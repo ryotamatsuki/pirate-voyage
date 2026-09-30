@@ -1,7 +1,7 @@
 # 一航海の試作から第一章までの開発工程
 
 更新日：2026年9月30日（日本時間）
-状態：開発方針を採用。新機能の実装と試遊は未着手。
+状態：M4a-1を実装、画面確認中。M4a-2以降と初見の試遊は未着手。
 対応仕様書：版1.2
 実装の基準点：ゲーム版 v0.1.1、コミット `419152009b712658b7d4aaf1fa208d7e2a49e6fa`
 
@@ -19,8 +19,8 @@
 
 | 順序 | 工程 | GitHub Issue | 内容 | 次へ進む条件 | 状況 |
 | --- | --- | --- | --- | --- | --- |
-| 1 | M4a 一航海の試作 | [#1](https://github.com/ryotamatsuki/pirate-voyage/issues/1) | 以下の三作業を一続きの体験として完成 | 初見の三問と処理、画面、保存の結果を記録 | 計画確定、実装未着手 |
-| 1a | M4a-1 視認と寄り道 | [#2](https://github.com/ryotamatsuki/pirate-voyage/issues/2) | 浮標、目印、部分的な未知の海図、直行と接近 | 対象を見つけ、通過も選べる | 未着手 |
+| 1 | M4a 一航海の試作 | [#1](https://github.com/ryotamatsuki/pirate-voyage/issues/1) | 以下の三作業を一続きの体験として完成 | 初見の三問と処理、画面、保存の結果を記録 | 実装中（M4a-1を確認中） |
+| 1a | M4a-1 視認と寄り道 | [#2](https://github.com/ryotamatsuki/pirate-voyage/issues/2) | 浮標、目印、部分的な未知の海図、直行と接近 | 対象を見つけ、通過も選べる | 実装済み・画面確認中 |
 | 1b | M4a-2 観測と報告 | [#3](https://github.com/ryotamatsuki/pirate-voyage/issues/3) | 1aの後に観測、手掛かり、航海帳、港への報告 | 記録から次の行き先を考え、再読込みで保持 | 未着手 |
 | 1c | M4a-3 航路登録と帰路 | [#4](https://github.com/ryotamatsuki/pirate-voyage/issues/4) | 1bの後に登録、移動短縮、ガイド、通し確認 | 通常と短縮で世界時間と消費が一致し、三問を記録 | 未着手 |
 | 2 | M4b 五港への拡張 | [#5](https://github.com/ryotamatsuki/pirate-voyage/issues/5) | M4a完了後に五港、五商品、噂、段階3から5 | 情報開示と相場が一致し、成長の利用先が分かる | 未着手 |

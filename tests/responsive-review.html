@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ゲーム画面の確認 / pirate-voyage</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#15232b;color:#e6eadd;font:14px system-ui,sans-serif}header{padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #53636b}h1{font-size:15px;margin:0 8px 0 0}button{min-height:44px;background:#28454e;color:#eee;border:1px solid #718b91;border-radius:5px;padding:7px 12px;font:inherit;cursor:pointer}button[aria-pressed="true"]{background:#e7c78d;color:#15303a}p{margin:8px 16px;color:#b6c6c8;font-size:12px;line-height:1.7}#frame-wrap{padding:12px 16px;overflow:auto}iframe{display:block;width:1360px;height:900px;max-width:none;border:1px solid #637782;background:#082b36}
+</style>
+<header><h1>開発用：ゲーム画面の確認</h1><button data-size="1360,900" aria-pressed="true">PC 1360×900</button><button data-size="390,844" aria-pressed="false">縦 390×844</button><button data-size="375,667" aria-pressed="false">小型 375×667</button><button data-size="844,390" aria-pressed="false">横 844×390</button><button data-size="701,393" aria-pressed="false">境界 701×393</button></header>
+<p>画面幅を切り替えても航海は続きます。停止・保存・JSONも通常のゲームと同じです。このページは表示と操作の確認用で、実機のタッチ入力やSafari、性能を再現するものではありません。</p>
+<div id="frame-wrap"><iframe id="game-frame" title="ゲームの確認画面" src="../adventure/index.html"></iframe></div>
+<script>
+for(const button of document.querySelectorAll('[data-size]'))button.addEventListener('click',()=>{
+  const [width,height]=button.dataset.size.split(',').map(Number),frame=document.querySelector('#game-frame');
+  frame.style.width=width+'px';frame.style.height=height+'px';
+  document.querySelectorAll('[data-size]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+});
+</script>
+</html>
