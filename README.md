@@ -7,13 +7,17 @@
 ## プレイする
 
 - [自由航海版 — GitHub Pages](https://ryotamatsuki.github.io/pirate-voyage/)
-- [ゲーム版 — 二港交易の試作 v0.1](https://ryotamatsuki.github.io/pirate-voyage/adventure/)
+- [ゲーム版 — 二港交易の試作 v0.1.1](https://ryotamatsuki.github.io/pirate-voyage/adventure/)
 - [自由航海版 — ChatGPT Sites](https://pirate-voyage.budoto.chatgpt.site/)
 - ローカル：遊びたい版の `index.html` をダウンロードし、WebGLに対応したブラウザで開いてください。オフラインでも動きます。
 
 ## ゲーム版：黒潮の航海 失われた潮路
 
 小船「凪灯号」で灯待ち港と松帆港を往復する試作です。最初は100G、食料30、船倉20から始まります。
+
+初めての航海では、航海士セナが目的と操作を一つずつ案内します。次の操作を金色の枠と矢印で示し、説明中は航海と食料消費を止めます。案内の途中でも閉じて自由に遊べます。進み具合は保存され、再読込み後も続けられます。
+
+画面の「遊び方・ガイド」か右上の「？」で、交易、補給、修理、操船、入港、改造、保存、JSON、救助を読み返せます。以前のセーブでも船と資金を保ったまま案内を始められます。
 
 1. 市場で木材を仕入れる。最初の配送も引き受けられます。
 2. 出港画面で食料と行き先を確認し、自動航海で松帆港へ向かう。
@@ -67,6 +71,8 @@
 - `index.html`：従来の自由航海版（内容を保持）
 - `adventure/index.html`：交易ゲーム版（HTML／CSS／JavaScript）
 - `tests/adventure-core.test.cjs`：取引・航海・保存のゲーム処理テスト
+- `tests/adventure-tutorial.test.cjs`：案内の進行、保存、旧セーブ互換性のテスト
+- `docs/tutorial-guide.md`：初回ガイドの動作と確認条件
 - `docs/development-status.md`：タスク、実装済み範囲、検証結果
 - `docs/asset-register.md`：素材の出所と制作記録
 - `.nojekyll`：GitHub Pagesで静的ファイルをそのまま配信するための設定
@@ -87,6 +93,7 @@ Node.js 18以上で、追加パッケージなしに実行できます。
 
 ```sh
 node tests/adventure-core.test.cjs
+node tests/adventure-tutorial.test.cjs
 ```
 
 ゲーム処理は `adventure/index.html` の `adventure-core`、画面と保存は `adventure-ui`、WebGL描画は `adventure-renderer` の各scriptに分けています。テストは配布するHTMLから処理を読み込むため、別の実装との食い違いを防げます。ゲーム版の修正は `adventure/` で行い、直下の自由航海版を変更しません。

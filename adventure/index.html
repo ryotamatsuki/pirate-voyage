@@ -33,6 +33,30 @@ dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:v
 
 @media(max-height:500px) and (min-width:701px){.journey .small-label{display:none}.toast{bottom:175px}}
 
+/* Original illustrated guide. No external images, fonts or libraries. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+#guide-sea-slot{position:absolute;left:28px;top:352px;bottom:174px;width:440px;z-index:4;pointer-events:auto}
+.guide-card{background:#12343cf5;border:1px solid #a7bdab80;border-radius:12px;padding:15px;box-shadow:0 12px 40px #00151b66;max-height:100%;display:flex;flex-direction:column;gap:9px;overflow:hidden;color:var(--ink)}
+.guide-person{display:flex;align-items:center;gap:11px;flex-shrink:0}.guide-portrait{width:45px;height:45px;flex-shrink:0;border-radius:50%}.guide-person strong{font-size:13px;font-weight:600;display:block;color:#f0dfb4}.guide-person span{display:block;font-size:10px;color:#b8cebf;margin-top:5px}.guide-person b{font-weight:400;margin-left:7px}.guide-person .text-button{margin-left:auto;font-size:11px;min-width:44px;padding:8px 4px;color:#bfd2ca}
+.guide-card progress{appearance:none;flex-shrink:0;width:100%;height:3px;border:0;background:#294b50}.guide-card progress::-webkit-progress-bar{background:#294b50}.guide-card progress::-webkit-progress-value{background:#e7c78d}.guide-card progress::-moz-progress-bar{background:#e7c78d}
+.guide-body{overflow:auto;overscroll-behavior:contain;min-height:40px}.guide-card h3{font-size:18px;margin:0 0 9px;line-height:1.5;font-weight:600;letter-spacing:.02em}.guide-card #guide-speech{font-size:13px;color:#e0e9df;line-height:1.85;margin:0 0 12px}.guide-card .guide-task{font-size:12px;color:#f2dba7;line-height:1.75;border-left:3px solid var(--gold);padding:6px 10px;background:#e7c78d0b;margin:9px 0 2px}
+.guide-buttons{display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0}.guide-buttons .game-button{font-size:12px;flex:1;min-width:125px;padding:9px 10px}.guide-card .guide-state{font-size:10px;line-height:1.5;color:#afc6bd;margin:0;flex-shrink:0}
+#guide-harbor-slot:has(.guide-card:not([hidden])),#guide-log-slot:has(.guide-card:not([hidden])){margin:15px 0}.game-dialog .guide-card{max-height:min(370px,65dvh)}
+.guide-loop{display:flex;gap:5px;align-items:center;justify-content:space-between;margin:12px 0;color:#dce6db}.guide-loop span{font-size:10px;text-align:center;flex:1;background:#25444a;border-radius:7px;padding:8px 3px;white-space:nowrap}.guide-loop b{display:block;font:23px system-ui;margin-bottom:5px;color:#eed099}.guide-loop i{font-size:20px;color:#e7c78d;font-style:normal}
+.guide-card .guide-resources{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.guide-resources div{border:1px solid #aac0ac33;padding:9px;background:#193d44;border-radius:6px}.guide-resources dt{font-size:10px;color:#bed0c4}.guide-resources dd{font-size:16px;margin:4px 0 0;color:#f1d79f}.guide-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.guide-controls span{font-size:10px;line-height:1.7;padding:7px;background:#29494f;border-radius:7px;color:#d0ded3}.guide-controls b{display:block;font-size:12px;color:#ead49f}.guide-safety{border:1px solid #adc1af40;background:#26454b;border-radius:6px;padding:9px}.guide-safety b,.guide-safety span{display:block;font-size:12px;line-height:1.8}.guide-safety span{font-size:10px;color:#c5d6ca}
+.guide-target{outline:3px solid #f1d496!important;outline-offset:3px;box-shadow:0 0 0 7px #f1d49620!important}.guide-target:is(button,input){position:relative}.guide-target:is(button,input)::after{content:'▼';position:absolute;top:-13px;right:7px;color:#f2d495;font-size:13px;text-shadow:0 1px 3px #092831;pointer-events:none}
+.tutorial-at-sea #next-goal,.tutorial-at-sea .view-tools,.tutorial-at-sea .readout{display:none}.tutorial-at-sea .toast{max-width:calc(100vw - 32px)}
+dialog.guidebook{width:720px}.guidebook .guidebook-purpose{background:#25454c;border:1px solid #aac0ac40;border-radius:8px;padding:15px;font-size:14px;line-height:1.8}.guidebook-purpose strong{color:#f0d699;font-weight:600}.guidebook details{border-top:1px solid var(--line);padding:3px 0}.guidebook summary{cursor:pointer;padding:15px 0;font-size:14px;line-height:1.6;color:#e8d5a5;min-height:44px}.guidebook details p,.guidebook li{font-size:13px;line-height:1.9;color:#d3e0d7}.guidebook ol{padding-left:23px}.guidebook li{margin:8px 0}.guidebook .guidebook-definitions{display:grid;grid-template-columns:95px 1fr;gap:12px;margin:12px 0 18px;font-size:12px;line-height:1.8}.guidebook dt{color:#e5cb94}.guidebook dd{margin:0;color:#d3e0d7}.guidebook #restart-guide{width:100%}
+@media(max-width:700px){#guide-sea-slot{left:14px;right:14px;top:346px;bottom:176px;width:auto}.guide-card{padding:12px;gap:7px;border-radius:10px}.guide-card h3{font-size:16px}.guide-card #guide-speech{font-size:13px;line-height:1.8}.guide-buttons .game-button{font-size:11px;min-width:120px}.guide-portrait{width:36px;height:36px}.guide-person{gap:9px}.guide-person strong{font-size:12px}.guide-person span{font-size:9px}.tutorial-at-sea .chart,.tutorial-at-sea .touch-helm{display:none}.game-actions{gap:5px}.game-actions button{min-height:44px}.game-dialog .guide-card{max-height:65dvh}.guidebook .guidebook-definitions{grid-template-columns:80px 1fr;gap:10px}.guidebook .guidebook-purpose{font-size:13px;padding:12px}.guidebook summary{font-size:13px}.guidebook details p,.guidebook li{font-size:12px}.guidebook .guide-loop span{font-size:9px}}
+@media(max-height:500px) and (min-width:701px){#guide-sea-slot{top:75px;left:16px;right:222px;bottom:183px;width:auto}.guide-card{padding:10px;gap:5px}.guide-portrait{width:32px;height:32px}.guide-person strong{font-size:12px}.guide-person span{font-size:9px;margin:2px 0}.guide-card h3{font-size:15px;margin-bottom:5px}.guide-card #guide-speech{font-size:12px;line-height:1.7}.guide-buttons .game-button{font-size:11px;min-height:44px;padding:7px 10px}.game-dialog .guide-card{max-height:70dvh}.tutorial-at-sea .resources{width:310px}.tutorial-at-sea .game-actions{top:auto;bottom:74px}.tutorial-at-sea .guide-state{display:none}}
+@media(prefers-reduced-motion:reduce){.guide-card,.guide-target{scroll-behavior:auto}}
+/* Reserve separate areas for the coach, steering and the harbor approach. */
+@media(max-width:700px){.tutorial-at-sea #guide-sea-slot{top:358px;bottom:234px}.tutorial-at-sea .touch-helm{display:flex;left:14px;bottom:178px}}
+@media(max-width:700px) and (max-height:740px){.tutorial-at-sea .brand{top:10px}.tutorial-at-sea .brand h1{font-size:21px;margin:2px 0}.tutorial-at-sea .brand p{display:none}.tutorial-at-sea .resources{top:69px}.tutorial-at-sea .game-actions{top:133px;left:14px;right:14px;width:auto;flex-direction:row;gap:6px}.tutorial-at-sea .game-actions button{font-size:10px;flex:1;white-space:nowrap;padding:6px}.tutorial-at-sea .journey{top:191px;left:14px;right:14px;width:auto;min-height:72px;padding:10px 12px}.tutorial-at-sea .journey .small-label,.tutorial-at-sea .journey #journey-eta,.tutorial-at-sea .journey progress{display:none}.tutorial-at-sea .journey h2{font-size:14px;margin:0 0 5px;max-width:calc(100% - 145px)}.tutorial-at-sea .journey #journey-distance{max-width:calc(100% - 145px);font-size:9px;margin:0}.tutorial-at-sea .journey button{position:absolute;right:10px;top:12px;width:132px}.tutorial-at-sea #guide-sea-slot{top:278px;bottom:176px}.tutorial-at-sea .touch-helm{display:none}.tutorial-at-sea .guide-state{display:none}}
+@media(max-height:500px) and (min-width:701px){.tutorial-at-sea #guide-sea-slot{top:75px;bottom:12px;left:16px;right:auto;width:min(320px,calc(100vw - 482px))}.tutorial-at-sea .game-actions{top:75px;bottom:auto;left:min(356px,calc(100vw - 446px));width:140px;gap:6px}}
+.guide-body{min-height:20px;scrollbar-width:thin;scrollbar-color:#d0bc8b #294b50}.guide-body::-webkit-scrollbar{width:4px}.guide-body::-webkit-scrollbar-thumb{background:#d0bc8b;border-radius:3px}.guide-card .guide-scroll-hint{margin:0;font-size:10px;color:#e0cb94;flex-shrink:0;line-height:1.5}
+.tutorial-on .toast.show:not(.guide-important){opacity:0}
+
 </style>
 </head>
 <body>
@@ -49,7 +73,7 @@ dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:v
     <button class="icon-btn" id="pause" aria-label="一時停止" title="一時停止 / P" aria-pressed="false"><span id="pause-icon-label">停止</span><svg viewBox="0 0 20 20" id="pause-icon"><path d="M7 4v12M13 4v12"/></svg></button>
     <button class="icon-btn" id="sound" aria-label="波と風の音をオン" title="波と風の音" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M9 4L5 7H2v6h3l4 3Z"/><path id="sound-waves" d="M13 7l5 6M18 7l-5 6"/></svg></button>
     <button class="icon-btn" id="fullscreen" aria-label="全画面表示" title="全画面表示"><svg viewBox="0 0 20 20"><path d="M3 7V3h4m6 0h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
-    <button class="icon-btn" id="help-button" aria-label="操作方法" title="操作方法"><svg viewBox="0 0 20 20"><path d="M7 6a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v.1"/></svg></button>
+    <button class="icon-btn" id="help-button" aria-label="遊び方・ゲームの目的" title="遊び方・ガイド"><svg viewBox="0 0 20 20"><path d="M7 6a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v.1"/></svg></button>
   </div>
   <aside class="wind-card" aria-label="風の状況"><div class="small-label">TRUE WIND / 風</div><div class="wind-main"><div><div class="wind-value"><span id="wind-speed">14.0</span><small>kn</small></div><div class="wind-sub" id="wind-description">南西の風 · 穏やかなうねり</div></div><div class="wind-rose"><b>N</b><div class="wind-arrow" id="wind-arrow"></div></div></div></aside>
   <nav class="view-tools" aria-label="カメラ"><button class="view-btn active" data-view="follow">船を追う</button><button class="view-btn" data-view="orbit">海を眺める</button><button class="view-btn" data-view="deck">甲板から</button></nav>
@@ -65,7 +89,8 @@ dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:v
   <div><span>資金</span><b id="gold-value">100G</b></div><div id="food-cell"><span>食料</span><b id="food-value">30 / 30</b></div>
   <div id="hp-cell"><span>船体</span><b id="hp-value">100 / 100</b></div><div><span>船倉</span><b id="cargo-value">0 / 20</b></div>
 </section>
-<nav class="game-actions" aria-label="航海のメニュー"><button id="open-port" class="game-button">港に立ち寄る</button><button id="open-log" class="game-button">日誌・保存</button></nav>
+<div id="guide-sea-slot"></div>
+<nav class="game-actions" aria-label="航海のメニュー"><button id="open-port" class="game-button">港に立ち寄る</button><button id="open-log" class="game-button">日誌・保存</button><button id="open-guidebook" class="game-button" data-guidebook>遊び方・ガイド</button></nav>
 <aside class="journey panel"><div class="small-label">NEXT HORIZON / 次の針路</div><h2 id="destination">出発の準備</h2><p id="journey-distance"></p><p id="journey-eta"></p><progress id="journey-progress" max="1" value="0" aria-label="目的地までの進行"></progress><button id="dock-game" class="game-button" disabled>入港する</button></aside>
 <p id="next-goal" class="goal panel">木材を仕入れ、松帆港で売ってみよう。</p>
 <!-- END HUD ADDITIONS -->
@@ -78,24 +103,56 @@ dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:v
 
 <section id="title-screen" aria-labelledby="title-heading">
   <div class="title-content"><div class="eyebrow">THE WANDERING SEA / ADVENTURE</div><h2 id="title-heading">黒潮の航海<span>失われた潮路</span></h2><p class="title-story">遺された小船「凪灯号」と、まだ白い海図。<br>まずは木材を積んで、対岸の港へ。<br>帰ってくるころには、次の航海が見えてくる。</p>
-  <div class="trial-label">二港交易の試作 · v0.1</div><p class="trial-description">交易と補給を重ね、120Gで船を補強しよう。<br>探索・海賊・物語の続きは、これから広がる海に。</p>
+  <div class="trial-label">二港交易の試作 · v0.1.1</div><p class="trial-description">交易と補給を重ね、120Gで船を補強しよう。<br>探索・海賊・物語の続きは、これから広がる海に。</p>
   <label class="name-label" for="captain-name">船長の名前<input id="captain-name" maxlength="24" value="船長" autocomplete="off"></label>
   <div class="title-buttons"><button id="new-game" class="game-button primary">新しい航海</button><button id="continue-game" class="game-button" disabled>続きから</button></div>
+  <p class="muted">初めての航海は、セナの操作ガイド付き。</p><button class="text-button" data-guidebook>ゲームの目的・遊び方を見る</button>
   <p id="save-status" class="muted"></p><div class="utility-links"><button class="text-button" data-import>JSONを読み込む</button><button class="text-button" id="restore-backup" disabled>前回の記録から</button></div>
   <a class="simulator-link" href="../index.html">自由航海版で、海を眺める ↗</a></div>
 </section>
 <input id="import-file" type="file" accept="application/json,.json" hidden>
+
+<aside id="voyage-guide" class="guide-card" aria-labelledby="guide-heading" hidden>
+  <div class="guide-person"><svg class="guide-portrait" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="#325c62"/><path d="M11 64c1-18 12-24 21-24s21 6 23 24" fill="#d8c393"/><path d="M20 38c-7-11-4-27 11-28 17-1 22 14 14 31l-3 6-21-2" fill="#342e2a"/><path d="M21 27c0-12 22-12 22 0v5c0 16-22 16-22 0" fill="#cc9874"/><path d="M19 25c0-13 25-14 26 0l-3-3c-7 4-10-2-13-3l-5 8" fill="#342e2a"/><path d="M18 17l10-9 15 3 5 10-14-4" fill="#68a5a0"/><path d="M16 20c11-3 21-2 33 3" fill="none" stroke="#e8ce95" stroke-width="3"/><circle cx="27" cy="30" r="1" fill="#342e2a"/><circle cx="38" cy="30" r="1" fill="#342e2a"/><path d="M29 37q4 3 8-1" fill="none" stroke="#704c3c" stroke-width="1.5"/><path d="M20 46l12 6 12-8-7 19-8-6" fill="#578c88"/></svg><div><strong>航海士 セナ</strong><span>船長の手ほどき <b id="guide-count">1 / 21</b></span></div><button id="guide-skip" class="text-button" aria-label="案内を閉じて自由に遊ぶ">閉じる</button></div>
+  <progress id="guide-progress" max="21" value="1" aria-label="チュートリアルの進み具合"></progress>
+  <div id="guide-body" class="guide-body" tabindex="0" aria-label="セナの説明。長い説明はこの欄をスクロールできます。"><h3 id="guide-heading"></h3><p id="guide-speech"></p>
+    <div data-guide-visual="loop" class="guide-loop" aria-label="仕入れ、航海、売却、補給と改造の繰り返し"><span><b>▤</b>仕入れる</span><i>›</i><span><b><svg viewBox="0 0 24 24" aria-hidden="true" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17h18l-4 4H7Z M11 3v14 M9 5l-5 9h5Z M13 3l7 11h-7Z"/></svg></b>海を渡る</span><i>›</i><span><b>◉</b>売る</span><i>›</i><span><b>⚒</b>船を育てる</span></div>
+    <dl data-guide-visual="resources" class="guide-resources" hidden><div><dt>資金 / 買い物</dt><dd id="guide-gold"></dd></div><div><dt>食料 / 航海の備え</dt><dd id="guide-food"></dd></div><div><dt>船体 / 丈夫さ</dt><dd id="guide-hp"></dd></div><div><dt>船倉 / 積荷の量</dt><dd id="guide-cargo"></dd></div></dl>
+    <div data-guide-visual="controls" class="guide-controls" hidden><span><b>自動 → 港</b>海図の港をタップ</span><span><b>手動 ↶ ↷</b>左右の舵で曲がる</span><span><b>帆 0 ━ 100％</b>つまみで開き具合</span><span><b>画面をなぞる</b>カメラだけが動く</span></div>
+    <div data-guide-visual="safety" class="guide-safety" hidden><b>救助 → 最後の安全な港</b><span>船の改造は残る / 配送は再受注できる</span></div>
+    <p id="guide-task" class="guide-task"></p></div>
+  <p id="guide-scroll-hint" class="guide-scroll-hint" hidden>説明欄をスクロールして続きを読む ↕</p>
+  <div class="guide-buttons"><button id="guide-focus" class="game-button">次の操作の場所を見る ↓</button><button id="guide-next" class="game-button primary">手ほどきを始める</button><button id="guide-recenter" class="game-button" hidden>航路に戻って再開</button></div>
+  <p id="guide-state" class="guide-state"></p>
+</aside>
+<p id="guide-announcement" class="sr-only" role="status" aria-live="polite"></p>
+
 <dialog id="harbor" class="game-dialog" aria-labelledby="port-name"><div class="dialog-header"><div><div class="small-label">HARBOR / 港</div><h2 id="port-name">灯待ち港</h2></div><button id="close-port" class="icon-btn" aria-label="港を閉じて海を眺める">×</button></div><p id="port-description"></p><p id="port-wallet" class="wallet"></p>
+  <div id="guide-harbor-slot"></div>
   <nav class="port-tabs" aria-label="港の施設"><button data-tab="market" class="active" aria-pressed="true">市場</button><button data-tab="supply" aria-pressed="false">補給</button><button data-tab="shipyard" aria-pressed="false">造船</button><button data-tab="departure" aria-pressed="false">出港</button></nav>
   <section data-panel="market"><div class="commodity"><div class="wood-icon" aria-hidden="true">≋</div><div><h3>木材</h3><p id="wood-stock"></p><p id="wood-owned"></p></div></div><div class="quantity-row"><label for="trade-quantity">数量<input type="number" id="trade-quantity" min="1" max="200" step="1" value="12" inputmode="numeric"></label><button data-quantity="1" class="game-button">1</button><button data-quantity="12" class="game-button">12</button><button data-quantity="max" class="game-button">買える最大</button></div><p class="muted">量が増えると価格も動きます。合計を確かめてから取引できます。</p><div class="trade-options"><div><p id="buy-quote"></p><button id="buy-wood" class="game-button primary">買う</button></div><div><p id="sell-quote"></p><button id="sell-wood" class="game-button">売る</button></div></div><p id="trade-preview" class="muted"></p><div class="job-card"><h3>最初の配送</h3><p id="delivery-description"></p><button id="delivery-job" class="game-button">木材配送を引き受ける</button></div></section>
   <section data-panel="supply" hidden><h3>次の航海に備える</h3><p id="supply-description"></p><div class="service-buttons"><button id="food-one" class="game-button">食料1単位</button><button id="food-full" class="game-button primary">食料を満載</button><button id="repair-ship" class="game-button">船体を全修理</button><button id="wait-day" class="game-button">一日休む · 6G</button><button id="port-errand" class="game-button" hidden>倉庫の仕事を手伝う · 報酬20G</button></div><p class="muted">食料は1単位1G。修理はHP1点1Gと滞在費2G、0.25日を使います。食料を満載にする料金は不足量を切り上げます。</p></section>
   <section data-panel="shipyard" hidden><h3>凪灯号を、遠い海へ</h3><p id="current-ship"></p><table class="upgrade-table"><thead><tr><th>船の性能</th><th>沿岸船</th><th>補強後</th></tr></thead><tbody><tr><th>船倉</th><td>20</td><td>28</td></tr><tr><th>食料上限</th><td>30</td><td>45</td></tr><tr><th>船体上限</th><td>100</td><td>115</td></tr><tr><th>標準船速</th><td>6 kn</td><td>6.3 kn</td></tr></tbody></table><button id="upgrade-ship" class="game-button primary">120Gで船を補強する</button><p class="muted">船体上限の増加分だけ現在HPも増えます。食料は補給所で積み足してください。試作では段階2まで改造できます。</p></section>
   <section data-panel="departure" hidden><h3 id="departure-name">松帆港へ</h3><p id="departure-estimate"></p><p id="departure-reserve"></p><p id="departure-warning" class="departure-note"></p><button id="depart-game" class="game-button primary">帆を上げて出港する</button><p class="muted">港に近づくと「入港する」が使えます。自動航海は沖で止まります。海図をタップして行き先を変えることもできます。</p></section>
 </dialog>
-<dialog id="captain-log" class="game-dialog" aria-labelledby="captain-log-title"><div class="dialog-header"><div><div class="small-label">CAPTAIN’S LOG / 航海日誌</div><h2 id="captain-log-title">船長の航海日誌</h2></div><button id="close-log" class="icon-btn" aria-label="日誌を閉じる">×</button></div><p id="voyage-summary"></p><p id="persistence-status" class="muted">港での取引と定期保存で航海を記録します。</p><div class="log-buttons"><button id="save-game" class="game-button primary">今すぐ保存</button><button class="game-button" data-export>JSONを書き出す</button><button class="game-button" data-import>JSONを読み込む</button><button id="restore-backup-log" class="game-button">前回の記録から</button><button id="request-rescue" class="game-button">救助を要請する</button><button id="new-game-log" class="game-button">新しい航海</button></div><ol id="journal-list" class="journal"></ol><a href="../index.html" class="simulator-link">自由航海版へ ↗</a></dialog>
+<dialog id="captain-log" class="game-dialog" aria-labelledby="captain-log-title"><div class="dialog-header"><div><div class="small-label">CAPTAIN’S LOG / 航海日誌</div><h2 id="captain-log-title">船長の航海日誌</h2></div><button id="close-log" class="icon-btn" aria-label="日誌を閉じる">×</button></div><div id="guide-log-slot"></div><p id="voyage-summary"></p><p id="persistence-status" class="muted">港での取引と定期保存で航海を記録します。</p><div class="log-buttons"><button id="save-game" class="game-button primary">今すぐ保存</button><button class="game-button" data-export>JSONを書き出す</button><button class="game-button" data-import>JSONを読み込む</button><button id="restore-backup-log" class="game-button">前回の記録から</button><button id="request-rescue" class="game-button">救助を要請する</button><button id="new-game-log" class="game-button">新しい航海</button></div><ol id="journal-list" class="journal"></ol><a href="../index.html" class="simulator-link">自由航海版へ ↗</a></dialog>
 
-<dialog id="help"><button class="icon-btn close" id="close-help" aria-label="閉じる">×</button><div class="small-label" style="color:var(--gold);margin-bottom:13px">WELCOME ABOARD, CAPTAIN</div><h2>次の航海は、あなたの針路で。</h2><p>凪灯号で二つの港を往復します。港で木材を仕入れ、対岸で売って利益を得たら、120Gで船を補強しましょう。最初の配送は船倉4単位、報酬40Gです。</p><dl><dt>出港</dt><dd>港の「出港」で行き先と食料を確認する</dd><dt>入港</dt><dd>沖の入港地点に近づくと「入港する」が使える</dd><dt>ドラッグ / スワイプ</dt><dd>カメラを回す。スクロール / ピンチで距離を変える</dd><dt>← → / A D</dt><dd>手動で操舵。↑ ↓ / W S で帆を調整</dd><dt>海図をタップ</dt><dd>出港後に行き先を変える。島の沖を選ぼう</dd><dt>P / H / R</dt><dd>停止 / 表示切替 / 救助を要請</dd></dl><p class="help-note">港とメニューを開いている間、背景のタブでは航海時間が止まります。保存はこのブラウザに記録されます。日誌からJSONを書き出すと別の環境へ持ち出せます。試作では風向きによる船速変化、探索、遭遇、海戦はまだ入りません。</p>
+
+<dialog id="help" class="game-dialog guidebook" aria-labelledby="guidebook-title">
+  <div class="dialog-header"><div><div class="small-label">船長の手引き</div><h2 id="guidebook-title">遊び方・ゲームの目的</h2></div><button class="icon-btn" id="close-help" aria-label="遊び方を閉じる">×</button></div>
+  <p class="guidebook-purpose"><strong>最初の目標：120Gで凪灯号を補強する。</strong><br>安く買った木材を別の港で売り、配送の報酬も受け取る。稼いだ資金で補給・改造して、また次の航海へ。</p>
+  <div class="guide-loop"><span><b>▤</b>仕入れる</span><i>›</i><span><b><svg viewBox="0 0 24 24" aria-hidden="true" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17h18l-4 4H7Z M11 3v14 M9 5l-5 9h5Z M13 3l7 11h-7Z"/></svg></b>海を渡る</span><i>›</i><span><b>◉</b>売る</span><i>›</i><span><b>⚒</b>船を育てる</span></div>
+  <button id="restart-guide" class="game-button primary">セナの操作ガイドを始める・再開する</button><p id="guidebook-start-note" class="muted">今の船・資金・積荷を保ったまま案内します。</p>
+  <details open><summary>1　まず何をすればいい？</summary><ol><li>灯待ち港の「市場」で木材配送を引き受ける。依頼の木材4単位を無料で預かる。</li><li>自分の木材も12単位買う。合計額と資金、船倉の空きを確認する。</li><li>「補給」で食料を確認し、「出港」で松帆港へ出る。</li><li>沖に着いたら「松帆港へ入港」を押す。市場で自分の木材を売り、別に配送の40Gを受け取る。</li><li>「造船」で120Gの補強。「補給」で食料を積み足し、日誌で保存する。</li></ol><p>初期相場なら木材12単位は購入60G・売却105G。配送後は185G、補強後は65Gが残る目安。相場や途中の買い物で変わります。</p></details>
+  <details><summary>2　資金・食料・船体・船倉</summary><dl class="guidebook-definitions"><dt>資金（G）</dt><dd>仕入れ、補給、修理、改造に使う。価格は一単位と合計を区別して確認する。</dd><dt>食料</dt><dd>海にいる間は一日4単位を消費。帆を畳んで止まっていても減る。港・停止・日誌・遊び方・背景タブでは減らない。食料切れは船体と士気を傷める。</dd><dt>船体（HP）</dt><dd>船の丈夫さ。35未満で船速が下がり、0になると救助される。</dd><dt>船倉</dt><dd>積荷の使用量 / 上限。依頼の積荷も含む。食料は別の上限なので、船倉を使わない。</dd></dl></details>
+  <details><summary>3　交易と配送</summary><p>数量欄に整数を入力するか、「1」「12」「買える最大」で選ぶ。「買う」と「売る」は同じ数量欄を使う。合計が示され、資金・積荷・船倉が足りない取引はできない。</p><p>灯待ち港は仕入れ、松帆港は売却に向く。大量に買うと買値が上がり、売ると買い取り価格が下がる。同じ港ですぐ売り戻しても利益は出ない。</p><p>配送の木材は売買できない契約品。松帆港で依頼ボタンから渡す。報酬40Gは一度だけ。救助で失敗したら、灯待ち港で再受注できる。</p></details>
+  <details><summary>4　補給・修理・休息・改造</summary><p>「補給」では食料1単位（1G）または満載を選ぶ。満載の料金は不足量の端数を切り上げる。船体の全修理は不足HPの端数を切り上げた料金＋滞在費2Gで、0.25日が進む。満載・修理済みのボタンは使う必要がない。</p><p>「一日休む」は6Gで一日を進め、士気を回復させる。港の在庫も日数に応じて平常量へ戻る。</p><p>「造船」で120Gを払うと船倉20→28、食料上限30→45、船体上限100→115、標準船速6→6.3になる。食料は自動で満載にならない。今ある傷も、別に修理する。この試作の改造は段階2まで。</p></details>
+  <details><summary>5　出港・操船・入港・画面操作</summary><p>「出港」で目的地と食料の目安を確認する。出港すると自動・帆100％になる。自動航海は目的地の沖で止まる。2ゲーム海里以内で使える「入港」を押して、港の操作へ移る。</p><dl class="guidebook-definitions"><dt>自動 / 手動</dt><dd>自動は海図の行き先へ進む。手動は←→ / A・D、スマートフォンは左右の舵ボタン。方向キーで曲がると手動に切り替わる。</dd><dt>帆のつまみ</dt><dd>帆の開き具合を調整。↑↓ / W・Sでも操作できる。0％では進めないが食料は減る。</dd><dt>海図</dt><dd>出港後、港をタップするとその港へ自動航海。海をタップすれば任意の沖へ向かう。島の陸地には行き先を置けない。</dd><dt>1・2・4倍</dt><dd>世界の時間が進む倍率。同じ距離の食料消費は変わらない。</dd><dt>停止 / P</dt><dd>航海時間と消費を止める。同じボタンで再開。</dd><dt>カメラ</dt><dd>ドラッグ・スワイプで回転。スクロール・ピンチで距離を調整。PCは「船を追う」「海を眺める」「甲板から」も選べる。船の針路とは別の操作。</dd><dt>そのほか</dt><dd>スピーカーで音のオン・オフ。PCの全画面ボタンで全画面。Hで操作画面を隠し、画面の復帰ボタンで戻す。</dd></dl></details>
+  <details><summary>6　保存・続きから・JSON・前回の記録</summary><p>取引・入港・改造などで自動保存し、航海中も定期保存する。「日誌・保存」の「今すぐ保存」で手動保存。再び開いたらタイトルの「続きから」。案内の進み具合も残る。</p><p>保存は端末のブラウザと公開先ごと。別の端末やブラウザへ移す前は「JSONを書き出す」。移動先の「JSONを読み込む」で選ぶ。現在の航海を置き換える前に確認が出る。「前回の記録から」も現在の航海を置き換えるので、必要なら先にJSONを書き出す。</p><p>「新しい航海」はゲーム版の記録を初期化する。元の自由航海版は別のゲームで、その記録を消さない。</p></details>
+  <details><summary>7　動けない・食料や資金がない</summary><p>まず停止して日誌を開こう。帆0％なら帆を上げる。手動で針路がわからないなら海図の港をタップし、自動に戻す。案内中なら「航路に戻って再開」も使える。</p><p>航海中の「救助を要請する」（R）は最後の安全な港へ戻る。資金20％、通常の積荷30％を失い、配送は失敗する。実行前に確認できる。船と改造は残る。</p><p>灯待ち港で資金と売れる木材がともにゼロなら、「補給」に出る「倉庫の仕事を手伝う」で20Gを得られる。食料と船体を整えて、再び出港しよう。</p></details>
+  <details><summary>8　補強したら終わり？ この試作の範囲</summary><p>補強は最初の達成目標。その後も二つの港で交易し、資金を増やして自由に航海できる。終わらせるときは保存してブラウザを閉じてよい。</p><p>探索・五港・宝探し・海賊・海戦・船員雇用・灯台の物語は今後の開発範囲。現在の遊び方は二港の交易、配送、補給、船の補強だよ。</p></details>
 </dialog>
+
 <div class="loader" id="loader"><div class="loader-content"><svg viewBox="0 0 64 64"><path d="M32 5v44M29 12L12 40h17ZM35 8v32h17L35 8ZM5 48h54l-9 9H15Z"/></svg><h2>帆を上げよう。</h2><p>PREPARING YOUR VOYAGE</p></div></div>
 <div class="error" id="error"><h2>このブラウザでは海を描画できませんでした。</h2><p>WebGLが有効なSafari、Chrome、Edgeなどで、このHTMLファイルを開いてください。プレビュー画面で動かない場合は、ファイルを保存してブラウザで開くと動くことがあります。</p><code id="error-detail"></code><p><button class="game-button" data-export>航海のJSONを書き出す</button></p></div>
 <noscript><div style="position:fixed;inset:0;z-index:20;background:#082932;padding:40px">この航海シミュレーションにはJavaScriptが必要です。JavaScriptを有効にしたブラウザでHTMLを開いてください。</div></noscript>
@@ -103,10 +160,13 @@ dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:v
 /* Pure game rules. Embedded in adventure/index.html; no runtime dependencies. */
 const AdventureCore = (() => {
   'use strict';
-  const VERSION = '0.1.0';
+  const VERSION = '0.1.1';
   const WORLD = 'two-ports-1';
   const SAVE_KEY = 'pirate-voyage:adventure:save:v1';
   const BACKUP_KEY = 'pirate-voyage:adventure:backup:v1';
+  const GUIDE_STEPS = Object.freeze(['welcome','resources','delivery','buy','supply','depart',
+    'pause','resume','controls','speed','sailing','dock','sell','claim','upgrade','refill',
+    'nextVoyage','save','backup','safety','complete']);
   const PORTS = Object.freeze([
     Object.freeze({id:'p_light', name:'灯待ち港', x:0, z:0, wood:4, recovery:15,
       description:'島々へ向かう小船が集まる港。木材を仕入れ、次の航海に備える。'}),
@@ -149,6 +209,7 @@ const AdventureCore = (() => {
       storyFlags:{},factions:{},completedRewardIds:[],pendingEncounter:null,
       markets:Object.fromEntries(PORTS.map(p=>[p.id,{wood:{stock:100,demandPercent:100,lastUpdatedDay:0}}])),
       stats:{tradeProfit:0,firstVoyage:false,firstSale:false,upgraded:false},
+      tutorial:{version:1,status:'ACTIVE',step:'welcome'},
       journal:[{day:0,text:'凪灯号を受け取った。灯待ち港の木材を、松帆港へ運んでみよう。'}]
     };
   }
@@ -203,6 +264,13 @@ const AdventureCore = (() => {
       goodNumber(l.day,0,s.clock.gameDays+1e-8)&&typeof l.text==='string'&&l.text.length<=180)) bad();
     // Reconstruct known fields. Imported extra properties never become commands or HTML.
     const clean=fresh(s.player.name);
+    // v0.1.0 saves have no tutorial. Offer guidance without changing their voyage.
+    if(s.tutorial!==undefined){
+      const g=s.tutorial;
+      if(!object(g)||g.version!==1||!['ACTIVE','SKIPPED','COMPLETED'].includes(g.status)||
+        !GUIDE_STEPS.includes(g.step)||(g.status==='COMPLETED'&&g.step!=='complete')) bad();
+      clean.tutorial={version:1,status:g.status,step:g.step};
+    }
     for(const k of ['phase','paused','rngStates','clock','player','ship','position','portId','lastSafePortId',
       'navigation','quests','completedRewardIds','markets','stats','journal']) clean[k]=copy(s[k]);
     return clean;
@@ -210,6 +278,41 @@ const AdventureCore = (() => {
   function create(saved=null,name='船長') {
     let s=saved===null?fresh(name):validate(saved);
     const log=text=>{s.journal.push({day:s.clock.gameDays,text:String(text).slice(0,180)});if(s.journal.length>40)s.journal.shift();};
+    function guide(step){
+      if(!GUIDE_STEPS.includes(step))return failure('案内の手順が不正です。');
+      s.tutorial={version:1,status:'ACTIVE',step};return {ok:true};
+    }
+    function skipGuide(){s.tutorial.status='SKIPPED';return {ok:true};}
+    function finishGuide(){s.tutorial={version:1,status:'COMPLETED',step:'complete'};return {ok:true};}
+    function syncGuide(){
+      if(s.tutorial.status!=='ACTIVE')return false;
+      const original=s.tutorial.step;
+      // Reconcile actual results, including old saves, free play and rescue.
+      // Reading lessons are acknowledged explicitly and never skipped by a timer.
+      for(let i=0;i<GUIDE_STEPS.length;i++){
+        const step=s.tutorial.step,atPort=s.phase==='PORT',q=s.quests.firstDelivery.status;
+        let next=step;
+        if(step==='delivery'&&(q==='ACTIVE'||q==='COMPLETED'||(atPort&&s.portId!=='p_light')))next='buy';
+        if(step==='buy'&&(woodOwned(s)>0||s.stats.firstSale||s.ship.tier===2||!atPort||s.portId==='p_pine'))next='supply';
+        if(['delivery','buy','supply','depart'].includes(step)&&!atPort)next='pause';
+        if(step==='depart'&&atPort&&s.portId==='p_pine')next='sell';
+        if(['pause','resume','controls','speed'].includes(step)&&atPort)next=s.portId==='p_pine'?'sell':'delivery';
+        else if(step==='pause'&&s.paused)next='resume';
+        else if(step==='resume'&&!s.paused)next='controls';
+        if(['sailing','dock'].includes(step)){
+          if(atPort)next=s.portId==='p_pine'?'sell':'delivery';
+          else if(Math.hypot(s.position.xNm-240,s.position.zNm)<=2.001)next='dock';
+          else next='sailing';
+        }
+        if(step==='sell'&&woodOwned(s)===0)next='claim';
+        if(step==='claim'&&q!=='ACTIVE')next='upgrade';
+        if(step==='upgrade'&&s.ship.tier===2)next='refill';
+        if(step==='refill'&&s.ship.food>=tier(s).food-1e-8)next='nextVoyage';
+        if(['sell','claim','upgrade','refill'].includes(step)&&!atPort)next='sailing';
+        if(next===step)break;s.tutorial.step=next;
+      }
+      return original!==s.tutorial.step;
+    }
     function advanceDays(days) {
       s.clock.gameDays+=days;
       const day=Math.floor(s.clock.gameDays+1e-8);
@@ -419,10 +522,11 @@ const AdventureCore = (() => {
       setPaused:on=>{if(typeof on==='boolean')s.paused=on;},
       setSpeed:n=>{if([1,2,4].includes(n))s.clock.speedMultiplier=n;},
       maxBuy:()=>{let n=0;for(let q=1;q<=tier(s).capacity;q++){if(!quote('buy',q).ok)break;n=q;}return n;},
+      guide,skipGuide,finishGuide,syncGuide,
       export:()=>JSON.stringify(validate(s),null,2)
     });
   }
-  return Object.freeze({VERSION,WORLD,SAVE_KEY,BACKUP_KEY,PORTS,TIERS,LAND,price,create,validate,cargoUsed,woodOwned});
+  return Object.freeze({VERSION,WORLD,SAVE_KEY,BACKUP_KEY,PORTS,TIERS,LAND,GUIDE_STEPS,price,create,validate,cargoUsed,woodOwned});
 })();
 
 </script>
@@ -434,7 +538,123 @@ const Adventure = (() => {
   let model=C.create(),active=false,saved=null,storageWarning='',saveElapsed=0,toastTimer=0;
   const fmt=n=>n.toFixed(1),text=(id,value)=>{$(id).textContent=value;};
   const port=id=>C.PORTS.find(p=>p.id===id),tier=s=>C.TIERS[s.ship.tier-1];
-  function message(value){text('toast',value);$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),4200);}
+
+  // Guidance follows actual game results; it never grants money or cargo.
+  let lastGuideStep='',markedTarget=null,guideNeedsLog=false,guideNeedsHarbor=false;
+  const guidePanel=$('voyage-guide');
+  const guideReadNext={welcome:'resources',resources:'delivery',supply:'depart',controls:'speed',
+    nextVoyage:'save',backup:'safety',safety:'complete'};
+  function guideHolding(){const g=model.snapshot().tutorial;return active&&g.status==='ACTIVE'&&g.step!=='sailing';}
+  function guideLesson(s){
+    const owned=C.woodOwned(s),q=s.quests.firstDelivery,t=tier(s),step=s.tutorial.step;
+    const lessons={
+      welcome:{title:'船長、最初の航海を一緒に。',speech:'私は航海士のセナ。木材を安い港で買い、別の港で売って資金を増やそう。この試作の最初の目標は、120Gで凪灯号を「補強沿岸船」にすることだよ。',task:'配送と交易を体験し、船の補強と保存まで進もう。',next:'手ほどきを始める',visual:'loop'},
+      resources:{title:'航海を支える、四つの数字。',speech:'資金は買い物と改造に、船倉は積荷に使う。食料は海にいる間に減り、船体は船の丈夫さだよ。港とメニューでは時間が止まるから、ゆっくり考えて大丈夫。',task:'食料が切れると船体も傷む。出港前に必ず確認しよう。',next:'わかった、依頼へ',target:s.phase==='PORT'&&$('harbor').open?'#port-wallet':'.resources',visual:'resources'},
+      delivery:{title:'まずは、仕入れのいらない仕事。',speech:'松帆港へ木材を届ける依頼がある。預かる木材は4単位、報酬は40G。依頼の積荷は売れないから、自分で買う木材とは別に考えよう。',task:'「木材配送を引き受ける」を押す。',target:'#delivery-job',tab:'market'},
+      buy:{title:'安い木材を、自分でも仕入れよう。',speech:'灯待ち港は木材の仕入れに向く港。まず12単位がおすすめ。数量を選び、購入合計と残る資金を見てから「買う」を押そう。売るときの合計も港と数量で変わるよ。',task:'数量を確認して木材を買う。依頼の4単位も船倉を使うよ。',target:'#buy-wood',tab:'market'},
+      supply:{title:'出港前の補給を覚えよう。',speech:'「補給」では食料と修理の料金がわかる。今の食料は'+fmt(s.ship.food)+'、船体は'+fmt(s.ship.hp)+'。満載・修理済みなら追加で払う必要はないよ。修理は傷の量に応じた料金と滞在費2Gがかかる。',task:'「補給」タブを開き、食料と船体を確認する。',target:'#supply-description',tab:'supply',next:'確認した、出港へ'},
+      depart:{title:'目的地と、帰りの食料を確認。',speech:'「出港」に、次の港・所要時間・食料の目安がある。片道だけでなく往復と予備も確認しよう。準備ができたら出港ボタン。自動航海で松帆港へ向かうよ。',task:'「出港」タブ → 「帆を上げて出港する」。',target:'#depart-game',tab:'departure'},
+      pause:{title:'海に出たら、まず停止を試そう。',speech:'右上の停止ボタンは、航海と食料消費を止める。考えたいときに使ってね。今も説明のため航海を止めているよ。',task:'右上の「一時停止」を押してみる。',target:'#pause'},
+      resume:{title:'同じボタンで、再開できる。',speech:'停止ボタンが三角形に変わったね。もう一度押すと再開する。港・日誌・遊び方を開いたときも時間は止まるよ。',task:'右上の三角形「航海を再開」を押す。',target:'#pause'},
+      controls:{title:'自動航海なら、舵はおまかせ。',speech:'「自動」は目的地へ進む。手動なら←→・A/D、スマートフォンなら舵ボタンで曲がるよ。帆のつまみは進む速さ、海図のタップは行き先を変える。初航海は自動・帆100％のままで大丈夫。',task:'海のドラッグはカメラ操作。船の針路は変わらないよ。',target:'#auto',next:'わかった、進もう',visual:'controls'},
+      speed:{title:'待ち時間は、4倍速で短く。',speech:'画面下の1・2・4倍は、航海時間の進む速さ。倍率を上げても、同じ航海距離に必要な食料は変わらないよ。まず4倍を選んでみよう。',task:'画面下の「4倍」を押すと、航海が進む。',target:'[data-speed="4"]'},
+      sailing:{title:'松帆港の沖へ向かおう。',speech:s.paused?'今は一時停止中だよ。右上の三角形で再開できる。':!s.navigation.auto||s.navigation.destinationPortId!=='p_pine'||s.navigation.sails<.99?'針路や帆を変えたね。「航路に戻る」で、松帆港へ自動・帆100％の航海に戻れるよ。':'残りの距離と所要時間を見ながら進もう。途中で食料が減るのは正常だよ。到着しても自動では港に入らない。沖で「入港」を押すところまで見届けよう。',task:'到着まで待つ。停止・倍率変更・カメラ操作は自由。',target:s.paused?'#pause':'.journey',recenter:true},
+      dock:{title:'着いた！ 最後は、自分で入港。',speech:'港の沖、2ゲーム海里以内に着いたね。自動航海はここで止まる。「松帆港へ入港」を押すと、市場と補給が使えるよ。',task:'強調された「松帆港へ入港」を押す。',target:'#dock-game'},
+      sell:{title:'積荷を売って、利益を出そう。',speech:'売れる自分の木材は'+owned+'単位。売却合計を確認して「売る」を押そう。買ったときより高く売れれば利益。大量に売ると港の買い取り価格は下がるよ。',task:'自分の木材を売る。依頼の木材はここでは売れない。',target:'#sell-wood',tab:'market'},
+      claim:{title:'預かった木材は、依頼として渡す。',speech:'自分の木材を売っても、配送はまだ終わっていない。依頼のボタンを押して、預かった4単位を渡そう。40Gの報酬は一度だけ受け取れるよ。',task:'「木材を届けて40Gを受け取る」を押す。',target:'#delivery-job',tab:'market'},
+      upgrade:{title:s.player.gold>=120?'稼いだ資金で、船を大きく。':'船の補強まで、もうひと航海。',speech:s.player.gold>=120?'「造船」では改造前後の性能を比べられる。120Gで補強すると、船倉・食料上限・船体上限が広がり、船も少し速くなる。資金を使って次の航海を楽にする、これが成長の流れだよ。':'補強には120G、今は'+s.player.gold+'G。売れる木材を市場で売るか、灯待ち港で仕入れて松帆港で売ろう。高い港で買い直すと利益が出にくいから気をつけてね。案内を閉じて遊び、あとで再開しても大丈夫。',task:s.player.gold>=120?'「造船」タブ → 「120Gで船を補強する」。':'市場・出港で交易を続け、120Gを目指す。',target:s.player.gold>=120?'#upgrade-ship':'[data-tab="market"]',tab:s.player.gold>=120?'shipyard':null},
+      refill:{title:'広くなった食料庫に、積み足そう。',speech:'補強は食料の上限を'+t.food+'にするけれど、食料そのものは増えない。「補給」で料金を確認し、満載にしよう。船の傷も、改造とは別に修理するよ。',task:'「補給」タブ → 「食料を満載」。',target:'#food-full',tab:'supply'},
+      nextVoyage:{title:'帰り道から、次の航海が始まる。',speech:'「出港」で帰りの灯待ち港を確認しよう。灯待ち港で仕入れ、松帆港で売るのが基本。改造後も往復して利益を増やせるよ。この試作には終了画面はなく、自由に続けられる。',task:'帰りの食料を確認したら、最後に保存を覚えよう。',target:'#departure-reserve',tab:'departure',next:'日誌を開いて保存へ'},
+      save:{title:'船の成長を、記録に残そう。',speech:'取引や入港は自動保存される。日誌の「今すぐ保存」でも記録できるよ。次に開いたときは「続きから」。まず自分で保存してみよう。',task:'「今すぐ保存」を押す。',target:'#save-game'},
+      backup:{title:'別の端末へは、JSONで持ち出す。',speech:'ブラウザの保存は、この端末と公開先の中にある。日誌の「JSONを書き出す」でファイルにして、別の端末では「JSONを読み込む」。読み込みは現在の記録を置き換えるので、確認してからね。',task:'JSONを書き出すか、「書き出しはあとで」で次へ。',target:'#captain-log [data-export]',next:'書き出しはあとで'},
+      safety:{title:'困ったときも、やり直せる。',speech:'海で動けなくなったら日誌の「救助」。最後の港へ戻れるけれど、資金20％・通常の積荷30％を失い、配送は失敗する。灯待ち港で資金と売れる木材がゼロなら、補給の倉庫の仕事で20Gを得られるよ。',task:'「前回の記録から」で戻る方法もある。救助は今試さなくて大丈夫。',next:'最後の確認へ',visual:'safety'},
+      complete:{title:s.ship.tier===2?'はじめての航海、達成！':'手ほどきは、ここまで。',speech:'港で仕入れる → 海を渡る → 入港して売る → 補給と改造。この流れを自分で選んで続けよう。「遊び方」はいつでも開けるし、セナの案内も再開できるよ。',task:'次の行き先と、積む量は船長が決めていい。',next:'自由な航海を続ける',visual:'loop'}
+    };
+    return lessons[step];
+  }
+  function markGuideTarget(target){
+    if(markedTarget===target)return;
+    if(markedTarget){markedTarget.classList.remove('guide-target');markedTarget.removeAttribute('aria-describedby');}
+    markedTarget=target;
+    if(target){target.classList.add('guide-target');target.setAttribute('aria-describedby','guide-task');}
+  }
+  function guideRender(){
+    const s=model.snapshot(),g=s.tutorial,t=tier(s);
+    const shown=active&&g.status==='ACTIVE'&&!$('help').open&&$('error').style.display!=='block';
+    guidePanel.hidden=!shown;document.body.classList.toggle('tutorial-on',shown);
+    document.body.classList.toggle('tutorial-at-sea',shown&&s.phase==='SAILING'&&!document.querySelector('dialog[open]'));
+    if(!shown){markGuideTarget(null);return;}
+    const host=$('harbor').open?$('guide-harbor-slot'):$('captain-log').open?$('guide-log-slot'):$('guide-sea-slot');
+    if(guidePanel.parentElement!==host)host.append(guidePanel);
+    const l=guideLesson(s),changed=lastGuideStep!==g.step;
+    if(changed){
+      if(g.step==='buy')$('trade-quantity').value=Math.max(1,Math.min(12,model.maxBuy()));
+      if(g.step==='sell')$('trade-quantity').value=Math.max(1,C.woodOwned(s));
+      lastGuideStep=g.step;guidePanel.dataset.step=g.step;
+      text('guide-announcement','セナ：'+l.title+' '+l.task);
+      guidePanel.scrollTop=0;
+      const menu=guidePanel.closest('dialog');if(menu)menu.scrollTop=0;
+    }
+    text('guide-count',(C.GUIDE_STEPS.indexOf(g.step)+1)+' / '+C.GUIDE_STEPS.length);
+    $('guide-progress').value=C.GUIDE_STEPS.indexOf(g.step)+1;
+    text('guide-heading',l.title);text('guide-speech',l.speech);text('guide-task',l.task);
+    document.querySelectorAll('[data-guide-visual]').forEach(e=>e.hidden=e.dataset.guideVisual!==l.visual);
+    if(l.visual==='resources'){
+      text('guide-gold',s.player.gold+'G');text('guide-food',fmt(s.ship.food)+'/'+t.food);
+      text('guide-hp',fmt(s.ship.hp)+'/'+t.hp);text('guide-cargo',C.cargoUsed(s)+'/'+t.capacity);
+    }
+    const needsTab=l.tab&&!document.querySelector('[data-tab="'+l.tab+'"]').classList.contains('active');
+    guideNeedsLog=['save','backup','safety','complete'].includes(g.step)&&!$('captain-log').open;
+    guideNeedsHarbor=!!l.tab&&s.phase==='PORT'&&!$('harbor').open;
+    const selector=needsTab?'[data-tab="'+l.tab+'"]':l.target;
+    const target=guideNeedsLog?document.querySelector('#open-log'):guideNeedsHarbor?document.querySelector('#open-port'):selector?document.querySelector(selector):null;
+    markGuideTarget(target);
+    $('guide-focus').hidden=!target;
+    text('guide-focus',guideNeedsLog?'日誌を開く':guideNeedsHarbor?'港を開く':needsTab?'「'+({market:'市場',supply:'補給',shipyard:'造船',departure:'出港'}[l.tab])+'」タブの場所を見る ↓':'次の操作の場所を見る ↓');
+    $('guide-next').hidden=!l.next;text('guide-next',l.next||'次へ');
+    $('guide-next').disabled=!!needsTab&&['supply','nextVoyage'].includes(g.step);
+    $('guide-recenter').hidden=!l.recenter;
+    text('guide-state',s.phase==='SAILING'?(guideHolding()?'説明中 · 航海と食料消費は停止':s.paused?'一時停止中':'航海中 · 到着を待とう'):'港・日誌では時間が止まります');
+    const body=$('guide-body');$('guide-scroll-hint').hidden=body.scrollHeight<=body.clientHeight+2;
+  }
+  function openGuidebook(){if(!$('help').open)$('help').showModal();guideRender();}
+  function guideNext(){
+    const step=model.snapshot().tutorial.step;
+    if(step==='complete'){
+      model.finishGuide();save(true);document.querySelectorAll('dialog[open]').forEach(d=>d.close());
+      update();message('手ほどきを終えました。「遊び方」からいつでも案内を再開できます。');return;
+    }
+    const next=guideReadNext[step];if(!next)return;
+    model.guide(next);save(true);
+    if(next==='save'){document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('captain-log').showModal();}
+    update();
+  }
+  $('guide-next').addEventListener('click',guideNext);
+  $('guide-focus').addEventListener('click',()=>{
+    if(guideNeedsLog){document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('captain-log').showModal();update();return;}
+    if(guideNeedsHarbor){openHarbor();return;}
+    if(!markedTarget)return;
+    markedTarget.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    if(markedTarget.matches('button,input'))markedTarget.focus({preventScroll:true});
+  });
+  $('guide-skip').addEventListener('click',()=>{model.skipGuide();save(true);update();message('案内を閉じました。「遊び方」で再開できます。');});
+  $('guide-recenter').addEventListener('click',()=>{
+    if(model.snapshot().phase!=='SAILING')return;
+    model.waypoint(240,0,'p_pine');model.setSails(1);model.setPaused(false);save(true);update();
+    message('松帆港への自動航海に戻りました。');
+  });
+  document.querySelectorAll('[data-guidebook]').forEach(b=>b.addEventListener('click',openGuidebook));
+  $('restart-guide').addEventListener('click',()=>{
+    if(!active)return;
+    document.querySelectorAll('dialog[open]').forEach(d=>d.close());model.guide('welcome');lastGuideStep='';
+    $('ui').classList.remove('hidden');save(true);
+    if(model.snapshot().phase==='PORT')openHarbor();update();
+  });
+  for(const id of ['harbor','captain-log','help']){
+    $(id).addEventListener('close',()=>{guideRender();});
+  }
+
+  function message(value,important=false){text('toast',value);$('toast').classList.toggle('guide-important',important);$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),4200);}
   function load(key){try{const raw=localStorage.getItem(key);return raw?C.validate(JSON.parse(raw)):null;}catch(e){storageWarning=e.message;return null;}}
   saved=load(C.SAVE_KEY);
   function hasSave(){try{return localStorage.getItem(C.SAVE_KEY)!==null;}catch{return false;}}
@@ -450,35 +670,44 @@ const Adventure = (() => {
       if(previous&&previous!==data){try{C.validate(JSON.parse(previous));localStorage.setItem(C.BACKUP_KEY,previous);}catch{/* Do not use corrupt data as a backup. */}}
       localStorage.setItem(C.SAVE_KEY,data);saved=C.validate(JSON.parse(data));saveElapsed=0;
       text('persistence-status','航海を保存しました。');if(!silent)message('航海を保存しました。');return true;
-    }catch(e){text('persistence-status','この環境では保存できません。JSONを書き出して記録を持ち帰ってください。');if(!silent)message('保存できません。JSONを書き出してください。');return false;}
+    }catch(e){text('persistence-status','この環境では保存できません。JSONを書き出して記録を持ち帰ってください。');if(!silent)message('保存できません。JSONを書き出してください。',true);return false;}
   }
   function run(method,...args){
-    const result=model[method](...args);if(result.message)message(result.message);
+    const result=model[method](...args);if(result.message)message(result.message,!result.ok);
+    if(result.ok&&method==='trade'&&args[0]==='sell'&&model.snapshot().tutorial.status==='ACTIVE'&&model.snapshot().tutorial.step==='sell')
+      $('trade-quantity').value=Math.max(1,C.woodOwned(model.snapshot()));
     if(result.ok)save(true);update();return result;
   }
   function begin(data){
     // Validate before swapping the current game or writing storage.
     const next=data?C.create(data):C.create(null,$('captain-name').value);
-    model=next;active=true;$('title-screen').hidden=true;$('ui').classList.remove('hidden');$('ui').inert=false;
+    model=next;active=true;lastGuideStep='';selectTab('market');$('title-screen').hidden=true;$('ui').classList.remove('hidden');$('ui').inert=false;
     document.querySelectorAll('dialog[open]').forEach(d=>d.close());save(true);update();
-    if(model.snapshot().phase==='PORT')openHarbor();
+    const current=model.snapshot();
+    if(current.tutorial.status==='ACTIVE'&&['save','backup','safety','complete'].includes(current.tutorial.step)){
+      $('captain-log').showModal();update();
+    }else if(current.phase==='PORT')openHarbor();
   }
   function newGame(){if((active||hasSave())&&!confirm('ゲーム版の航海記録を新しい航海で置き換えます。よろしいですか？'))return;begin(null);}
   function openHarbor(){
     if(!active)return;
     if(model.snapshot().phase!=='PORT'){message('港の沖へ近づき、「入港する」を押してください。');return;}
-    update();if(!$('harbor').open)$('harbor').showModal();
+    update();if(!$('harbor').open)$('harbor').showModal();$('harbor').scrollTop=0;update();
   }
   function selectTab(name){
     document.querySelectorAll('[data-tab]').forEach(b=>{const on=b.dataset.tab===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
     document.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==name);
+    update();
   }
   function exportSave(){
     try{const data=active?model.export():saved?JSON.stringify(saved,null,2):null;
-      if(!data){message('書き出せる航海記録がありません。');return;}
+      if(!data){message('書き出せる航海記録がありません。',true);return;}
       const url=URL.createObjectURL(new Blob([data],{type:'application/json'})),a=document.createElement('a');
       a.href=url;a.download='pirate-voyage-adventure-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('航海のJSONを書き出しました。');
-    }catch(e){message('航海記録を書き出せませんでした。');}
+      if(active&&model.snapshot().tutorial.status==='ACTIVE'&&model.snapshot().tutorial.step==='backup'){
+        model.guide('safety');save(true);update();
+      }
+    }catch(e){message('航海記録を書き出せませんでした。',true);}
   }
   async function importSave(file){
     if(!file)return;
@@ -487,7 +716,7 @@ const Adventure = (() => {
       const data=C.validate(JSON.parse(await file.text()));
       if((active||hasSave())&&!confirm('選んだ航海記録で、ゲーム版の現在の航海を置き換えます。よろしいですか？'))return;
       begin(data);message('航海記録を読み込みました。');
-    }catch(e){message(e instanceof SyntaxError?'JSONの形式を確認してください。現在の航海は変更しません。':e.message);}
+    }catch(e){message(e instanceof SyntaxError?'JSONの形式を確認してください。現在の航海は変更しません。':e.message,true);}
     finally{$('import-file').value='';}
   }
   function restoreBackup(){const data=load(C.BACKUP_KEY);if(!data){message('読み込める前回の記録がありません。');return;}
@@ -497,6 +726,7 @@ const Adventure = (() => {
     if(run('recover').ok){document.querySelectorAll('dialog[open]').forEach(d=>d.close());openHarbor();}}
   function quoteText(q,side){return q.total!==undefined?`${side==='buy'?'購入':'売却'}合計 ${q.total}G · 一単位 ${q.first}〜${q.last}G${q.ok?'':` · ${q.message}`}`:q.message;}
   function update(){
+    if(model.syncGuide()&&active)save(true);
     const s=model.snapshot(),t=tier(s),p=port(s.portId),used=C.cargoUsed(s);
     text('gold-value',`${s.player.gold}G`);text('food-value',`${fmt(s.ship.food)} / ${t.food}`);
     text('hp-value',`${fmt(s.ship.hp)} / ${t.hp}`);text('cargo-value',`${used} / ${t.capacity}`);
@@ -556,6 +786,10 @@ const Adventure = (() => {
       text('voyage-summary',`交易利益 ${s.stats.tradeProfit}G · 航海 ${fmt(s.navigation.distance)}ゲーム海里`);
     }
     $('request-rescue').disabled=s.phase!=='SAILING';
+    $('restart-guide').disabled=!active;
+    text('guidebook-start-note',active?'今の船・資金・積荷を保ったまま案内します。':'先に「新しい航海」か「続きから」でゲームを始めると、操作ガイドを使えます。');
+    guideRender();
+    if(guideHolding()&&s.phase==='SAILING')text('live-text','GUIDE');
   }
   $('new-game').addEventListener('click',newGame);$('new-game-log').addEventListener('click',newGame);
   $('continue-game').addEventListener('click',()=>{if(saved)begin(saved);});
@@ -577,12 +811,21 @@ const Adventure = (() => {
   $('port-errand').addEventListener('click',()=>run('errand'));$('upgrade-ship').addEventListener('click',()=>run('upgrade'));
   $('depart-game').addEventListener('click',()=>{if(run('depart',$('depart-game').dataset.destination).ok)$('harbor').close();});
   $('dock-game').addEventListener('click',()=>{if(run('dock').ok){selectTab('market');openHarbor();}});
-  document.querySelectorAll('[data-speed]').forEach(b=>b.addEventListener('click',()=>{model.setSpeed(+b.dataset.speed);save(true);update();}));
-  $('save-game').addEventListener('click',()=>save());$('request-rescue').addEventListener('click',rescue);
+  document.querySelectorAll('[data-speed]').forEach(b=>b.addEventListener('click',()=>{
+    model.setSpeed(+b.dataset.speed);
+    if(model.snapshot().tutorial.status==='ACTIVE'&&model.snapshot().tutorial.step==='speed')model.guide('sailing');
+    save(true);update();
+  }));
+  $('save-game').addEventListener('click',()=>{
+    save();
+    if(model.snapshot().tutorial.status==='ACTIVE'&&model.snapshot().tutorial.step==='save'){
+      model.guide('backup');save(true);update();
+    }
+  });$('request-rescue').addEventListener('click',rescue);
   window.addEventListener('pagehide',()=>save(true));document.addEventListener('visibilitychange',()=>{if(document.hidden)save(true);});
   titleStatus();update();
   const bridge=Object.freeze({snapshot:()=>model.snapshot(),run,message,update,save,rescue,
-    shouldAdvance:()=>active&&!document.hidden&&!document.querySelector('dialog[open]')&&!model.snapshot().paused&&model.snapshot().phase==='SAILING',
+    shouldAdvance:()=>active&&!guideHolding()&&!document.hidden&&!document.querySelector('dialog[open]')&&!model.snapshot().paused&&model.snapshot().phase==='SAILING',
     autosave:seconds=>{saveElapsed+=seconds;if(saveElapsed>=30)save(true);},
     step:(seconds,steer)=>{const result=model.step(seconds,steer);
       if(result.recovered){save(true);update();message(result.message);openHarbor();}},
@@ -714,7 +957,7 @@ function waveSlope(x,z){const t=state.time,a=state.amplitude;return[a*(Math.cos(
 function message(str){$('toast').textContent=str;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600);}
 function autopilot(on){const r=Adventure.run('setAuto',on);if(r.ok)state.auto=on;}
 function togglePause(){Adventure.togglePause();state.paused=Adventure.snapshot().paused;}
-function toggleUI(){state.hidden=!state.hidden;$('ui').classList.toggle('hidden',state.hidden);$('restore').classList.toggle('show',state.hidden);}
+function toggleUI(){if(Adventure.snapshot().tutorial.status==='ACTIVE')return;state.hidden=!state.hidden;$('ui').classList.toggle('hidden',state.hidden);$('restore').classList.toggle('show',state.hidden);}
 function resize(){width=innerWidth;height=innerHeight;const mobile=matchMedia('(pointer:coarse)').matches;const dpr=Math.min(devicePixelRatio||1,mobile?1.45:1.7);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);gl.viewport(0,0,canvas.width,canvas.height);aspect=width/height;const c=$('chart'),s=c.clientWidth||196;c.width=Math.round(s*2);c.height=Math.round(s*2);}
 window.addEventListener('resize',resize);resize();
 function bindMesh(mesh){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);for(const[name,size,offset]of[['aPosition',3,0],['aNormal',3,12],['aColor',4,24],['aUV',2,40],['aFlex',1,48]]){let a=meshProgram.attrs[name];if(a===undefined)a=meshProgram.attrs[name]=gl.getAttribLocation(meshProgram.p,name);if(a>=0){gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,size,gl.FLOAT,false,52,offset);}}}
