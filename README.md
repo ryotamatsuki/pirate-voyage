@@ -51,3 +51,12 @@ HTML・CSS・JavaScriptを `index.html` 1ファイルに収めています。外
 - `index.html`：シミュレーション本体（HTML／CSS／JavaScript）
 - `.nojekyll`：GitHub Pagesで静的ファイルをそのまま配信するための設定
 - `README.md`：作品概要・操作方法・公開手順
+
+## ゲーム拡張の企画書
+
+探索・交易・船の成長を中心とするゲーム拡張の企画と仕様です。独自の物語、船員と勢力、権利確認の方針、段階的な実装手順をまとめています。
+
+- [企画書兼仕様書 Markdown版](docs/pirate-voyage_game-spec_v1.md)
+- [企画書兼仕様書 Word版](docs/pirate-voyage_game-spec_v1.docx)
+
+ゲーム拡張の実装は、この文書の制作順序に沿って進めます。
