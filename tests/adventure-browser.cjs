@@ -12,7 +12,7 @@ async function fixed(){const before=await state();await page.waitForTimeout(300)
 async function continueSave(){await page.reload();await page.locator('#loader.done').waitFor();await click('#continue-game');}
 async function layout(label){
   const bounds=await page.evaluate(()=>{
-    const selectors=['#voyage-guide','.helm','.journey','.game-actions','.touch-helm','.resources','.chart','#sea-clue'];
+    const selectors=['#voyage-guide','.helm','.journey','.game-actions','.touch-helm','.resources','.chart','#sea-clue','.top-actions','.brand','#next-goal','.readout','.view-tools'];
     const visible=selectors.map(selector=>{const e=document.querySelector(selector),r=e.getBoundingClientRect(),css=getComputedStyle(e);
       return {selector,x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height,visible:!e.hidden&&css.display!=='none'&&css.visibility!=='hidden'&&r.width>0&&r.height>0};}).filter(e=>e.visible);
     return {width:innerWidth,height:innerHeight,items:visible,dialogs:[...document.querySelectorAll('dialog[open]')].map(e=>({id:e.id,width:e.getBoundingClientRect().width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}))};
