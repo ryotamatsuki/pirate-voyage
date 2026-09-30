@@ -12,6 +12,9 @@ on:
       - '.github/workflows/adventure-checks.yml'
 permissions:
   contents: read
+concurrency:
+  group: adventure-checks-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest

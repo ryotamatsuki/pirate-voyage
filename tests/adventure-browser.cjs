@@ -4,8 +4,8 @@
 const fs=require('node:fs/promises'),path=require('node:path'),http=require('node:http'),vm=require('node:vm'),assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results');
-const results=[],errors=[];let browser,server,page;
-const click=selector=>page.locator(selector).click();
+const results=[],errors=[];let browser,server,page,touchMode=false;
+const click=selector=>touchMode?page.locator(selector).tap():page.locator(selector).click();
 const state=()=>page.evaluate(()=>window.adventure.getState());
 const shot=name=>page.screenshot({path:path.join(out,name+'.png'),fullPage:true});
 async function fixed(){const before=await state();await page.waitForTimeout(300);const after=await state();assert.equal(after.ship.food,before.ship.food);assert.equal(after.clock.gameDays,before.clock.gameDays);}
@@ -48,7 +48,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  await click('#pause');await click('#pause');await click('#guide-next');await click('[data-speed="4"]');
  await page.locator('#sighting[open]').waitFor({timeout:45000});await fixed();await shot('pc-sighting');await layout('pc-sighting');
  assert.equal((await state()).exploration.pending.kind,'SIGHTED');
- await click('#sight-mark');await click('#open-map');await fixed();await shot('pc-map');
+ await page.locator('#sight-mark').press('Enter');await click('#open-map');await fixed();await shot('pc-map');
  assert.equal((await state()).exploration.buoys.buoy_shoal_01.marked,true);
  await click('#map-buoy');await click('#sight-approach');
  await page.waitForFunction(()=>window.adventure.getState().exploration.pending?.kind==='ARRIVED',null,{timeout:45000});
@@ -79,6 +79,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  for(let i=0;i<1000&&!g.snapshot().exploration.buoys.buoy_shoal_01.seen;i++)g.step(.05);
  g.setPaused(true);const fixture=JSON.parse(g.export());
  for(const [label,width,height,touch] of [['pc',1360,900,false],['portrait',390,844,true],['small',375,667,true],['landscape',844,390,true],['boundary',701,393,true]]){
+  touchMode=touch;
   const ctx=await browser.newContext({viewport:{width,height},hasTouch:touch,isMobile:touch});
   await ctx.addInitScript(({key,save})=>localStorage.setItem(key,JSON.stringify(save)),{key:C.SAVE_KEY,save:fixture});
   page=await ctx.newPage();listen(page);page.on('dialog',d=>d.accept());await page.goto(url);await page.locator('#loader.done').waitFor();await click('#continue-game');
@@ -86,7 +87,9 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
   for(const selector of ['#sight-direct','#sight-approach','#sight-mark']){
    await page.locator(selector).scrollIntoViewIfNeeded();const box=await page.locator(selector).boundingBox();assert.ok(box.height>=44&&box.width>=44,label+' touch target');
   }
-  await click('#close-sight');await layout(label+'-guide');await shot(label+'-guide');
+  await click('#close-sight');
+  if(!touch){await page.locator('#sea').press('ArrowRight');assert.equal((await state()).navigation.auto,false);await click('#auto');}
+  await layout(label+'-guide');await shot(label+'-guide');
   await click('#open-map');await fixed();await layout(label+'-map');await shot(label+'-map');
   if(touch)await page.locator('#map-buoy').tap();else await click('#map-buoy');
   await click('#sight-mark');await click('#guide-skip');await layout(label+'-free');await shot(label+'-free');
@@ -96,7 +99,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
   if(touch){await page.setViewportSize({width:height,height:width});await page.waitForTimeout(250);assert.equal((await state()).exploration.buoys.buoy_shoal_01.approached,true);await layout(label+'-rotation');}
   await ctx.close();
  }
- const old=JSON.parse(JSON.stringify(exported));delete old.exploration;delete old.tutorial;old.discovery.fogChunks={};
+ touchMode=false;const old=JSON.parse(JSON.stringify(exported));delete old.exploration;delete old.tutorial;old.discovery.fogChunks={};
  const ctx=await browser.newContext({viewport:{width:1360,height:900}});await ctx.addInitScript(({key,save})=>localStorage.setItem(key,JSON.stringify(save)),{key:C.SAVE_KEY,save:old});
  page=await ctx.newPage();listen(page);await page.goto(url);await page.locator('#loader.done').waitFor();await click('#continue-game');
  const migrated=await state();assert.equal(migrated.player.gold,old.player.gold);assert.equal(migrated.ship.tier,2);assert.equal(migrated.tutorial.step,'welcome');assert.equal(migrated.exploration.buoys.buoy_shoal_01.seen,false);
