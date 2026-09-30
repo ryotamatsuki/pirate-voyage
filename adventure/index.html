@@ -88,6 +88,17 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
 }
 
 @media(max-height:500px) and (orientation:landscape) and (max-width:700px){.guide-portrait{display:none}.guide-buttons .game-button{min-width:0;font-size:10px;padding:7px 5px}}
+/* Observation records remain separate from the rolling journal. */
+.observation-card{border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0;background:#143b423d}
+.observation-card h3{font-size:17px;margin:0 0 10px;line-height:1.5}
+.observation-facts{grid-template-columns:76px minmax(0,1fr);gap:12px;margin:18px 0;font-size:12px;line-height:1.8}
+.observation-facts dt{font-weight:600}.observation-facts dd{overflow-wrap:anywhere}
+.observation-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.observation-actions button{flex:1 1 190px}
+.observation-status{color:var(--gold)!important;font-weight:600}.observation-steps{list-style:none;padding:0;margin:18px 0;display:grid;gap:8px;font-size:13px;line-height:1.7}
+.observation-steps li{padding:10px 12px;border:1px solid var(--line);border-radius:7px}.observation-steps li.complete{background:#416c543d;border-color:#8fba8999}
+.port-tabs button{flex:1;min-width:0;padding:10px 7px}
+@media(max-width:700px){.observation-card{padding:12px}.observation-actions button{flex-basis:100%}.observation-facts{grid-template-columns:65px minmax(0,1fr);gap:10px}.port-tabs button{font-size:12px;padding:10px 4px}}
+@media(max-height:500px) and (orientation:landscape){#observation .sight-illustration{display:block;height:50px}}
 </style>
 </head>
 <body>
@@ -121,7 +132,7 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
   <div id="hp-cell"><span>船体</span><b id="hp-value">100 / 100</b></div><div><span>船倉</span><b id="cargo-value">0 / 20</b></div>
 </section>
 <div id="guide-sea-slot"></div>
-<nav class="game-actions" aria-label="航海のメニュー"><button id="open-port" class="game-button">港に立ち寄る</button><button id="open-log" class="game-button">日誌・保存</button><button id="open-map" class="game-button">海図・発見</button><button id="open-guidebook" class="game-button" data-guidebook>遊び方</button></nav>
+<nav class="game-actions" aria-label="航海のメニュー"><button id="open-port" class="game-button">港に立ち寄る</button><button id="open-log" class="game-button">航海帳・保存</button><button id="open-map" class="game-button">海図・発見</button><button id="open-guidebook" class="game-button" data-guidebook>遊び方</button></nav>
 <button id="sea-clue" class="game-button" hidden aria-label="海鳥の集まる浮標の行動を選ぶ"></button>
 <aside class="journey panel"><div class="small-label">NEXT HORIZON / 次の針路</div><h2 id="destination">出発の準備</h2><p id="journey-distance"></p><p id="journey-eta"></p><progress id="journey-progress" max="1" value="0" aria-label="目的地までの進行"></progress><button id="dock-game" class="game-button" disabled>入港する</button></aside>
 <p id="next-goal" class="goal panel">木材を仕入れ、松帆港で売ってみよう。</p>
@@ -135,7 +146,7 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
 
 <section id="title-screen" aria-labelledby="title-heading">
   <div class="title-content"><div class="eyebrow">THE WANDERING SEA / ADVENTURE</div><h2 id="title-heading">黒潮の航海<span>失われた潮路</span></h2><p class="title-story">遺された小船「凪灯号」と、まだ白い海図。<br>まずは木材を積んで、対岸の港へ。<br>帰ってくるころには、次の航海が見えてくる。</p>
-  <div class="trial-label">交易と発見の試作 · v0.1.2</div><p class="trial-description">交易で船を補強し、海鳥の集まる浮標を探そう。<br>港へ直行するか、食料を確かめて寄り道するかは船長しだい。</p>
+  <div class="trial-label">交易と観測の試作 · v0.1.3</div><p class="trial-description">交易で船を補強し、浮標の観測を港へ持ち帰ろう。<br>港へ直行するか、食料を確かめて寄り道するかは船長しだい。</p>
   <label class="name-label" for="captain-name">船長の名前<input id="captain-name" maxlength="24" value="船長" autocomplete="off"></label>
   <div class="title-buttons"><button id="new-game" class="game-button primary">新しい航海</button><button id="continue-game" class="game-button" disabled>続きから</button></div>
   <p class="muted">初めての航海は、セナの操作ガイド付き。</p><button class="text-button" data-guidebook>ゲームの目的・遊び方を見る</button>
@@ -161,18 +172,39 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
 
 <dialog id="harbor" class="game-dialog" aria-labelledby="port-name"><div class="dialog-header"><div><div class="small-label">HARBOR / 港</div><h2 id="port-name">灯待ち港</h2></div><button id="close-port" class="icon-btn" aria-label="港を閉じて海を眺める">×</button></div><p id="port-description"></p><p id="port-wallet" class="wallet"></p>
   <div id="guide-harbor-slot"></div>
-  <nav class="port-tabs" aria-label="港の施設"><button data-tab="market" class="active" aria-pressed="true">市場</button><button data-tab="supply" aria-pressed="false">補給</button><button data-tab="shipyard" aria-pressed="false">造船</button><button data-tab="departure" aria-pressed="false">出港</button></nav>
+  <nav class="port-tabs" aria-label="港の施設"><button data-tab="market" class="active" aria-pressed="true">市場</button><button data-tab="supply" aria-pressed="false">補給</button><button data-tab="shipyard" aria-pressed="false">造船</button><button data-tab="observations" aria-pressed="false">海図係</button><button data-tab="departure" aria-pressed="false">出港</button></nav>
   <section data-panel="market"><div class="commodity"><div class="wood-icon" aria-hidden="true">≋</div><div><h3>木材</h3><p id="wood-stock"></p><p id="wood-owned"></p></div></div><div class="quantity-row"><label for="trade-quantity">数量<input type="number" id="trade-quantity" min="1" max="200" step="1" value="12" inputmode="numeric"></label><button data-quantity="1" class="game-button">1</button><button data-quantity="12" class="game-button">12</button><button data-quantity="max" class="game-button">買える最大</button></div><p class="muted">量が増えると価格も動きます。合計を確かめてから取引できます。</p><div class="trade-options"><div><p id="buy-quote"></p><button id="buy-wood" class="game-button primary">買う</button></div><div><p id="sell-quote"></p><button id="sell-wood" class="game-button">売る</button></div></div><p id="trade-preview" class="muted"></p><div class="job-card"><h3>最初の配送</h3><p id="delivery-description"></p><button id="delivery-job" class="game-button">木材配送を引き受ける</button></div></section>
   <section data-panel="supply" hidden><h3>次の航海に備える</h3><p id="supply-description"></p><div class="service-buttons"><button id="food-one" class="game-button">食料1単位</button><button id="food-full" class="game-button primary">食料を満載</button><button id="repair-ship" class="game-button">船体を全修理</button><button id="wait-day" class="game-button">一日休む · 6G</button><button id="port-errand" class="game-button" hidden>倉庫の仕事を手伝う · 報酬20G</button></div><p class="muted">食料は1単位1G。修理はHP1点1Gと滞在費2G、0.25日を使います。食料を満載にする料金は不足量を切り上げます。</p></section>
   <section data-panel="shipyard" hidden><h3>凪灯号を、遠い海へ</h3><p id="current-ship"></p><table class="upgrade-table"><thead><tr><th>船の性能</th><th>沿岸船</th><th>補強後</th></tr></thead><tbody><tr><th>船倉</th><td>20</td><td>28</td></tr><tr><th>食料上限</th><td>30</td><td>45</td></tr><tr><th>船体上限</th><td>100</td><td>115</td></tr><tr><th>標準船速</th><td>6 kn</td><td>6.3 kn</td></tr></tbody></table><button id="upgrade-ship" class="game-button primary">120Gで船を補強する</button><p class="muted">船体上限の増加分だけ現在HPも増えます。食料は補給所で積み足してください。試作では段階2まで改造できます。</p></section>
+  <section data-panel="observations" hidden aria-labelledby="report-heading">
+    <h3 id="report-heading">海図係 · 浮標の観測報告</h3>
+    <p class="sena-line"><strong>航海士 セナ</strong><br><span id="report-speech"></span></p>
+    <p id="report-status" class="observation-status" role="status"></p>
+    <ul class="observation-steps" aria-label="航路登録に使う記録の条件"><li id="report-observed"></li><li id="report-accepted"></li></ul>
+    <button id="submit-observation" class="game-button primary">浮標の観測を報告する</button>
+    <p id="report-result" class="observation-status" hidden></p>
+    <div class="observation-card"><h3 id="registration-status">航路登録の準備</h3><p id="registration-note"></p><p class="muted">登録航路を使った帰りの移動短縮は、次の更新で遊べるようになります。今は「出港」から通常航海で帰れます。</p></div>
+    <button id="report-book" class="game-button">航海帳で観測を読み直す</button>
+  </section>
   <section data-panel="departure" hidden><h3 id="departure-name">松帆港へ</h3><p id="departure-estimate"></p><p id="departure-reserve"></p><p id="departure-warning" class="departure-note"></p><button id="depart-game" class="game-button primary">帆を上げて出港する</button><p class="muted">港に近づくと「入港する」が使えます。自動航海は沖で止まります。海図をタップして行き先を変えることもできます。</p></section>
 </dialog>
-<dialog id="captain-log" class="game-dialog" aria-labelledby="captain-log-title"><div class="dialog-header"><div><div class="small-label">CAPTAIN’S LOG / 航海日誌</div><h2 id="captain-log-title">船長の航海日誌</h2></div><button id="close-log" class="icon-btn" aria-label="日誌を閉じる">×</button></div><div id="guide-log-slot"></div><p id="voyage-summary"></p><p id="persistence-status" class="muted">港での取引と定期保存で航海を記録します。</p><div class="log-buttons"><button id="save-game" class="game-button primary">今すぐ保存</button><button class="game-button" data-export>JSONを書き出す</button><button class="game-button" data-import>JSONを読み込む</button><button id="restore-backup-log" class="game-button">前回の記録から</button><button id="request-rescue" class="game-button">救助を要請する</button><button id="new-game-log" class="game-button">新しい航海</button></div><button id="log-discovery" class="game-button log-discovery" hidden>見つけた浮標を海図で見る</button><ol id="journal-list" class="journal"></ol><a href="../index.html" class="simulator-link">自由航海版へ ↗</a></dialog>
+<dialog id="captain-log" class="game-dialog" aria-labelledby="captain-log-title"><div class="dialog-header"><div><div class="small-label">CAPTAIN’S LOG / 航海帳</div><h2 id="captain-log-title">船長の航海帳</h2></div><button id="close-log" class="icon-btn" aria-label="航海帳を閉じる">×</button></div><div id="guide-log-slot"></div><p id="voyage-summary"></p><p id="persistence-status" class="muted">港での取引と定期保存で航海を記録します。</p><div class="log-buttons"><button id="save-game" class="game-button primary">今すぐ保存</button><button class="game-button" data-export>JSONを書き出す</button><button class="game-button" data-import>JSONを読み込む</button><button id="restore-backup-log" class="game-button">前回の記録から</button><button id="request-rescue" class="game-button">救助を要請する</button><button id="new-game-log" class="game-button">新しい航海</button></div><button id="log-discovery" class="game-button log-discovery" hidden>見つけた浮標を海図で見る</button><section id="observation-book" class="observation-card" aria-labelledby="book-heading"><h3 id="book-heading">海から持ち帰る記録</h3><p id="book-empty"></p><div id="book-entry" hidden><h3>潮見の浮標の観測</h3><p id="book-status" class="observation-status"></p><dl class="observation-facts"><dt>分かったこと</dt><dd id="book-known"></dd><dt>未確認</dt><dd id="book-unknown"></dd><dt>次の行動</dt><dd id="book-next"></dd></dl><p id="book-clue" class="muted"></p><div class="observation-actions"><button id="book-reopen" class="game-button">観測記録を読む</button><button id="book-report" class="game-button primary">松帆港の海図係へ</button></div><p id="book-report-note" class="muted"></p></div></section><h3>航海日誌</h3><ol id="journal-list" class="journal"></ol><a href="../index.html" class="simulator-link">自由航海版へ ↗</a></dialog>
 
 <dialog id="sea-map" class="game-dialog sea-map-dialog" aria-labelledby="map-title"><div class="dialog-header"><div><div class="small-label">CHART / 船長の海図</div><h2 id="map-title">碧の群島と、発見の記録</h2></div><button id="close-map" class="icon-btn" aria-label="海図を閉じる">×</button></div><p id="map-status"></p><div class="large-chart"><canvas id="large-chart" aria-label="未探索の海と航行で開いた海図。下の港・浮標ボタンでも操作できます。"></canvas><button class="map-target" data-map-port="p_light" style="left:11.29%;top:50%"><b aria-hidden="true">⚓</b>灯待ち港</button><button class="map-target" data-map-port="p_pine" style="left:88.71%;top:50%"><b aria-hidden="true">⚓</b>松帆港</button><button id="map-buoy" class="map-target buoy" hidden><b aria-hidden="true">⚑</b><span id="map-buoy-name">潮見の浮標</span></button></div><div class="map-legend"><span>濃い海：未探索</span><span>明るい海：航行で確認</span><span>旗：浮標 / 星：目印</span></div><p class="map-position-note">二つの港は案内済みの情報。海をタップして沖の行き先も選べます。</p><div class="map-actions"><button id="map-discovery" class="game-button" hidden>浮標の行動を選ぶ</button><button id="map-resume" class="game-button" hidden>元の航路へ戻る</button></div></dialog>
 
 <dialog id="sighting" class="game-dialog" aria-labelledby="sight-title"><div class="dialog-header"><div><div class="small-label">LOOKOUT / 海からの手掛かり</div><h2 id="sight-title">海鳥の向こうに、浮標。</h2></div><button id="close-sight" class="icon-btn" aria-label="決めずに航海へ戻る">×</button></div><svg class="sight-illustration" viewBox="0 0 500 100" aria-label="海鳥が輪を描く、黄色い旗と赤白の浮標"><path d="M0 67q30-13 60 0t60 0t60 0t60 0t60 0t60 0t60 0t80 0" fill="none" stroke="#689ba4" stroke-width="2"/><path d="M215 65h70l-13 15h-45Z" fill="#d2e6dc"/><path d="M237 65l6-28h13l7 28" fill="#b7614d"/><path d="M243 47h14l3 10h-19" fill="#f4e3c0"/><path d="M250 40V10l34 10-34 10" fill="#e7c78d" stroke="#e7c78d" stroke-width="2"/><path d="M137 29q10-13 20 0q10-13 20 0M323 24q8-11 16 0q8-11 16 0M190 15q6-8 12 0q6-8 12 0" fill="none" stroke="#e1e6d9" stroke-width="2"/><circle cx="250" cy="72" r="34" fill="none" stroke="#e7c78d" stroke-dasharray="3 7" opacity=".4"/></svg><p class="sena-line"><strong>航海士 セナ</strong><br><span id="sight-speech"></span></p><p id="sight-position" class="map-position-note"></p><div class="sight-choices"><button id="sight-direct" class="game-button"><strong id="sight-direct-label"></strong><span id="sight-direct-quote"></span></button><button id="sight-approach" class="game-button primary"><strong>浮標へ接近する</strong><span id="sight-approach-quote"></span></button><button id="sight-mark" class="game-button"><strong id="sight-mark-label">目印を付け、今の針路で進む</strong><span>航路は変えない。海図や日誌から、あとで戻れる。</span></button></div><p id="sight-reserve"></p><p id="sight-warning" hidden></p><p class="muted">選択中は航海と食料消費が停止。食料は自動・全帆、港の減速を含む目安です。帆を絞る・停船すると増えます。</p></dialog>
 
+
+<dialog id="observation" class="game-dialog" aria-labelledby="observe-title">
+  <div class="dialog-header"><div><div class="small-label">SURVEY / 潮と旗を読む</div><h2 id="observe-title">潮見の浮標を観測する</h2></div><button id="close-observation" class="icon-btn" aria-label="観測画面を閉じる">×</button></div>
+  <svg class="sight-illustration" viewBox="0 0 500 100" aria-label="黄色い旗の向きと浮標の北側を横切る泡の筋"><path d="M0 75q30-10 60 0t60 0t60 0t60 0t60 0t60 0t60 0t80 0M0 91q30-9 60 0t60 0t60 0t60 0t60 0t60 0t60 0t80 0" fill="none" stroke="#689ba4" stroke-width="2"/><path d="M48 30q100-20 195-2t203-2" fill="none" stroke="#d4e3d1" stroke-width="3" stroke-dasharray="2 10"/><path d="M215 68h70l-13 15h-45Z" fill="#d2e6dc"/><path d="M237 68l6-27h13l7 27" fill="#b7614d"/><path d="M242 52h16l2 9h-20" fill="#f4e3c0"/><path d="M250 42V9l34 10-34 10" fill="#e7c78d" stroke="#e7c78d" stroke-width="2"/><path d="M314 28h30l-7-6m7 6-7 6" fill="none" stroke="#e7c78d" stroke-width="2"/></svg>
+  <p class="sena-line"><strong>航海士 セナ</strong><br><span id="observe-speech"></span></p>
+  <p id="observe-status" class="observation-status" role="status" aria-live="polite"></p>
+  <button id="observe-confirm" class="game-button primary">観測して航海帳に記録する</button>
+  <div id="observe-entry" class="observation-card" hidden><dl class="observation-facts"><dt>分かったこと</dt><dd id="observe-known"></dd><dt>未確認</dt><dd id="observe-unknown"></dd><dt>次の行動</dt><dd id="observe-next"></dd></dl><p id="observe-clue" class="muted"></p></div>
+  <div class="observation-actions"><button id="observe-log" class="game-button" hidden>航海帳で記録を確かめる</button><button id="observe-onward" class="game-button"></button></div>
+  <p class="muted">この画面では時間と食料消費が止まります。閉じても接近した位置は残り、未観測ならあとで観測できます。</p>
+</dialog>
 
 <dialog id="help" class="game-dialog guidebook" aria-labelledby="guidebook-title">
   <div class="dialog-header"><div><div class="small-label">船長の手引き</div><h2 id="guidebook-title">遊び方・ゲームの目的</h2></div><button class="icon-btn" id="close-help" aria-label="遊び方を閉じる">×</button></div>
@@ -184,9 +216,10 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
   <details><summary>3　交易と配送</summary><p>数量欄に整数を入力するか、「1」「12」「買える最大」で選ぶ。「買う」と「売る」は同じ数量欄を使う。合計が示され、資金・積荷・船倉が足りない取引はできない。</p><p>灯待ち港は仕入れ、松帆港は売却に向く。大量に買うと買値が上がり、売ると買い取り価格が下がる。同じ港ですぐ売り戻しても利益は出ない。</p><p>配送の木材は売買できない契約品。松帆港で依頼ボタンから渡す。報酬40Gは一度だけ。救助で失敗したら、灯待ち港で再受注できる。</p></details>
   <details><summary>4　補給・修理・休息・改造</summary><p>「補給」では食料1単位（1G）または満載を選ぶ。満載の料金は不足量の端数を切り上げる。船体の全修理は不足HPの端数を切り上げた料金＋滞在費2Gで、0.25日が進む。満載・修理済みのボタンは使う必要がない。</p><p>「一日休む」は6Gで一日を進め、士気を回復させる。港の在庫も日数に応じて平常量へ戻る。</p><p>「造船」で120Gを払うと船倉20→28、食料上限30→45、船体上限100→115、標準船速6→6.3になる。食料は自動で満載にならない。今ある傷も、別に修理する。この試作の改造は段階2まで。</p></details>
   <details><summary>5　出港・操船・入港・画面操作</summary><p>「出港」で目的地と食料の目安を確認する。出港すると自動・帆100％になる。自動航海は目的地の沖で止まる。2ゲーム海里以内で使える「入港」を押して、港の操作へ移る。</p><dl class="guidebook-definitions"><dt>自動 / 手動</dt><dd>自動は海図の行き先へ進む。手動は←→ / A・D、スマートフォンは左右の舵ボタン。方向キーで曲がると手動に切り替わる。</dd><dt>帆のつまみ</dt><dd>帆の開き具合を調整。↑↓ / W・Sでも操作できる。0％では進めないが食料は減る。</dd><dt>海図</dt><dd>出港後、港をタップするとその港へ自動航海。海をタップすれば任意の沖へ向かう。島の陸地には行き先を置けない。</dd><dt>1・2・4倍</dt><dd>世界の時間が進む倍率。同じ距離の食料消費は変わらない。</dd><dt>停止 / P</dt><dd>航海時間と消費を止める。同じボタンで再開。</dd><dt>カメラ</dt><dd>ドラッグ・スワイプで回転。スクロール・ピンチで距離を調整。PCは「船を追う」「海を眺める」「甲板から」も選べる。船の針路とは別の操作。</dd><dt>そのほか</dt><dd>スピーカーで音のオン・オフ。PCの全画面ボタンで全画面。Hで操作画面を隠し、画面の復帰ボタンで戻す。</dd></dl></details>
-  <details><summary>6　保存・続きから・JSON・前回の記録</summary><p>取引・入港・改造などで自動保存し、航海中も定期保存する。「日誌・保存」の「今すぐ保存」で手動保存。再び開いたらタイトルの「続きから」。案内の進み具合も残る。</p><p>保存は端末のブラウザと公開先ごと。別の端末やブラウザへ移す前は「JSONを書き出す」。移動先の「JSONを読み込む」で選ぶ。現在の航海を置き換える前に確認が出る。「前回の記録から」も現在の航海を置き換えるので、必要なら先にJSONを書き出す。</p><p>「新しい航海」はゲーム版の記録を初期化する。元の自由航海版は別のゲームで、その記録を消さない。</p></details>
+  <details><summary>6　保存・続きから・JSON・前回の記録</summary><p>取引・入港・改造などで自動保存し、航海中も定期保存する。「航海帳・保存」の「今すぐ保存」で手動保存。再び開いたらタイトルの「続きから」。案内の進み具合も残る。</p><p>保存は端末のブラウザと公開先ごと。別の端末やブラウザへ移す前は「JSONを書き出す」。移動先の「JSONを読み込む」で選ぶ。現在の航海を置き換える前に確認が出る。「前回の記録から」も現在の航海を置き換えるので、必要なら先にJSONを書き出す。</p><p>「新しい航海」はゲーム版の記録を初期化する。元の自由航海版は別のゲームで、その記録を消さない。</p></details>
   <details><summary>7　動けない・食料や資金がない</summary><p>まず停止して日誌を開こう。帆0％なら帆を上げる。手動で針路がわからないなら海図の港をタップし、自動に戻す。案内中なら「航路に戻って再開」も使える。</p><p>航海中の「救助を要請する」（R）は最後の安全な港へ戻る。資金20％、通常の積荷30％を失い、配送は失敗する。実行前に確認できる。船と改造は残る。</p><p>灯待ち港で資金と売れる木材がともにゼロなら、「補給」に出る「倉庫の仕事を手伝う」で20Gを得られる。食料と船体を整えて、再び出港しよう。</p></details>
-  <details><summary>8　浮標の発見と寄り道・この試作の範囲</summary><p>航海すると、船が通った周囲の海図が開く。二つの港は最初から位置がわかっている。海鳥の集まる浮標を見つけたら、港へ直行・浮標に接近・目印を付ける、の三つから選べる。選択中は時間と食料消費が止まる。</p><p>浮標経由の食料と、元の行き先から出発港へ帰る分・予備30％を確認しよう。見つけた浮標は「海図・発見」と日誌からいつでも選べる。目印だけでは針路を変えない。寄り道後は「元の航路へ戻る」で港への航海を再開できる。視認・接近・目印は保存される。</p><p>補強は最初の達成目標。その後も自由に交易・航海できる。浮標の観測と港への報告、航路登録、帰路の移動短縮、五港と灯台の物語は、今後遊べるようになる範囲。浮標への接近だけで観測の報酬は得られない。終わるときは保存してブラウザを閉じてよい。</p></details>
+  <details><summary>8　浮標の発見と寄り道・この試作の範囲</summary><p>航海すると、船が通った周囲の海図が開く。二つの港は最初から位置がわかっている。海鳥の集まる浮標を見つけたら、港へ直行・浮標に接近・目印を付ける、の三つから選べる。選択中は時間と食料消費が止まる。</p><p>浮標経由の食料と、元の行き先から出発港へ帰る分・予備30％を確認しよう。見つけた浮標は「海図・発見」と日誌からいつでも選べる。目印だけでは針路を変えない。寄り道後は「元の航路へ戻る」で港への航海を再開できる。視認・接近・目印は保存される。</p><p>補強は最初の達成目標。その後も自由に交易・航海できる。浮標では潮を観測し、記録を松帆港の「海図係」に報告できる。航路登録と帰路の移動短縮、五港と灯台の物語は、今後遊べるようになる範囲。終わるときは保存してブラウザを閉じてよい。</p></details>
+  <details><summary>9　浮標の観測・航海帳・港への報告</summary><ol><li>見つけた浮標へ接近し、2ゲーム海里以内で観測画面を開く。「観測して航海帳に記録する」で潮と銘板を読む。</li><li>「分かったこと」「未確認」「次の行動」を確認する。「航海帳・保存」から、あとでも読み直せる。視認・目印・接近だけでは観測済みにならない。</li><li>元の針路へ戻り、松帆港へ入港。「海図係」で「浮標の観測を報告する」。報告が受理されると、航路登録に使う記録の準備がそろう。</li><li>市場で木材を売り、配送と補給を済ませる。今は「出港」から通常航海で灯待ち港へ戻れる。</li></ol><p>観測と報告で得るものは潮の情報と手掛かり。資金や船は増えない。同じ浮標の再観測・再報告で記録は重複しない。「北の灯」は今の試作では訪問できない手掛かり。</p></details>
 </dialog>
 
 <div class="loader" id="loader"><div class="loader-content"><svg viewBox="0 0 64 64"><path d="M32 5v44M29 12L12 40h17ZM35 8v32h17L35 8ZM5 48h54l-9 9H15Z"/></svg><h2>帆を上げよう。</h2><p>PREPARING YOUR VOYAGE</p></div></div>
@@ -196,10 +229,17 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
 /* Pure game rules. Embedded in adventure/index.html; no runtime dependencies. */
 const AdventureCore = (() => {
   'use strict';
-  const VERSION = '0.1.2';
+  const VERSION = '0.1.3';
   const WORLD = 'two-ports-1';
   // Permanent IDs and game coordinates are shared by rules, charts and the 3D scene.
   const BUOYS = Object.freeze([Object.freeze({id:'buoy_shoal_01',name:'潮見の浮標',x:66,z:28,sightRadius:45,arrivalRadius:2})]);
+  const OBSERVATION = Object.freeze({id:'buoy_shoal_01',reportPortId:'p_pine',title:'潮見の浮標の観測',
+    known:'旗の向きと泡の筋から、浮標の北側に潮の境目があると分かった。',
+    unknown:'銘板に残る「北の灯」の所在と、その先の潮のつながりは、まだ分からない。',
+    next:'松帆港の「海図係」で、この観測を報告する。',
+    afterReport:'木材の売却・配送・補給を済ませ、通常航海で灯待ち港へ戻れる。',
+    clue:'「北の灯」は今の試作では訪問できない手掛かり。'});
+  const freshObservations=()=>({version:1,activeId:null,records:{buoy_shoal_01:null}});
   const SAVE_KEY = 'pirate-voyage:adventure:save:v1';
   const BACKUP_KEY = 'pirate-voyage:adventure:backup:v1';
   const GUIDE_STEPS = Object.freeze(['welcome','resources','delivery','buy','supply','depart',
@@ -265,6 +305,7 @@ const AdventureCore = (() => {
         waypoint:null,destinationPortId:null,legDistance:0,blockedSeconds:0},
       discovery:{ports:['p_light','p_pine'],fogChunks:{}},
       exploration:{version:1,buoys:{buoy_shoal_01:{seen:false,marked:false,approached:false}},pending:null,activeTarget:null,resumeCourse:null},
+      observations:freshObservations(),
       quests:{firstDelivery:{status:'AVAILABLE',rewardClaimed:false}},
       storyFlags:{},factions:{},completedRewardIds:[],pendingEncounter:null,
       markets:Object.fromEntries(PORTS.map(p=>[p.id,{wood:{stock:100,demandPercent:100,lastUpdatedDay:0}}])),
@@ -339,6 +380,21 @@ const AdventureCore = (() => {
       }
       if((e.activeTarget!==null&&(!b.seen||!e.resumeCourse))||(s.phase==='PORT'&&(e.activeTarget!==null||e.pending!==null||e.resumeCourse!==null)))bad();
     }
+    if(s.observations!==undefined){
+      const o=s.observations,r=o?.records?.buoy_shoal_01,b=s.exploration?.buoys?.buoy_shoal_01;
+      if(!object(o)||o.version!==1||!object(o.records)||Object.keys(o.records).length!==1||
+        (o.activeId!==null&&o.activeId!==OBSERVATION.id)||(r!==null&&!object(r)))bad();
+      if(r!==null){
+        if(!b?.seen||!b.approached||!goodNumber(r.observedDay,0,s.clock.gameDays+1e-8)||
+          (r.reportedPortId===null?r.reportedDay!==null:r.reportedPortId!==OBSERVATION.reportPortId||
+            !goodNumber(r.reportedDay,r.observedDay,s.clock.gameDays+1e-8)))bad();
+      }
+      if(o.activeId!==null){
+        const buoy=BUOYS[0];
+        if(r!==null||!b?.seen||!b.approached||s.phase!=='SAILING'||!s.paused||s.exploration.pending!==null||
+          Math.hypot(s.position.xNm-buoy.x,s.position.zNm-buoy.z)>buoy.arrivalRadius+.001)bad();
+      }
+    }
     if(!Array.isArray(s.journal)||s.journal.length>40||!s.journal.every(l=>object(l)&&
       goodNumber(l.day,0,s.clock.gameDays+1e-8)&&typeof l.text==='string'&&l.text.length<=180)) bad();
     // Reconstruct known fields. Imported extra properties never become commands or HTML.
@@ -360,12 +416,18 @@ const AdventureCore = (() => {
         pending:e.pending===null?null:{id:e.pending.id,kind:e.pending.kind},activeTarget:e.activeTarget,
         resumeCourse:e.resumeCourse===null?null:{waypoint:copy(e.resumeCourse.waypoint),destinationPortId:e.resumeCourse.destinationPortId}};
     }
+    // Old records gain an empty observation book; approach is never a completed survey.
+    if(s.observations!==undefined){
+      const o=s.observations,r=o.records.buoy_shoal_01;
+      clean.observations={version:1,activeId:o.activeId,records:{buoy_shoal_01:r===null?null:
+        {observedDay:r.observedDay,reportedDay:r.reportedDay,reportedPortId:r.reportedPortId}}};
+    }
     return clean;
   }
   function create(saved=null,name='船長') {
     let s=saved===null?fresh(name):validate(saved);
     const log=text=>{s.journal.push({day:s.clock.gameDays,text:String(text).slice(0,180)});if(s.journal.length>40)s.journal.shift();};
-    function clearDetour(){Object.assign(s.exploration,{pending:null,activeTarget:null,resumeCourse:null});}
+    function clearDetour(){Object.assign(s.exploration,{pending:null,activeTarget:null,resumeCourse:null});s.observations.activeId=null;}
     function originalCourse(){
       const e=s.exploration,n=s.navigation,p=port(s.lastSafePortId);
       return e.resumeCourse||{waypoint:n.waypoint?.slice()||[p.x,p.z],destinationPortId:n.waypoint?n.destinationPortId:p.id};
@@ -422,6 +484,45 @@ const AdventureCore = (() => {
         }
       }
       return {sighted,arrived};
+    }
+    function observationQuote(id=OBSERVATION.id){
+      const buoy=BUOYS.find(b=>b.id===id);if(!buoy)return failure('観測対象が不正です。');
+      const b=s.exploration.buoys[id],r=s.observations.records[id],near=s.phase==='SAILING'&&
+        Math.hypot(s.position.xNm-buoy.x,s.position.zNm-buoy.z)<=buoy.arrivalRadius+.001;
+      return {ok:true,seen:b.seen,approached:b.approached,near,observed:r!==null,reported:!!r?.reportedPortId,
+        canObserve:b.seen&&b.approached&&near&&r===null,
+        canReport:s.phase==='PORT'&&s.portId===OBSERVATION.reportPortId&&r!==null&&!r.reportedPortId,
+        registrationReady:!!r?.reportedPortId,record:copy(r)};
+    }
+    function beginObservation(id=OBSERVATION.id){
+      const q=observationQuote(id);if(!q.ok)return q;
+      if(q.observed)return {ok:true,already:true};
+      if(!q.canObserve)return failure('観測するには、見つけた浮標から2ゲーム海里以内へ接近してください。');
+      if(s.observations.activeId===id)return {ok:true,already:true};
+      s.observations.activeId=id;s.paused=true;s.navigation.speed=0;s.exploration.pending=null;
+      return {ok:true};
+    }
+    function cancelObservation(){
+      s.observations.activeId=null;
+      return {ok:true};
+    }
+    function completeObservation(id=OBSERVATION.id){
+      const q=observationQuote(id);if(!q.ok)return q;
+      if(q.observed)return {ok:true,already:true,message:'この観測は航海帳に記録済みです。'};
+      if(!q.canObserve||s.observations.activeId!==id)return failure('浮標のそばで観測画面を開いてください。');
+      s.observations.records[id]={observedDay:s.clock.gameDays,reportedDay:null,reportedPortId:null};
+      s.observations.activeId=null;
+      log('潮見の浮標で潮の境目と「北の灯」の手掛かりを観測し、航海帳に記録した。');
+      return {ok:true,message:'観測を記録しました。松帆港の「海図係」へ持ち帰れます。'};
+    }
+    function reportObservation(id=OBSERVATION.id){
+      const q=observationQuote(id);if(!q.ok)return q;
+      if(s.phase!=='PORT'||s.portId!==OBSERVATION.reportPortId)return failure('観測報告は松帆港の「海図係」で受け付けます。');
+      if(!q.observed)return failure('まず浮標へ接近し、観測して航海帳へ記録してください。');
+      if(q.reported)return {ok:true,already:true,message:'この観測は松帆港で受理済みです。'};
+      const r=s.observations.records[id];r.reportedPortId=s.portId;r.reportedDay=s.clock.gameDays;
+      log('松帆港の海図係に潮見の浮標の観測を報告し、航路登録に使う記録として受理された。');
+      return {ok:true,message:'観測が受理されました。航路登録の準備がそろいました。'};
     }
     function guide(step){
       if(!GUIDE_STEPS.includes(step))return failure('案内の手順が不正です。');
@@ -618,7 +719,7 @@ const AdventureCore = (() => {
         return failure('島の沖に行き先を置いてください。');
       if(id!==null&&!port(id))return failure('行き先が不正です。');
       if(id!==null&&(x!==port(id).x||z!==port(id).z))return failure('港の入港地点を選んでください。');
-      s.exploration.activeTarget=null;
+      s.exploration.activeTarget=null;s.observations.activeId=null;
       s.navigation.waypoint=[x,z];s.navigation.destinationPortId=id;s.navigation.auto=true;
       s.navigation.legDistance=Math.hypot(x-s.position.xNm,z-s.position.zNm);s.navigation.blockedSeconds=0;
       return {ok:true,message:id?`${port(id).name}へ針路を変えました。`:'海図に行き先を置きました。'};
@@ -635,7 +736,7 @@ const AdventureCore = (() => {
     }
     function step(realSeconds,steer=0) {
       if(!goodNumber(realSeconds,0,.05000001))throw new Error('固定刻みは0.05秒以下です。');
-      if(s.phase!=='SAILING'||s.paused||realSeconds===0)return {ok:true};
+      if(s.phase!=='SAILING'||s.paused||s.observations.activeId||realSeconds===0)return {ok:true};
       if(s.ship.hp<=0)return recover();
       const days=realSeconds/60,foodDays=Math.min(days,s.ship.food/4),starvingDays=days-foodDays;
       s.ship.food=Math.max(0,s.ship.food-4*days);
@@ -670,15 +771,15 @@ const AdventureCore = (() => {
     return Object.freeze({
       snapshot:()=>copy(s),quote,trade,supplyQuote,supply,upgrade,voyageQuote,depart,dock,
       nearestPort,delivery,waitDay,errand,recover,waypoint,setAuto,setSails,step,
-      explorationQuote,chooseSight,
-      setPaused:on=>{if(typeof on==='boolean')s.paused=on;},
+      explorationQuote,chooseSight,observationQuote,beginObservation,cancelObservation,completeObservation,reportObservation,
+      setPaused:on=>{if(typeof on==='boolean'&&(!s.observations.activeId||on))s.paused=on;},
       setSpeed:n=>{if([1,2,4].includes(n))s.clock.speedMultiplier=n;},
       maxBuy:()=>{let n=0;for(let q=1;q<=tier(s).capacity;q++){if(!quote('buy',q).ok)break;n=q;}return n;},
       guide,skipGuide,finishGuide,syncGuide,
       export:()=>JSON.stringify(validate(s),null,2)
     });
   }
-  return Object.freeze({VERSION,WORLD,SAVE_KEY,BACKUP_KEY,PORTS,TIERS,LAND,BUOYS,GUIDE_STEPS,price,create,validate,cargoUsed,woodOwned,fogKnown});
+  return Object.freeze({VERSION,WORLD,SAVE_KEY,BACKUP_KEY,PORTS,TIERS,LAND,BUOYS,OBSERVATION,GUIDE_STEPS,price,create,validate,cargoUsed,woodOwned,fogKnown});
 })();
 
 </script>
@@ -690,17 +791,67 @@ const Adventure = (() => {
   let model=C.create(),active=false,saved=null,storageWarning='',saveElapsed=0,toastTimer=0;
   const fmt=n=>n.toFixed(1),text=(id,value)=>{$(id).textContent=value;};
   const port=id=>C.PORTS.find(p=>p.id===id),tier=s=>C.TIERS[s.ship.tier-1];
+  function leaveObservation(){
+    if(model.snapshot().observations.activeId){model.cancelObservation();save(true);}
+  }
+  function openLog(){
+    if(!active)return;
+    leaveObservation();document.querySelectorAll('dialog[open]').forEach(d=>d.close());
+    $('captain-log').showModal();update();
+  }
+  function openObservation(){
+    if(!active)return;
+    const result=model.beginObservation();if(!result.ok){message(result.message,true);return;}
+    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
+    $('observation').showModal();$('observation').scrollTop=0;save(true);update();
+  }
+  function dismissObservation(){leaveObservation();$('observation').close();update();}
+  function openFoundClue(){
+    const q=model.observationQuote();
+    if(q.observed||q.canObserve)openObservation();else openSight();
+  }
+  function openReportDesk(){
+    if(model.snapshot().phase!=='PORT'||model.snapshot().portId!==C.OBSERVATION.reportPortId)return;
+    document.querySelectorAll('dialog[open]').forEach(d=>d.close());selectTab('observations');openHarbor();
+  }
+  function observationUI(s){
+    const q=model.observationQuote(),o=C.OBSERVATION,r=q.record;
+    const status=q.observed?`観測 ${fmt(r.observedDay)}日 · ${q.reported?'松帆港で受理済み':'港への報告はまだ'}`:'まだ観測していません。';
+    const next=q.reported?o.afterReport:o.next;
+    for(const prefix of ['observe','book']){
+      text(prefix+'-status',status);text(prefix+'-known',o.known);text(prefix+'-unknown',o.unknown);text(prefix+'-next',next);text(prefix+'-clue',o.clue);
+    }
+    text('observe-title',q.observed?'潮見の浮標の観測記録':'潮見の浮標を観測する');
+    text('observe-speech',q.observed?(q.reported?'この記録は松帆港で受理されたよ。交易と補給を済ませ、次の航海を選ぼう。':'旗の向きと泡の筋、それに銘板の言葉を記録したよ。海図だけでは分からない潮の情報だね。松帆港へ持ち帰ろう。'):'近くで見ると、旗の向きと海面を横切る泡の筋が読める。銘板の言葉も確かめて、航海帳へ記録しよう。接近しただけでは観測済みにはならないよ。');
+    $('observe-entry').hidden=!q.observed;$('observe-confirm').hidden=q.observed;$('observe-confirm').disabled=!q.canObserve;
+    $('observe-log').hidden=!q.observed;$('observe-onward').hidden=s.phase!=='SAILING';
+    const course=model.explorationQuote();text('observe-onward',course.ok?`${course.targetName}への航海を再開`:'航海へ戻る');
+    $('book-entry').hidden=!q.observed;$('book-empty').hidden=q.observed;
+    text('book-empty',q.seen?'潮見の浮標を見つけた。浮標へ接近し、観測するとここに記録が残ります。':'まだ観測記録はありません。海鳥の集まる浮標を探してみよう。');
+    $('book-report').disabled=s.phase!=='PORT'||s.portId!==o.reportPortId;
+    text('book-report',q.reported?'松帆港の受理状況を見る':'松帆港の海図係へ');
+    text('book-report-note',s.phase==='PORT'&&s.portId===o.reportPortId?'「海図係」で受理状況を確認できます。':'報告は松帆港へ入港してから。海上や灯待ち港では受け付けません。');
+    text('report-status',!q.observed?'観測記録が必要です。':q.reported?'報告は受理済みです。':s.portId!==o.reportPortId?'この観測は、松帆港へ持ち帰ってください。':'報告できる観測記録が1件あります。');
+    text('report-speech',q.reported?'旗と泡の筋の記録を海図係が照合してくれたね。航路登録に使う準備はそろったよ。':'浮標で読んだ潮は、航海帳に残すだけでなく港に伝えると役立つ。松帆港の海図係に報告しよう。');
+    text('report-observed',(q.observed?'✓ 完了':'○ 未完了')+' · 潮見の浮標を観測して航海帳に記録');
+    text('report-accepted',(q.reported?'✓ 完了':'○ 未完了')+' · 松帆港で観測報告を受理');
+    $('report-observed').classList.toggle('complete',q.observed);$('report-accepted').classList.toggle('complete',q.reported);
+    $('submit-observation').disabled=!q.canReport;text('submit-observation',q.reported?'この観測は受理済み':'浮標の観測を報告する');
+    $('report-result').hidden=!q.reported;text('report-result',q.reported?`受理 ${fmt(r.reportedDay)}日 · 潮の境目の記録を、航路登録に使う資料として受け取りました。`:'');
+    text('registration-status',q.registrationReady?'航路登録の準備がそろいました':'航路登録の準備');
+    text('registration-note',q.reported?o.afterReport:'浮標の観測と、松帆港での受理が必要です。');
+  }
   function openSeaMap(){
     if(!active)return;
-    if(model.snapshot().exploration.pending)run('chooseSight','defer');
+    leaveObservation();if(model.snapshot().exploration.pending)run('chooseSight','defer');
     document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('sea-map').showModal();update();
   }
   function openSight(){
     if(!active||!model.snapshot().exploration.buoys.buoy_shoal_01.seen)return;
-    document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('sighting').showModal();update();
+    leaveObservation();document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('sighting').showModal();update();
   }
   function dismissSight(){run('chooseSight','defer');$('sighting').close();update();}
-  function chooseSight(action){if(run('chooseSight',action).ok){$('sighting').close();$('sea-map').close();update();}}
+  function chooseSight(action){if(run('chooseSight',action).ok){$('sighting').close();$('sea-map').close();$('observation').close();update();}}
   function explorationUI(s){
     const b=C.BUOYS[0],e=s.exploration,r=e.buoys[b.id],sailing=s.phase==='SAILING';
     const close=Math.hypot(s.position.xNm-b.x,s.position.zNm-b.z)<=b.arrivalRadius;
@@ -708,7 +859,8 @@ const Adventure = (() => {
     $('map-resume').hidden=!e.resumeCourse;$('map-resume').disabled=!sailing;
     $('map-buoy').style.left=((b.x+35)/310*100)+'%';$('map-buoy').style.top=((75-b.z)/150*100)+'%';
     text('map-buoy-name',(r.marked?'★ ':'')+b.name);
-    text('map-status',r.seen?`${b.name}：${r.approached?'接近済み':'視認済み'}${r.marked?' · 目印付き':''}。港から出たあと、旗を選んで食料と針路を確認できます。`:'航行した周りの海が少しずつ開きます。海鳥や水平線の変化にも目を向けよう。');
+    const o=model.observationQuote();text('map-discovery',o.observed?'浮標の観測記録を読む':o.canObserve?'浮標を観測する':'浮標の行動を選ぶ');
+    text('map-status',r.seen?`${b.name}：${o.reported?'報告受理済み':o.observed?'観測済み':r.approached?'接近済み':'視認済み'}${r.marked?' · 目印付き':''}。旗を選ぶと${o.observed?'観測記録を読み直せます':'行動や食料を確認できます'}。`:'航行した周りの海が少しずつ開きます。海鳥や水平線の変化にも目を向けよう。');
     for(const button of document.querySelectorAll('[data-map-port]')){
       const p=port(button.dataset.mapPort);button.disabled=!sailing;
       button.style.left=((p.x+35)/310*100)+'%';button.style.top=((75-p.z)/150*100)+'%';
@@ -747,7 +899,7 @@ const Adventure = (() => {
       resume:{title:'同じボタンで、再開できる。',speech:'停止ボタンが三角形に変わったね。もう一度押すと再開する。港・日誌・遊び方を開いたときも時間は止まるよ。',task:'右上の三角形「航海を再開」を押す。',target:'#pause'},
       controls:{title:'自動航海なら、舵はおまかせ。',speech:'「自動」は目的地へ進む。手動なら←→・A/D、スマートフォンなら舵ボタンで曲がるよ。帆のつまみは進む速さ、海図のタップは行き先を変える。初航海は自動・帆100％のままで大丈夫。',task:'海のドラッグはカメラ操作。船の針路は変わらないよ。',target:'#auto',next:'わかった、進もう',visual:'controls'},
       speed:{title:'航海の速さを選ぼう。',speech:'画面下の1・2・4倍は、航海時間の進む速さ。同じ距離の食料消費は変わらないよ。4倍でも浮標を見つけたら選択画面で止まるから、ゆっくり決められる。倍率はあとで戻せるよ。',task:'画面下の「4倍」で航海を始める。',target:'[data-speed="4"]'},
-      sailing:{title:s.exploration.activeTarget?'海鳥の集まる浮標へ。':'水平線から、次の針路を探そう。',speech:s.exploration.activeTarget?(s.paused?'浮標のそばで停止中だよ。「海図・発見」で食料と帰りの針路を確認しよう。':'浮標への針路を選んだね。そばまで来ると止まるよ。気が変わったら「海図・発見」から元の航路に戻れる。'):s.paused?'今は一時停止中。右上の三角形で再開できるよ。':!s.exploration.buoys.buoy_shoal_01.seen?'海鳥と、旗の立つ浮標を探してみよう。見つけたら寄り道するか選べるよ。松帆港へ直行して木材を届けるのも、船長の選択だよ。':'見つけた浮標は「海図・発見」や日誌から選び直せるよ。木材を届けたあと、補給して戻ってもいい。港の沖では最後に「入港」を押してね。',task:'「海図・発見」で針路と目印を確認。停止・倍率変更・カメラ操作も自由。',target:s.paused&&!s.exploration.activeTarget?'#pause':'#open-map',recenter:true},
+      sailing:{title:s.exploration.activeTarget?'海鳥の集まる浮標へ。':'水平線から、次の針路を探そう。',speech:s.exploration.activeTarget?(s.paused?'浮標のそばで停止中だよ。「海図・発見」の旗から観測できる。記録を松帆港へ持ち帰り、海図係に報告しよう。帰りの食料も確認してね。':'浮標への針路を選んだね。そばまで来ると止まるよ。気が変わったら「海図・発見」から元の航路に戻れる。'):s.paused?'今は一時停止中。右上の三角形で再開できるよ。':!s.exploration.buoys.buoy_shoal_01.seen?'海鳥と、旗の立つ浮標を探してみよう。見つけたら寄り道するか選べるよ。松帆港へ直行して木材を届けるのも、船長の選択だよ。':'見つけた浮標は「海図・発見」や日誌から選び直せるよ。木材を届けたあと、補給して戻ってもいい。港の沖では最後に「入港」を押してね。',task:'「海図・発見」で針路と目印を確認。停止・倍率変更・カメラ操作も自由。',target:s.paused&&!s.exploration.activeTarget?'#pause':'#open-map',recenter:true},
       dock:{title:'着いた！ 最後は、自分で入港。',speech:'港の沖、2ゲーム海里以内に着いたね。自動航海はここで止まる。「松帆港へ入港」を押すと、市場と補給が使えるよ。',task:'強調された「松帆港へ入港」を押す。',target:'#dock-game'},
       sell:{title:'積荷を売って、利益を出そう。',speech:'売れる自分の木材は'+owned+'単位。売却合計を確認して「売る」を押そう。買ったときより高く売れれば利益。大量に売ると港の買い取り価格は下がるよ。',task:'自分の木材を売る。依頼の木材はここでは売れない。',target:'#sell-wood',tab:'market'},
       claim:{title:'預かった木材は、依頼として渡す。',speech:'自分の木材を売っても、配送はまだ終わっていない。依頼のボタンを押して、預かった4単位を渡そう。40Gの報酬は一度だけ受け取れるよ。',task:'「木材を届けて40Gを受け取る」を押す。',target:'#delivery-job',tab:'market'},
@@ -769,7 +921,7 @@ const Adventure = (() => {
   }
   function guideRender(){
     const s=model.snapshot(),g=s.tutorial,t=tier(s);
-    const shown=active&&g.status==='ACTIVE'&&!$('help').open&&!$('sea-map').open&&!$('sighting').open&&$('error').style.display!=='block';
+    const shown=active&&g.status==='ACTIVE'&&!$('help').open&&!$('sea-map').open&&!$('sighting').open&&!$('observation').open&&!($('harbor').open&&document.querySelector('[data-tab="observations"]').classList.contains('active'))&&$('error').style.display!=='block';
     guidePanel.hidden=!shown;document.body.classList.toggle('tutorial-on',shown);
     document.body.classList.toggle('tutorial-at-sea',shown&&s.phase==='SAILING'&&!document.querySelector('dialog[open]'));
     if(!shown){markGuideTarget(null);return;}
@@ -841,7 +993,7 @@ const Adventure = (() => {
     $('ui').classList.remove('hidden');save(true);
     if(model.snapshot().phase==='PORT')openHarbor();update();
   });
-  for(const id of ['harbor','captain-log','help','sea-map','sighting']){
+  for(const id of ['harbor','captain-log','help','sea-map','sighting','observation']){
     $(id).addEventListener('close',()=>{guideRender();});
   }
 
@@ -875,10 +1027,11 @@ const Adventure = (() => {
     model=next;active=true;lastGuideStep='';selectTab('market');$('title-screen').hidden=true;$('ui').classList.remove('hidden');$('ui').inert=false;
     document.querySelectorAll('dialog[open]').forEach(d=>d.close());save(true);update();
     const current=model.snapshot();
-    if(current.tutorial.status==='ACTIVE'&&['save','backup','safety','complete'].includes(current.tutorial.step)){
+    if(current.observations.activeId)openObservation();
+    else if(current.tutorial.status==='ACTIVE'&&['save','backup','safety','complete'].includes(current.tutorial.step)){
       $('captain-log').showModal();update();
     }else if(current.phase==='PORT')openHarbor();
-    else if(current.exploration.pending&&!guideHolding())openSight();
+    else if(current.exploration.pending&&!guideHolding())current.exploration.pending.kind==='ARRIVED'?openFoundClue():openSight();
   }
   function newGame(){if((active||hasSave())&&!confirm('ゲーム版の航海記録を新しい航海で置き換えます。よろしいですか？'))return;begin(null);}
   function openHarbor(){
@@ -927,7 +1080,7 @@ const Adventure = (() => {
     text('game-day',`${fmt(s.clock.gameDays)}日`);text('course-label',s.phase==='PORT'?'停泊':s.navigation.auto?'自動':'手動');
     const quest=s.quests.firstDelivery;
     const goal=s.stats.upgraded?'船倉が広がった。次の航海は、あなたの選ぶ針路で。':quest.status==='ACTIVE'?'松帆港へ木材を届けよう。':!s.stats.firstSale?'木材を仕入れ、松帆港で売ってみよう。':`補強沿岸船まであと${Math.max(0,120-s.player.gold)}G。`;
-    text('next-goal',goal);text('live-text',s.phase==='PORT'?'IN PORT':s.paused?'PAUSED':'SAILING');
+    const observation=model.observationQuote();text('next-goal',observation.observed&&!observation.reported?'浮標の観測を松帆港の「海図係」へ報告しよう。':goal);text('live-text',s.phase==='PORT'?'IN PORT':s.paused?'PAUSED':'SAILING');
     text('pause-icon-label',s.paused?'再開':'停止');$('pause').setAttribute('aria-pressed',String(s.paused));
     $('pause').setAttribute('aria-label',s.paused?'航海を再開':'一時停止');
     $('pause-icon').innerHTML=s.paused?'<path d="M6 3l10 7-10 7Z"/>':'<path d="M7 4v12M13 4v12"/>';
@@ -973,16 +1126,16 @@ const Adventure = (() => {
       text('departure-warning',s.ship.food<q.roundTripFood?'食料が往復の目安を下回っています。補給してからの出発をおすすめします。':s.ship.hp<35?'船体が傷んでいます。修理で航海が速くなります。':'穏やかな海です。自動航海で沖の入港地点へ向かいます。');
     }
     if($('captain-log').open){
-      text('captain-log-title',`${s.player.name}の航海日誌`);const list=$('journal-list');list.replaceChildren();
+      text('captain-log-title',`${s.player.name}の航海帳`);const list=$('journal-list');list.replaceChildren();
       for(const item of [...s.journal].reverse()){const li=document.createElement('li');li.textContent=`${fmt(item.day)}日 · ${item.text}`;list.append(li);}
       text('voyage-summary',`交易利益 ${s.stats.tradeProfit}G · 航海 ${fmt(s.navigation.distance)}ゲーム海里`);
     }
     $('request-rescue').disabled=s.phase!=='SAILING';
     $('restart-guide').disabled=!active;
     text('guidebook-start-note',active?'今の船・資金・積荷を保ったまま案内します。':'先に「新しい航海」か「続きから」でゲームを始めると、操作ガイドを使えます。');
-    explorationUI(s);guideRender();
+    observationUI(s);explorationUI(s);guideRender();
     if(guideHolding()&&s.phase==='SAILING')text('live-text','GUIDE');
-    if(active&&s.phase==='SAILING'&&s.exploration.pending&&!guideHolding()&&!document.querySelector('dialog[open]'))openSight();
+    if(active&&s.phase==='SAILING'&&s.exploration.pending&&!guideHolding()&&!document.querySelector('dialog[open]'))s.exploration.pending.kind==='ARRIVED'?openFoundClue():openSight();
   }
   $('new-game').addEventListener('click',newGame);$('new-game-log').addEventListener('click',newGame);
   $('continue-game').addEventListener('click',()=>{if(saved)begin(saved);});
@@ -991,14 +1144,20 @@ const Adventure = (() => {
   document.querySelectorAll('[data-export]').forEach(b=>b.addEventListener('click',exportSave));
   $('restore-backup').addEventListener('click',restoreBackup);$('restore-backup-log').addEventListener('click',restoreBackup);
   $('open-port').addEventListener('click',openHarbor);$('close-port').addEventListener('click',()=>$('harbor').close());
-  $('open-log').addEventListener('click',()=>{if(!$('captain-log').open)$('captain-log').showModal();update();});
+  $('open-log').addEventListener('click',openLog);
   $('close-log').addEventListener('click',()=>$('captain-log').close());
   $('open-map').addEventListener('click',openSeaMap);$('log-discovery').addEventListener('click',openSeaMap);
   $('close-map').addEventListener('click',()=>$('sea-map').close());
-  $('map-buoy').addEventListener('click',openSight);$('map-discovery').addEventListener('click',openSight);
-  $('sea-clue').addEventListener('click',openSight);$('map-resume').addEventListener('click',()=>chooseSight('direct'));
+  $('map-buoy').addEventListener('click',openFoundClue);$('map-discovery').addEventListener('click',openFoundClue);
+  $('sea-clue').addEventListener('click',openFoundClue);$('map-resume').addEventListener('click',()=>chooseSight('direct'));
   $('close-sight').addEventListener('click',dismissSight);
   $('sighting').addEventListener('cancel',e=>{e.preventDefault();dismissSight();});
+  $('close-observation').addEventListener('click',dismissObservation);
+  $('observation').addEventListener('cancel',e=>{e.preventDefault();dismissObservation();});
+  $('observe-confirm').addEventListener('click',()=>run('completeObservation'));
+  $('observe-log').addEventListener('click',openLog);$('observe-onward').addEventListener('click',()=>chooseSight('direct'));
+  $('book-reopen').addEventListener('click',openObservation);$('book-report').addEventListener('click',openReportDesk);
+  $('submit-observation').addEventListener('click',()=>run('reportObservation'));$('report-book').addEventListener('click',openLog);
   for(const action of ['direct','approach','mark'])$('sight-'+action).addEventListener('click',()=>chooseSight(action));
   document.querySelectorAll('[data-map-port]').forEach(button=>button.addEventListener('click',()=>{
     const p=port(button.dataset.mapPort);if(run('waypoint',p.x,p.z,p.id).ok){model.setPaused(false);save(true);$('sea-map').close();update();}
@@ -1032,7 +1191,7 @@ const Adventure = (() => {
     autosave:seconds=>{saveElapsed+=seconds;if(saveElapsed>=30)save(true);},
     step:(seconds,steer)=>{const result=model.step(seconds,steer);
       if(result.recovered){save(true);update();message(result.message);openHarbor();}
-      else if(result.sighted||result.arrived){save(true);openSight();}},
+      else if(result.sighted||result.arrived){save(true);result.arrived?openFoundClue():openSight();}},
     setSails:value=>{const r=model.setSails(value);if(r.ok)update();},
     togglePause:()=>{const s=model.snapshot();if(active&&s.phase==='SAILING'){model.setPaused(!s.paused);save(true);update();}},
     renderingFailed:()=>{model.setPaused(true);save(true);update();}
@@ -1252,7 +1411,7 @@ function drawChart(){
  paintChart($('chart'));if($('sea-map').open)paintChart($('large-chart'),true);
  const s=Adventure.snapshot(),b=AdventureCore.BUOYS[0],distance=Math.hypot(s.position.xNm-b.x,s.position.zNm-b.z);
  const show=$('title-screen').hidden&&s.phase==='SAILING'&&s.exploration.buoys[b.id].seen&&distance<=b.sightRadius&&!document.querySelector('dialog[open]');
- $('sea-clue').hidden=!show;if(show)$('sea-clue').textContent=`⚑ 海鳥と浮標 · ${distance.toFixed(1)}海里`;
+ $('sea-clue').hidden=!show;if(show){const observed=s.observations.records[b.id]!==null,label=observed?'観測記録を読む':distance<=b.arrivalRadius+.001?'浮標を観測する':'海鳥と浮標';$('sea-clue').textContent=`⚑ ${label} · ${distance.toFixed(1)}海里`;$('sea-clue').setAttribute('aria-label',label);}
 }
 function hud(){const s=Adventure.snapshot(),heading=(s.navigation.heading*180/Math.PI+360)%360,names=['N / 北','NE / 北東','E / 東','SE / 南東','S / 南','SW / 南西','W / 西','NW / 北西'];$('ship-speed').textContent=s.navigation.speed.toFixed(1);$('heading').textContent=(Math.round(heading)%360).toString().padStart(3,'0')+'°';$('heading-name').textContent=names[Math.round(heading/45)%8];$('distance').textContent=s.navigation.distance.toFixed(1);$('wind-speed').textContent='14.0';$('wind-description').textContent='穏やかな貿易風';$('wind-arrow').style.transform=`rotate(${(state.windAngle+Math.PI)*180/Math.PI}deg)`;drawChart();Adventure.update();}
 function frame(now){if(!running)return;const dt=lastFrame?clamp((now-lastFrame)/1000,0,.5):1/60;lastFrame=now;update(dt);render(dt);hudTimer+=dt;if(hudTimer>.12){hudTimer=0;hud();}requestAnimationFrame(frame);}

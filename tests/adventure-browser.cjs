@@ -56,12 +56,27 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  await page.locator('#sight-mark').press('Enter');await click('#open-map');await fixed();await shot('pc-map');
  assert.equal((await state()).exploration.buoys.buoy_shoal_01.marked,true);
  await click('#map-buoy');await click('#sight-approach');
- await page.waitForFunction(()=>window.adventure.getState().exploration.pending?.kind==='ARRIVED',null,{timeout:45000});
- await fixed();await shot('pc-arrival');await click('#close-sight');await shot('pc-buoy-at-sea');
- const arrival=await state();await continueSave();assert.deepEqual((await state()).position,arrival.position);
- assert.equal((await state()).exploration.activeTarget,'buoy_shoal_01');assert.equal((await state()).paused,true);
- await click('#open-map');await click('#map-resume');
+ await page.locator('#observation[open]').waitFor({timeout:45000});
+ await fixed();await shot('pc-observation-intro');await layout('pc-observation-intro');
+ const arrival=await state();assert.equal(arrival.observations.activeId,'buoy_shoal_01');assert.equal(arrival.observations.records.buoy_shoal_01,null);
+ await continueSave();assert.deepEqual((await state()).position,arrival.position);await page.locator('#observation[open]').waitFor();await fixed();
+ assert.equal((await state()).observations.activeId,'buoy_shoal_01');await click('#close-observation');
+ assert.equal((await state()).observations.records.buoy_shoal_01,null);assert.equal((await state()).paused,true);
+ await click('#open-map');await click('#map-discovery');await click('#observe-confirm');await fixed();
+ const surveyed=await state();assert.equal(surveyed.player.gold,arrival.player.gold);assert.deepEqual(surveyed.ship,arrival.ship);
+ assert.equal(surveyed.observations.activeId,null);assert.equal(surveyed.observations.records.buoy_shoal_01.reportedPortId,null);
+ assert.match(await page.locator('#observe-next').innerText(),/松帆港.*海図係/);assert.match(await page.locator('#observe-clue').innerText(),/訪問できない/);
+ await layout('pc-observation-record');await shot('pc-observation-record');await click('#observe-log');
+ await page.locator('#observation-book').scrollIntoViewIfNeeded();await fixed();await shot('pc-observation-book');await layout('pc-observation-book');
+ await click('#book-reopen');assert.deepEqual((await state()).observations,surveyed.observations);await click('#observe-onward');
  await page.waitForFunction(()=>!document.querySelector('#dock-game').disabled,null,{timeout:60000});await click('#dock-game');
+ await click('[data-tab="observations"]');await fixed();assert.equal(await page.locator('#submit-observation').isEnabled(),true);
+ const beforeReport=await state();await click('#submit-observation');const accepted=await state();
+ assert.equal(accepted.player.gold,beforeReport.player.gold);assert.deepEqual(accepted.ship,beforeReport.ship);assert.deepEqual(accepted.clock,beforeReport.clock);
+ assert.equal(accepted.observations.records.buoy_shoal_01.reportedPortId,'p_pine');assert.equal(await page.locator('#submit-observation').isDisabled(),true);
+ assert.match(await page.locator('#registration-status').innerText(),/準備がそろいました/);await layout('pc-report');await shot('pc-report');
+ await continueSave();await click('[data-tab="observations"]');assert.deepEqual((await state()).observations,accepted.observations);
+ assert.equal(await page.locator('#submit-observation').isDisabled(),true);await click('[data-tab="market"]');
  await click('#sell-wood');await click('#delivery-job');await click('[data-tab="shipyard"]');await click('#upgrade-ship');
  assert.equal((await state()).player.gold,65);
  await click('[data-tab="supply"]');const beforeRefill=await state(),refillCost=Number((await page.locator('#food-full').innerText()).match(/(\d+)G$/)[1]);
@@ -70,16 +85,18 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  const savePath=path.join(out,'round-trip-save.json');await download.saveAs(savePath);
  const exported=JSON.parse(await fs.readFile(savePath,'utf8'));C.validate(exported);
  assert.equal(exported.ship.tier,2);assert.equal(exported.player.gold,beforeRefill.player.gold-refillCost);assert.equal(exported.ship.food,45);
+ assert.equal(exported.observations.records.buoy_shoal_01.reportedPortId,'p_pine');assert.equal(exported.observations.activeId,null);
  assert.equal(exported.exploration.buoys.buoy_shoal_01.approached,true);assert.equal(exported.exploration.buoys.buoy_shoal_01.marked,true);
  await click('#guide-next');await click('#guide-next');assert.equal((await state()).tutorial.status,'COMPLETED');
  await continueSave();assert.equal((await state()).tutorial.status,'COMPLETED');await shot('pc-completed');
  await page.locator('#import-file').setInputFiles(savePath);await page.waitForFunction(()=>window.adventure.getState().tutorial.step==='backup');
- assert.equal((await state()).exploration.buoys.buoy_shoal_01.marked,true);
- const bad=JSON.parse(JSON.stringify(exported));bad.exploration.version=999;const badPath=path.join(out,'invalid-save.json');await fs.writeFile(badPath,JSON.stringify(bad));
+ assert.equal((await state()).exploration.buoys.buoy_shoal_01.marked,true);assert.deepEqual((await state()).observations,exported.observations);
+ const bad=JSON.parse(JSON.stringify(exported));bad.observations.version=999;const badPath=path.join(out,'invalid-save.json');await fs.writeFile(badPath,JSON.stringify(bad));
  const preserved=await state();await page.locator('#import-file').setInputFiles(badPath);await page.waitForTimeout(300);assert.deepEqual(await state(),preserved);
  await context.close();results.push({label:'pc-complete-flow',passed:true});
 
  // Generated fixtures exercise actual saved states, without a second game implementation.
+ const portFixture=C.create(exported);portFixture.skipGuide();const savedPort=JSON.parse(portFixture.export());
  const g=C.create();g.delivery();g.trade('buy',12);g.depart('p_pine');g.guide('sailing');g.setSpeed(4);
  for(let i=0;i<1000&&!g.snapshot().exploration.buoys.buoy_shoal_01.seen;i++)g.step(.05);
  g.setPaused(true);const fixture=JSON.parse(g.export());
@@ -99,18 +116,30 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
   if(touch)await page.locator('#map-buoy').tap();else await click('#map-buoy');
   await click('#sight-mark');await click('#guide-skip');await layout(label+'-free');await shot(label+'-free');
   await click('#open-map');await click('#map-discovery');await click('#sight-approach');
-  await page.waitForFunction(()=>window.adventure.getState().exploration.pending?.kind==='ARRIVED',null,{timeout:45000});
-  await click('#close-sight');await layout(label+'-arrival');await shot(label+'-buoy-at-sea');
+  await page.locator('#observation[open]').waitFor({timeout:45000});await fixed();await layout(label+'-observation-intro');await shot(label+'-observation-intro');
+  await click('#close-observation');await layout(label+'-arrival');await shot(label+'-buoy-at-sea');
+  await click('#sea-clue');await click('#observe-confirm');await fixed();await layout(label+'-observation-record');await shot(label+'-observation-record');
+  await click('#observe-log');await page.locator('#observation-book').scrollIntoViewIfNeeded();await layout(label+'-observation-book');await shot(label+'-observation-book');
+  assert.match(await page.locator('#book-next').innerText(),/松帆港/);assert.equal(await page.locator('#book-report').isDisabled(),true);
+  await click('#book-reopen');assert.equal(await page.locator('#observe-confirm').isVisible(),false);await click('#close-observation');
   if(touch){await page.setViewportSize({width:height,height:width});await page.waitForTimeout(250);assert.equal((await state()).exploration.buoys.buoy_shoal_01.approached,true);await layout(label+'-rotation');}
-  await ctx.close();
+  const portSave=JSON.parse(JSON.stringify(savedPort));portSave.observations.records.buoy_shoal_01.reportedDay=null;portSave.observations.records.buoy_shoal_01.reportedPortId=null;
+  const importPath=path.join(out,label+'-report-fixture.json');await fs.writeFile(importPath,JSON.stringify(portSave));
+  await page.locator('#import-file').setInputFiles(importPath);await page.waitForFunction(()=>window.adventure.getState().phase==='PORT');
+  await click('[data-tab="observations"]');await fixed();await layout(label+'-report-before');
+  await click('#submit-observation');assert.equal((await state()).observations.records.buoy_shoal_01.reportedPortId,'p_pine');
+  await layout(label+'-report');await shot(label+'-report');await click('#report-book');
+  await page.locator('#observation-book').scrollIntoViewIfNeeded();await fixed();await layout(label+'-accepted-book');await shot(label+'-accepted-book');
+  assert.match(await page.locator('#book-next').innerText(),/通常航海/);await click('#book-report');
+  assert.equal(await page.locator('#submit-observation').isDisabled(),true);await ctx.close();
  }
- touchMode=false;const old=JSON.parse(JSON.stringify(exported));delete old.exploration;delete old.tutorial;old.discovery.fogChunks={};
+ touchMode=false;const old=JSON.parse(JSON.stringify(exported));delete old.exploration;delete old.tutorial;delete old.observations;old.discovery.fogChunks={};
  const ctx=await browser.newContext({viewport:{width:1360,height:900}});await ctx.addInitScript(({key,save})=>localStorage.setItem(key,JSON.stringify(save)),{key:C.SAVE_KEY,save:old});
  page=await ctx.newPage();listen(page);await page.goto(url);await page.locator('#loader.done').waitFor();await click('#continue-game');
- const migrated=await state();assert.equal(migrated.player.gold,old.player.gold);assert.equal(migrated.ship.tier,2);assert.equal(migrated.tutorial.step,'welcome');assert.equal(migrated.exploration.buoys.buoy_shoal_01.seen,false);
+ const migrated=await state();assert.equal(migrated.player.gold,old.player.gold);assert.equal(migrated.ship.tier,2);assert.equal(migrated.tutorial.step,'welcome');assert.equal(migrated.exploration.buoys.buoy_shoal_01.seen,false);assert.equal(migrated.observations.records.buoy_shoal_01,null);
  assert.deepEqual(errors,[],'No page exceptions');assert.deepEqual(layoutErrors,[],'All viewport layouts must fit without overlapping controls');results.push({label:'legacy-import',passed:true});
  await fs.writeFile(path.join(out,'results.json'),JSON.stringify({passed:true,version:C.VERSION,results,errors},null,2));
- console.log('Browser flow, persistence, JSON, legacy import and six viewport profiles passed.');
+ console.log('Browser observation, book, reporting, trade loop, persistence, JSON, legacy import and six viewport profiles passed.');
 })().catch(async error=>{
  console.error(error);if(page)try{await shot('failure');}catch{}
  await fs.mkdir(out,{recursive:true});await fs.writeFile(path.join(out,'results.json'),JSON.stringify({passed:false,results,errors,error:String(error)},null,2));process.exitCode=1;
