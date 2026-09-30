@@ -26,7 +26,7 @@
 
 在庫に応じて価格が動き、表示した合計額で決済します。食料と船体HP、救助による復帰、1・2・4倍速、航海日誌、ブラウザ内保存、JSONの書き出し・読み込みが使えます。港とメニュー、背景のタブでは航海時間が止まります。ゲーム版の `R` は、費用を確認した上で救助を要請する操作です。
 
-探索・五港・遭遇・第一章は次の工程です。船員・海賊行為・勢力争いはさらに後の工程です。完成版の仕様と現在の実装範囲は、[開発タスクと進捗](docs/development-status.md)で区別しています。
+次は二港の一航海に、観測浮標の発見、寄り道、観測と報告、航路登録、帰路の移動短縮を追加します。この試作を確認してから、五港、予報と十遭遇、第一章の順に広げます。船員・海賊行為・勢力争いはさらに後の工程です。完成版の仕様と現在の実装範囲は、[開発タスクと進捗](docs/development-status.md)で区別しています。
 
 保存先はブラウザと公開先ごとに異なります。移動する場合は日誌からJSONを書き出してください。二港試作の世界データは `two-ports-1` です。将来版への移行は今後実装し、互換性のない保存は上書きせず拒否します。
 
@@ -74,6 +74,10 @@
 - `tests/adventure-tutorial.test.cjs`：案内の進行、保存、旧セーブ互換性のテスト
 - `docs/tutorial-guide.md`：初回ガイドの動作と確認条件
 - `docs/development-status.md`：タスク、実装済み範囲、検証結果
+- `docs/voyage-prototype-plan.md`：一航海の試作と、第一章までの開発工程
+- `docs/voyage-prototype-playtest.md`：初見の三問と受入項目の記録ひな形
+- `docs/development-log.md`：判断、変更理由、確認結果の記録
+- `docs/exploration-research_2026-09-30.md`：八作品の比較と採用する設計
 - `docs/asset-register.md`：素材の出所と制作記録
 - `.nojekyll`：GitHub Pagesで静的ファイルをそのまま配信するための設定
 - `README.md`：作品概要・操作方法・公開手順
@@ -85,7 +89,13 @@
 - [企画書兼仕様書 Markdown版](docs/pirate-voyage_game-spec_v1.md)
 - [企画書兼仕様書 Word版](docs/pirate-voyage_game-spec_v1.docx)
 
-仕様書は版1.1です。二版を並べる構成を追記し、その制作順序に沿ってM0〜M3の試作を実装しました。
+仕様書は版1.2です。M0〜M3と初回ガイドは完了済みです。一航海の試作を優先する開発順を採用し、内容と確認基準をGitHubに記録しました。
+
+- [次の開発工程と受入項目](docs/voyage-prototype-plan.md)
+- [開発Issue](https://github.com/ryotamatsuki/pirate-voyage/issues)
+- [初見の試遊記録のひな形](docs/voyage-prototype-playtest.md)
+- [判断と変更の開発ログ](docs/development-log.md)
+- [八作品の調査提案書](docs/exploration-research_2026-09-30.md)
 
 ## 開発時の検証
 
@@ -97,3 +107,4 @@ node tests/adventure-tutorial.test.cjs
 ```
 
 ゲーム処理は `adventure/index.html` の `adventure-core`、画面と保存は `adventure-ui`、WebGL描画は `adventure-renderer` の各scriptに分けています。テストは配布するHTMLから処理を読み込むため、別の実装との食い違いを防げます。ゲーム版の修正は `adventure/` で行い、直下の自由航海版を変更しません。
+
