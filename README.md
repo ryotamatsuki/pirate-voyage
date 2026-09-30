@@ -7,7 +7,7 @@
 ## プレイする
 
 - [自由航海版 — GitHub Pages](https://ryotamatsuki.github.io/pirate-voyage/)
-- [ゲーム版 — 交易と発見の試作 v0.1.2](https://ryotamatsuki.github.io/pirate-voyage/adventure/)
+- [ゲーム版 — 交易と観測の試作 v0.1.3](https://ryotamatsuki.github.io/pirate-voyage/adventure/)
 - [自由航海版 — ChatGPT Sites](https://pirate-voyage.budoto.chatgpt.site/)
 - ローカル：遊びたい版の `index.html` をダウンロードし、WebGLに対応したブラウザで開いてください。オフラインでも動きます。
 
@@ -28,9 +28,11 @@
 
 航海で海図が開き、海鳥の集まる浮標を見つけられます。セナの案内で、港へ直行・浮標に接近・目印を残す、を選びます。選択中は時間と食料消費を止め、寄り道と帰港の予備を表示します。「海図・発見」と日誌から選び直し、元の航路にも戻れます。
 
-次は浮標の観測と港への報告、航路登録、帰路の移動短縮を追加します。この試作を確認してから、五港、予報と十遭遇、第一章の順に広げます。船員・海賊行為・勢力争いはさらに後の工程です。完成版の仕様と現在の実装範囲は、[開発タスクと進捗](docs/development-status.md)で区別しています。
+浮標へ接近すると、潮と銘板を観測できます。「航海帳・保存」に分かったこと・未確認・次の行動を記録し、松帆港の「海図係」で報告すると受理状況と航路登録の準備を確認できます。観測で資金や積荷は増えません。「北の灯」は現在訪問できない手掛かりです。
 
-保存先はブラウザと公開先ごとに異なります。移動する場合は日誌からJSONを書き出してください。二港試作の世界データは `two-ports-1` です。v0.1.0/1の記録を保って読み込み、視認・接近・目印と開いた海図を保存します。将来版への移行は今後実装し、互換性のない保存は上書きせず拒否します。
+次は航路登録と帰路の移動短縮を追加します。この試作を確認してから、五港、予報と十遭遇、第一章の順に広げます。船員・海賊行為・勢力争いはさらに後の工程です。完成版の仕様と現在の実装範囲は、[開発タスクと進捗](docs/development-status.md)で区別しています。
+
+保存先はブラウザと公開先ごとに異なります。移動する場合は日誌からJSONを書き出してください。二港試作の世界データは `two-ports-1` です。v0.1.0〜2の記録を保って読み込み、視認・接近・目印と開いた海図、観測・報告を保存します。旧記録は未観測から始め、接近済みでも勝手に観測・受理済みにしません。将来版への移行は今後実装し、互換性のない保存は上書きせず拒否します。
 
 ## 自由航海版の主な機能
 
@@ -75,6 +77,7 @@
 - `tests/adventure-core.test.cjs`：取引・航海・保存のゲーム処理テスト
 - `tests/adventure-tutorial.test.cjs`：案内の進行、保存、旧セーブ互換性のテスト
 - `tests/adventure-exploration.test.cjs`：発見、海図、寄り道、食料見積り、保存のテスト
+- `tests/adventure-observation.test.cjs`：観測・報告、重複防止、旧版移行、保存条件のテスト
 - `tests/adventure-browser.cjs`：実画面の操作・保存・旧記録・縦横配置のブラウザ検証
 - `.github/workflows/adventure-checks.yml`：処理とブラウザの継続検証、画面・結果の保存
 - `tests/responsive-review.html`：幅を変えて航海中の画面と操作を確認する開発用ページ
@@ -98,6 +101,7 @@
 仕様書は版1.2です。M0〜M3と初回ガイドは完了済みです。一航海の試作を優先する開発順を採用し、内容と確認基準をGitHubに記録しました。
 
 - [次の開発工程と受入項目](docs/voyage-prototype-plan.md)
+- [観測と報告の検証記録](docs/verification/m4a2.md)
 - [開発Issue](https://github.com/ryotamatsuki/pirate-voyage/issues)
 - [初見の試遊記録のひな形](docs/voyage-prototype-playtest.md)
 - [判断と変更の開発ログ](docs/development-log.md)
@@ -113,7 +117,7 @@ node --test tests/*.test.cjs
 
 画面は [開発用の確認ページ](https://ryotamatsuki.github.io/pirate-voyage/tests/responsive-review.html) でPC幅、縦・小型・横画面を切り替えて確認できます。iframe内のゲームは同じ公開版で、幅変更だけでは再読込みしません。実機のタッチ入力・Safari・性能測定とは区別します。
 
-ブラウザ検証はGitHub Actionsの **Adventure checks** で実行します。配布するHTMLをChromiumで開き、初回ガイド、発見・寄り道、帰港、売買、補強、保存・JSON、旧記録の移行を確認します。PCとタッチ操作を模した六つの画面サイズ、回転、画面の重なりを検証し、スクリーンショットと結果JSONを14日間保存します。実機Safariと性能測定は後続の確認です。
+ブラウザ検証はGitHub Actionsの **Adventure checks** で実行します。配布するHTMLをChromiumで開き、初回ガイド、発見・寄り道・観測、航海帳、港への報告、帰港、売買、補強、保存・JSON、旧記録の移行を確認します。PCとタッチ操作を模した六つの画面サイズ、回転、画面の重なりを検証し、スクリーンショットと結果JSONを14日間保存します。実機Safariと性能測定は後続の確認です。
 
 手元で画面検証を行う場合だけ、開発用にPlaywrightを追加します。ゲームの起動には不要です。
 
