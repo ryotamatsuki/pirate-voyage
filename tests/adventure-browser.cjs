@@ -79,7 +79,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  const g=C.create();g.delivery();g.trade('buy',12);g.depart('p_pine');g.guide('sailing');g.setSpeed(4);
  for(let i=0;i<1000&&!g.snapshot().exploration.buoys.buoy_shoal_01.seen;i++)g.step(.05);
  g.setPaused(true);const fixture=JSON.parse(g.export());
- for(const [label,width,height,touch] of [['pc',1360,900,false],['portrait',390,844,true],['small',375,667,true],['landscape',844,390,true],['boundary',701,393,true]]){
+ for(const [label,width,height,touch] of [['pc',1360,900,false],['portrait',390,844,true],['small',375,667,true],['landscape',844,390,true],['boundary',701,393,true],['compact-landscape',667,375,true]]){
   touchMode=touch;
   const ctx=await browser.newContext({viewport:{width,height},hasTouch:touch,isMobile:touch});
   await ctx.addInitScript(({key,save})=>localStorage.setItem(key,JSON.stringify(save)),{key:C.SAVE_KEY,save:fixture});
@@ -106,8 +106,9 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  const migrated=await state();assert.equal(migrated.player.gold,old.player.gold);assert.equal(migrated.ship.tier,2);assert.equal(migrated.tutorial.step,'welcome');assert.equal(migrated.exploration.buoys.buoy_shoal_01.seen,false);
  assert.deepEqual(errors,[],'No page exceptions');results.push({label:'legacy-import',passed:true});
  await fs.writeFile(path.join(out,'results.json'),JSON.stringify({passed:true,version:C.VERSION,results,errors},null,2));
- console.log('Browser flow, persistence, JSON, legacy import and five viewport profiles passed.');
+ console.log('Browser flow, persistence, JSON, legacy import and six viewport profiles passed.');
 })().catch(async error=>{
  console.error(error);if(page)try{await shot('failure');}catch{}
  await fs.mkdir(out,{recursive:true});await fs.writeFile(path.join(out,'results.json'),JSON.stringify({passed:false,results,errors,error:String(error)},null,2));process.exitCode=1;
 }).finally(async()=>{if(browser)await browser.close();if(server)await new Promise(resolve=>server.close(resolve));});
+
