@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#082b36">
+<title>黒潮の航海 — 失われた潮路 | ゲーム版</title>
+<meta name="description" content="木材を積み、対岸の港へ。交易・補給・船の強化を遊べる海洋冒険ゲーム、二港交易の試作です。">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20rx%3D%227%22%20fill%3D%22%23082b36%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2215%22%20fill%3D%22none%22%20stroke%3D%22%23e7c78d%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M20%204L23%2017%2036%2020%2023%2023%2020%2036%2017%2023%204%2020%2017%2017Z%22%20fill%3D%22none%22%20stroke%3D%22%23e7c78d%22%2F%3E%3Cpath%20d%3D%22M20%208L23%2020%2020%2032%2017%2020Z%22%20fill%3D%22%23e7c78d%22%2F%3E%3C%2Fsvg%3E">
+
+<style>
+:root{color-scheme:dark;--ink:#eef2e6;--muted:#9dbabc;--gold:#e7c78d;--line:rgba(223,207,167,.2);--panel:rgba(5,27,35,.78)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#082b36;color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:4px}button{color:inherit;-webkit-tap-highlight-color:transparent}canvas#sea{display:block;width:100%;height:100%;touch-action:none;outline:0}.shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,22,31,.42),transparent 27%,transparent 57%,rgba(2,21,28,.7)),radial-gradient(ellipse at 50% 40%,transparent 44%,rgba(0,15,23,.22));z-index:1}
+#ui{position:fixed;inset:0;pointer-events:none;z-index:2;transition:opacity .3s}#ui.hidden{opacity:0;visibility:hidden}#ui button,#ui input,#ui canvas{pointer-events:auto}.brand{position:absolute;top:max(30px,env(safe-area-inset-top));left:max(38px,env(safe-area-inset-left));}.eyebrow{display:flex;align-items:center;gap:11px;font-size:10px;letter-spacing:.3em;color:var(--gold);font-weight:600}.brand-mark{width:27px;height:27px}.brand h1{font-family:"Palatino Linotype","Yu Mincho","Hiragino Mincho ProN",serif;font-weight:400;font-size:38px;letter-spacing:.13em;margin:10px 0 7px;text-shadow:0 2px 18px #08222f40}.brand p{margin:0;color:#cedcda;font-size:11px;letter-spacing:.15em}.location{display:inline-flex;gap:7px;align-items:center;margin-top:22px;color:#d8e6df;font-size:10px;letter-spacing:.15em}.location:before{content:"";width:5px;height:5px;background:var(--gold);border-radius:50%;box-shadow:0 0 10px #eacb8a80}.top-actions{position:absolute;right:34px;top:max(31px,env(safe-area-inset-top));display:flex;align-items:center;gap:7px}.live{display:flex;align-items:center;gap:6px;margin-right:13px;font-size:9px;letter-spacing:.16em;color:#e2eadd}.live i{width:5px;height:5px;border-radius:50%;background:#b4d6b5;box-shadow:0 0 8px #b4d6b580}.icon-btn{display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;width:37px;height:37px;background:#08253055;backdrop-filter:blur(12px);transition:background .2s,color .2s}.icon-btn:hover{background:#315259a8;color:var(--gold)}.icon-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}.icon-btn[aria-pressed="true"]{color:var(--gold);background:#25444a}
+.wind-card{position:absolute;right:36px;top:109px;width:205px;padding:16px 17px;border:1px solid var(--line);background:linear-gradient(135deg,#173e4445,#08252e70);border-radius:3px;backdrop-filter:blur(14px)}.small-label{font-size:9px;letter-spacing:.2em;color:var(--muted)}.wind-main{display:flex;align-items:center;justify-content:space-between;margin-top:11px}.wind-value{font-family:Georgia,serif;font-size:27px;line-height:1.1}.wind-value small{font:10px system-ui;color:var(--muted);margin-left:5px}.wind-sub{font-size:9px;margin-top:7px;letter-spacing:.06em;color:#c5d6d3}.wind-rose{width:57px;height:57px;position:relative;border:1px solid #8eaebd50;border-radius:50%;background:radial-gradient(circle,#aac5c21a,transparent 68%)}.wind-rose:before,.wind-rose:after{content:"";position:absolute;background:#bed5d426}.wind-rose:before{width:1px;height:45px;left:27px;top:5px}.wind-rose:after{height:1px;width:45px;top:27px;left:5px}.wind-rose b{position:absolute;font-size:7px;left:25px;top:-11px;font-weight:400;color:#bacac8}.wind-arrow{position:absolute;left:22px;top:11px;width:11px;height:34px;transform-origin:50% 50%;z-index:1}.wind-arrow:before{content:"";position:absolute;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:20px solid var(--gold);top:0}.wind-arrow:after{content:"";position:absolute;border-left:5px solid transparent;border-right:5px solid transparent;border-top:14px solid #68888b;top:20px}
+.readout{position:absolute;left:39px;bottom:163px;display:flex;align-items:end;gap:26px;text-shadow:0 2px 20px #082835}.speed{font-family:Georgia,serif;font-size:59px;font-weight:400;letter-spacing:-.04em;line-height:1}.speed small{font:10px system-ui;letter-spacing:.18em;color:#c4d7d4;margin-left:8px}.readout .small-label{margin-bottom:9px}.readout-detail{padding-bottom:4px}.readout-detail b{display:block;font:20px Georgia,serif;letter-spacing:.02em}.readout-detail span{font-size:9px;color:#a4c3c3;letter-spacing:.1em}.readout-divider{height:38px;width:1px;background:var(--line);margin-bottom:5px}.view-tools{position:absolute;left:40px;top:238px;display:flex;flex-direction:column;gap:9px}.view-btn{border:0;background:transparent;display:flex;align-items:center;gap:9px;padding:4px 0;font-size:10px;letter-spacing:.08em;text-align:left;color:#c4d6d5}.view-btn:before{content:"";display:inline-block;width:5px;height:5px;border:1px solid #b8d2ce70;border-radius:50%}.view-btn.active{color:var(--gold)}.view-btn.active:before{background:var(--gold);border-color:var(--gold)}
+.helm{position:absolute;left:36px;right:260px;bottom:max(35px,env(safe-area-inset-bottom));border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(22px);border-radius:5px;display:grid;grid-template-columns:1.03fr 1fr 1.23fr;max-width:935px;min-height:105px;box-shadow:0 9px 55px #041d2740}.helm-section{padding:17px 21px}.helm-section+.helm-section{border-left:1px solid var(--line)}.section-title{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:9px;letter-spacing:.16em;margin-bottom:12px}.section-title strong{font-weight:400;color:var(--gold);font-variant-numeric:tabular-nums}.segmented{display:flex;border:1px solid #75919138;border-radius:3px;padding:3px;gap:3px}.segmented button{flex:1;border:0;border-radius:2px;padding:7px 6px;background:transparent;font-size:10px;white-space:nowrap;color:#a9c0be;transition:background .2s,color .2s}.segmented button.active{background:var(--gold);color:#142f38}.segmented button:hover:not(.active){background:#748e8525;color:var(--ink)}.sail-row{display:flex;align-items:center;gap:10px;margin-top:4px}.sail-row svg{width:22px;flex-shrink:0;stroke:var(--gold);fill:none;stroke-width:1.3}input[type="range"]{width:100%;height:18px;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;touch-action:pan-y}input[type="range"]::-webkit-slider-runnable-track{height:3px;background:linear-gradient(to right,var(--gold) 0% 100%,#728985 100%);border-radius:2px}input[type="range"]::-moz-range-track{height:3px;background:#819591;border-radius:2px}input[type="range"]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;background:#f3dfb7;border:2px solid var(--gold);margin-top:-4px;box-shadow:0 0 0 4px #dec17f13}input[type="range"]::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:#f3dfb7;border:1px solid var(--gold)}.sail-hint{display:flex;justify-content:space-between;font-size:8px;color:#90aaa9;margin:4px 0 0 32px;letter-spacing:.04em}.world-buttons{display:flex;justify-content:space-between;gap:8px}.world-buttons .segmented{flex:1}.time-btn{width:30px;height:32px;border:1px solid #75919138;background:transparent;border-radius:3px;color:var(--gold);font-size:15px;display:grid;place-items:center}.time-btn:hover{background:#6e877c26}.world-caption{font-size:8px;color:#9cb3b1;letter-spacing:.09em;margin-top:5px}
+.chart{position:absolute;right:36px;bottom:max(35px,env(safe-area-inset-bottom));width:196px;height:196px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:rgba(5,27,35,.73);backdrop-filter:blur(16px)}#chart{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipulation}.chart-title{position:absolute;left:13px;top:12px;font-size:8px;letter-spacing:.2em;color:#b4c9c5;pointer-events:none}.chart-footer{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:8px;color:#a7bfbc;letter-spacing:.04em;pointer-events:none}.travel-tag{position:absolute;bottom:13px;left:39px;color:#9cb8b7;font-size:8px;letter-spacing:.09em}.camera-hint{position:absolute;bottom:13px;right:37px;font-size:8px;color:#9bb6b4;letter-spacing:.06em}.touch-helm{position:absolute;left:39px;bottom:245px;display:none;gap:8px}.touch-helm button{border:1px solid var(--line);background:#0a313aaa;width:48px;height:43px;border-radius:5px;font-size:20px;touch-action:none;user-select:none}.touch-helm button:active{background:#d3bb87;color:#0b2932}.restore{position:fixed;z-index:4;bottom:18px;left:20px;display:none;backdrop-filter:blur(10px)}.restore.show{display:grid}.toast{position:fixed;z-index:5;left:50%;top:24%;transform:translate(-50%,10px);font-size:11px;letter-spacing:.08em;padding:10px 18px;background:#082832c9;backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:4px;opacity:0;pointer-events:none;transition:.3s;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:var(--ink);padding:30px;width:min(460px,calc(100% - 36px));box-shadow:0 20px 90px #0006}dialog::backdrop{background:#00121ca8;backdrop-filter:blur(7px)}dialog h2{margin:0 0 8px;font:27px "Yu Mincho",Georgia,serif;letter-spacing:.06em}dialog p{font-size:12px;line-height:1.9;color:#c2d3cf}dialog .close{position:absolute;right:15px;top:15px;width:28px;height:28px}dialog dl{display:grid;grid-template-columns:120px 1fr;gap:13px;font-size:11px;margin:25px 0}dialog dt{color:var(--gold)}dialog dd{margin:0;color:#c2d3cf}.help-note{border-top:1px solid var(--line);padding-top:13px;font-size:10px!important;color:#94afae!important}.loader{position:fixed;inset:0;z-index:10;background:#082932;display:grid;place-items:center;transition:opacity .65s}.loader.done{opacity:0;pointer-events:none}.loader-content{text-align:center}.loader svg{width:48px;stroke:var(--gold);fill:none;stroke-width:1;animation:sway 3s ease-in-out infinite}.loader h2{font:30px "Yu Mincho",Georgia,serif;letter-spacing:.1em;margin:20px 0 9px}.loader p{font-size:10px;color:#aac6c4;letter-spacing:.16em}.error{display:none;position:fixed;z-index:12;inset:0;background:#0a2832;padding:8vh 8vw;color:#eef2e6}.error h2{font:26px "Yu Mincho",serif}.error p{line-height:1.9;max-width:560px;font-size:13px}.error code{color:#e7c78d;font-size:11px;overflow-wrap:anywhere}@keyframes sway{50%{transform:rotate(6deg) translateY(5px)}}
+@media(min-width:1500px){.brand{top:44px;left:52px}.helm{left:50px;bottom:45px;max-width:1040px}.chart{right:50px;bottom:45px;width:210px;height:210px}.readout{left:53px;bottom:178px}.view-tools{left:54px;top:263px}}
+@media(max-width:1000px){.helm{right:243px;grid-template-columns:1fr 1fr;min-height:108px}.helm-section{padding:13px 15px}.helm-section:nth-child(3){grid-column:1 / 3;border-left:0;border-top:1px solid var(--line);padding:9px 15px;display:flex;align-items:center;gap:13px}.helm-section:nth-child(3) .section-title{margin:0;white-space:nowrap}.world-buttons{flex:1}.world-caption{display:none}.readout{bottom:215px}.chart{width:180px;height:180px}.travel-tag{font-size:7px}.touch-helm{bottom:290px}.helm{max-width:none}}
+@media(max-width:700px){.brand{top:max(20px,env(safe-area-inset-top));left:22px}.brand h1{font-size:28px;margin:10px 0}.brand p{font-size:9px;letter-spacing:.1em}.brand .eyebrow{font-size:7px;letter-spacing:.21em;gap:7px}.brand-mark{width:21px;height:21px}.location{margin-top:16px;font-size:8px}.top-actions{right:17px;top:max(22px,env(safe-area-inset-top));gap:5px}.top-actions .live{display:none}.icon-btn{width:31px;height:31px}.icon-btn svg{width:14px;height:14px}#fullscreen{display:none}.wind-card{right:20px;top:112px;width:98px;border:0;padding:0;background:transparent;backdrop-filter:none}.wind-card .small-label{font-size:7px}.wind-main{margin-top:8px;gap:8px}.wind-value{font-size:20px}.wind-value small{font-size:8px;margin-left:2px}.wind-rose{width:33px;height:33px;flex-shrink:0}.wind-rose:before{height:23px;left:15px;top:4px}.wind-rose:after{width:23px;top:15px;left:4px}.wind-rose b{left:13px;top:-10px;font-size:6px}.wind-arrow{width:8px;height:24px;left:12px;top:5px}.wind-arrow:before{border-left-width:4px;border-right-width:4px;border-bottom-width:14px}.wind-arrow:after{border-left-width:4px;border-right-width:4px;border-top-width:10px;top:14px}.wind-sub{font-size:7px;line-height:1.6}.view-tools{left:23px;top:185px;gap:4px}.view-btn{font-size:8px}.readout{left:23px;bottom:calc(195px + env(safe-area-inset-bottom));gap:16px}.speed{font-size:42px}.speed small{font-size:8px;margin-left:6px}.readout .small-label{font-size:7px;margin-bottom:7px}.readout-detail b{font-size:17px}.readout-detail span{font-size:7px}.readout-divider{height:30px}.readout-detail.distance{display:none}.chart{right:20px;bottom:calc(190px + env(safe-area-inset-bottom));width:118px;height:118px}.chart-title{font-size:6px;left:8px;top:8px}.chart-footer{font-size:6px;bottom:6px}.helm{left:19px;right:19px;bottom:max(25px,calc(env(safe-area-inset-bottom) + 12px));grid-template-columns:1fr 1fr}.helm-section{padding:12px 13px}.section-title{font-size:8px;margin-bottom:9px}.segmented button{padding:8px 3px;font-size:10px}.helm-section:nth-child(3){padding:9px 13px;gap:10px}.helm-section:nth-child(3) .section-title{font-size:7px}.world-buttons{gap:7px}.world-buttons .segmented button{padding:6px 3px;font-size:9px}.time-btn{height:30px}.travel-tag,.camera-hint{display:none}.touch-helm{left:23px;bottom:calc(269px + env(safe-area-inset-bottom))}.touch-helm button{width:43px;height:37px;font-size:17px}.toast{font-size:10px;top:30%;max-width:90%;white-space:normal;text-align:center}.sail-hint{font-size:7px}}
+@media(max-height:540px) and (orientation:landscape){.brand{top:15px;left:24px}.brand h1{font-size:25px}.brand p,.location,.view-tools,.wind-card,.chart,.camera-hint{display:none}.top-actions{top:15px;right:20px}.helm{left:auto;right:20px;bottom:18px;width:410px;min-height:0;grid-template-columns:1fr 1fr}.helm-section{padding:10px 13px}.helm-section:nth-child(3){padding:6px 13px}.readout{left:25px;bottom:30px}.touch-helm{left:25px;bottom:100px}.speed{font-size:40px}.travel-tag{display:none}}
+@media(pointer:coarse){.touch-helm{display:flex}}
+/* The two-port prototype keeps the sea visible around its game controls. */
+[hidden]{display:none!important}button:disabled{opacity:.45;cursor:not-allowed}button,a,input{touch-action:manipulation}
+.brand{left:28px;top:26px}.brand h1{font-size:30px;margin:7px 0}.brand p{font-size:11px}.brand .location{margin-top:11px}.top-actions{right:28px;top:28px}.icon-btn{width:44px;height:44px}.live{margin-right:5px}.resources{position:absolute;left:28px;top:156px;display:grid;grid-template-columns:repeat(4,1fr);width:408px;border:1px solid var(--line);border-radius:12px;background:var(--panel);backdrop-filter:blur(12px);overflow:hidden}.resources div{padding:10px 14px;border-right:1px solid var(--line);min-width:0}.resources div:last-child{border:0}.resources span{display:block;font-size:10px;color:var(--muted);margin-bottom:6px}.resources b{font-size:15px;white-space:nowrap;font-weight:500}.resources .warning{color:#ffca8d;background:#80522122}.game-actions{position:absolute;left:28px;top:238px;display:flex;gap:8px}.game-button{min-height:44px;padding:10px 16px;border:1px solid var(--line);border-radius:7px;background:#163e46;color:var(--ink);font-size:13px;letter-spacing:.02em;transition:background .15s}.game-button:hover:enabled{background:#225660}.game-button.primary{background:var(--gold);color:#112c34;border-color:var(--gold);font-weight:600}.game-button.primary:hover:enabled{background:#f2daa9}.text-button{border:0;background:none;color:var(--muted);padding:12px 4px;min-height:44px;text-decoration:underline}.panel{border:1px solid var(--line);background:var(--panel);border-radius:12px;backdrop-filter:blur(12px)}.journey{position:absolute;right:28px;top:242px;width:232px;padding:17px;pointer-events:auto}.journey h2{font-size:20px;font-weight:400;margin:12px 0 10px}.journey p{font-size:11px;color:var(--muted);line-height:1.6;margin:5px 0}.journey progress{appearance:none;width:100%;height:3px;display:block;margin:15px 0;background:#29474b;border:0}.journey progress::-webkit-progress-bar{background:#29474b}.journey progress::-webkit-progress-value{background:var(--gold)}.journey .game-button{width:100%;margin-top:0}.goal{position:absolute;left:28px;top:286px;max-width:408px;margin:9px 0;padding:12px 16px;font-size:12px;line-height:1.7;color:var(--gold)}.view-tools{left:28px;top:362px;display:flex;flex-direction:row}.view-btn{min-height:44px;font-size:11px}.wind-card{right:28px;top:100px;max-width:232px}.readout{left:28px;bottom:166px}.readout .distance{display:none}.helm{left:28px;right:285px;bottom:32px;grid-template-columns:1.15fr 1fr 1fr;max-width:880px}.helm-section{padding:15px}.segmented button{min-height:44px}.sail-row input{min-height:44px}.clock-section .segmented{display:flex}.clock-section .segmented button{flex:1}.clock-section .world-caption{padding-top:5px}.chart{right:28px;bottom:32px;width:232px;height:202px;padding:14px}.chart canvas{width:100%;height:152px}.chart-title{font-size:10px}.chart-footer{font-size:9px}.travel-tag{display:none}.camera-hint{display:none}.touch-helm{left:28px;bottom:255px}.touch-helm button{width:44px;height:44px}.toast{z-index:40;top:auto;bottom:160px;width:max-content;max-width:min(620px,calc(100vw - 24px));white-space:normal;text-align:center;line-height:1.6;font-size:13px}
+#title-screen{position:fixed;inset:0;z-index:12;background:linear-gradient(90deg,rgba(3,22,30,.95),rgba(3,22,30,.70) 48%,rgba(3,22,30,.25));overflow-y:auto;display:flex;align-items:center;padding:44px max(40px,7vw)}.title-content{max-width:550px}.title-content .eyebrow{font-size:10px;letter-spacing:.18em}.title-content h2{font-size:56px;letter-spacing:.10em;font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:400;margin:28px 0 24px}.title-content h2 span{display:block;font-family:system-ui,sans-serif;font-size:17px;letter-spacing:.22em;margin-top:17px;color:var(--gold)}.title-story{font-size:15px;line-height:2.0;color:#d1e0d9;margin:24px 0}.trial-label{font-size:11px;letter-spacing:.1em;color:var(--gold)}.trial-description{font-size:12px;line-height:1.8;color:var(--muted)}.name-label{display:block;font-size:11px;color:var(--muted);margin:20px 0 14px}.name-label input{display:block;margin-top:8px;width:100%;max-width:340px;padding:10px 12px;min-height:44px;background:#0b2f37;border:1px solid var(--line);border-radius:5px;color:var(--ink)}.title-buttons{display:flex;gap:10px;max-width:340px}.title-buttons button{flex:1}.muted{font-size:12px!important;color:var(--muted)!important;line-height:1.7}.utility-links{display:flex;gap:15px;font-size:12px}.simulator-link{display:inline-block;font-size:12px;color:var(--gold);line-height:1.8;margin:17px 0 0;text-underline-offset:4px;min-height:28px}dialog.game-dialog{padding:26px 28px;width:620px;max-width:calc(100vw - 28px);max-height:calc(100dvh - 32px);overflow:auto;border:1px solid #517279;background:#092b34;color:var(--ink);border-radius:14px;box-shadow:0 30px 100px #0008}dialog::backdrop{background:#011d28b8;backdrop-filter:blur(4px)}.game-dialog h2{font-size:26px;font-weight:400;margin:7px 0 0}.game-dialog h3{font-size:17px;font-weight:500;margin:14px 0 8px}.game-dialog p{font-size:13px;line-height:1.8;margin:10px 0}.dialog-header{display:flex;justify-content:space-between;gap:12px;align-items:center}.dialog-header .icon-btn{flex-shrink:0}.wallet{color:var(--gold)}.port-tabs{display:flex;border-bottom:1px solid var(--line);margin:17px 0 18px;gap:5px}.port-tabs button{flex:1;min-height:44px;padding:10px 12px;border:0;border-bottom:2px solid transparent;background:transparent;font-size:13px;color:var(--muted)}.port-tabs button.active{color:var(--gold);border-color:var(--gold)}.commodity{display:flex;align-items:center;gap:16px}.commodity h3{margin:0}.commodity p{font-size:12px;margin:4px 0}.wood-icon{width:62px;height:62px;border:1px solid var(--line);background:#254446;display:grid;place-items:center;font-size:46px;color:var(--gold);border-radius:9px}.quantity-row{display:flex;gap:8px;align-items:flex-end;margin:18px 0 8px}.quantity-row label{font-size:11px;color:var(--muted);max-width:100px}.quantity-row input{display:block;margin-top:6px;width:100%;min-height:44px;background:#123943;border:1px solid var(--line);border-radius:5px;padding:8px 10px;color:var(--ink)}.quantity-row .game-button{padding:9px 12px}.trade-options{display:grid;grid-template-columns:1fr 1fr;gap:14px}.trade-options p{min-height:47px;font-size:12px}.trade-options button{width:100%}.job-card{border-top:1px solid var(--line);padding-top:7px;margin-top:17px}.job-card p{font-size:12px}.service-buttons,.log-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.upgrade-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}.upgrade-table th,.upgrade-table td{border-bottom:1px solid var(--line);text-align:left;padding:10px 7px}.upgrade-table th{font-weight:400;color:var(--muted)}.upgrade-table td:last-child{color:var(--gold)}.departure-note{padding:12px;border:1px solid var(--line);border-radius:7px;background:#183a40}.journal{margin:20px 0 0;padding-left:18px}.journal li{padding:8px 0;line-height:1.8;font-size:12px;color:#c6d9d4;border-bottom:1px solid var(--line)}#pause-icon-label{display:none}.error{z-index:30}.error button{margin:14px 0}.loader{z-index:20}#help{max-height:calc(100dvh - 30px);overflow:auto}#help .close{width:44px;height:44px}
+@media(max-width:700px){.brand{left:14px;top:max(16px,env(safe-area-inset-top))}.brand h1{font-size:23px;margin:4px 0}.brand .eyebrow{font-size:8px;gap:7px;letter-spacing:.14em}.brand-mark{width:18px;height:18px}.brand p{font-size:9px}.brand .location{display:none}.top-actions{right:12px;top:15px;gap:4px}.top-actions .live,#fullscreen{display:none}.resources{left:14px;top:98px;width:calc(100% - 28px)}.resources div{padding:10px 9px}.resources b{font-size:12px}.resources span{font-size:9px}.wind-card{display:none}.game-actions{left:14px;top:174px;flex-direction:column;width:137px;gap:7px}.game-actions button{font-size:12px;padding:8px 9px}.goal{top:364px;left:14px;right:14px;width:auto;max-width:none;padding:9px 12px;font-size:10px;margin:0}.journey{top:174px;right:14px;width:calc(100% - 176px);padding:12px}.journey h2{font-size:17px;margin:8px 0}.journey .small-label{font-size:8px;letter-spacing:.04em}.journey p{font-size:9px}.journey progress{margin:9px 0}.journey .game-button{font-size:11px;min-height:44px;padding:7px}.view-tools{display:none}.readout{left:14px;bottom:183px;gap:14px}.speed{font-size:37px}.readout-detail{display:none}.readout-divider{display:none}.chart{right:14px;bottom:166px;width:155px;height:140px;padding:9px}.chart canvas{height:99px}.chart-title{font-size:8px}.chart-footer{font-size:7px}.helm{left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));width:auto;grid-template-columns:1fr 1fr;display:grid;border-radius:10px}.helm-section{padding:10px}.helm-section:nth-child(2){border-right:0}.helm-section.clock-section{grid-column:1 / -1;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);border-left:0;gap:12px}.clock-section .section-title{margin:0;min-width:92px}.clock-section .section-title span{font-size:8px}.clock-section .segmented{flex:1;margin:0;max-width:178px}.clock-section .segmented button{min-height:44px;padding:6px;font-size:11px}.clock-section .world-caption{display:none}.section-title{font-size:8px;margin-bottom:7px}.segmented button{font-size:10px;padding:8px 4px}.sail-row{gap:5px}.sail-row input{min-height:44px}.sail-hint{display:none}.touch-helm{left:14px;bottom:260px;display:flex}.touch-helm button{width:44px;height:44px}.toast{bottom:172px;font-size:11px}.title-content h2{font-size:39px;margin:22px 0 18px}.title-content .eyebrow{font-size:8px;letter-spacing:.14em}#title-screen{padding:28px 25px;background:linear-gradient(180deg,#032330e6,#032330b3);align-items:center}.title-story{font-size:13px;line-height:1.9;margin:18px 0}.trial-description{font-size:11px}.name-label{margin-top:16px}.utility-links{gap:10px;font-size:11px}.title-content .simulator-link{margin-top:9px}dialog.game-dialog{padding:18px;width:calc(100vw - 24px);max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px)}.game-dialog h2{font-size:23px}.game-dialog p{font-size:12px}.quantity-row{gap:6px}.quantity-row .game-button{font-size:11px;padding:8px 10px}.quantity-row label{max-width:77px}.trade-options{gap:10px}.trade-options p{font-size:11px;min-height:58px}.trade-options .game-button{font-size:12px}.service-buttons,.log-buttons{grid-template-columns:1fr}.port-tabs button{font-size:12px}.wood-icon{width:48px;height:48px;font-size:35px}.commodity{gap:11px}}
+@media(max-height:500px) and (min-width:701px){.brand{top:12px;left:16px}.brand h1{font-size:23px}.brand p,.brand .location,.wind-card,.view-tools,.touch-helm{display:none}.brand .eyebrow{font-size:8px}.resources{left:280px;top:12px;width:310px}.resources div{padding:8px}.resources b{font-size:12px}.top-actions{top:12px;right:12px}.top-actions .live,#fullscreen{display:none}.game-actions{left:16px;top:104px;flex-direction:column;width:140px}.goal{left:174px;right:220px;top:87px;padding:10px;font-size:10px;max-width:none}.journey{right:12px;top:75px;width:195px;padding:12px}.journey h2{font-size:16px;margin:8px 0}.journey .small-label{font-size:8px}.journey p{font-size:9px}.journey progress{margin:8px 0}.chart{display:none}.helm{left:auto;right:12px;bottom:12px;width:440px;grid-template-columns:1fr 1fr 1fr}.helm-section{padding:10px}.section-title span{font-size:7px}.segmented button{font-size:10px;padding:8px 5px}.readout{left:18px;bottom:20px}.readout .speed{font-size:36px}.readout-divider,.readout-detail{display:none}.toast{bottom:116px}.title-content h2{font-size:34px;margin:12px 0}.title-content .title-story{margin:12px 0}.trial-description,.name-label,.title-content .eyebrow{display:none}#title-screen{padding:20px 40px}.title-content{max-width:650px}.title-content h2 span{margin-top:6px;font-size:13px}}
+
+@media(max-height:500px) and (min-width:701px){.journey #journey-eta,.journey progress{display:none}.helm{grid-template-columns:1fr 1fr}.clock-section{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:14px}.clock-section .section-title{margin:0}.clock-section .segmented{flex:1}.clock-section .world-caption{display:none}}
+
+@media(max-height:500px) and (min-width:701px){.journey .small-label{display:none}.toast{bottom:175px}}
+
+</style>
+</head>
+<body>
+<canvas id="sea" tabindex="0" aria-label="凪灯号の3D航海。ドラッグで視点を変更し、出港後に方向キーで操舵できます。"></canvas>
+<div class="shade"></div>
+<div id="ui" class="hidden" inert>
+  <header class="brand">
+    <div class="eyebrow"><svg class="brand-mark" viewBox="0 0 40 40" fill="none" stroke="currentColor"><circle cx="20" cy="20" r="16" stroke-width=".7"/><circle cx="20" cy="20" r="12" stroke-width=".4"/><path d="M20 2L23 17 38 20 23 23 20 38 17 23 2 20 17 17Z" stroke-width=".7"/><path d="M20 7L23 20 20 33 17 20Z" fill="currentColor" stroke="none"/></svg>THE WANDERING SEA</div>
+    <h1>黒潮の航海</h1><p>失われた潮路 · 二港交易の試作</p>
+    <div class="location" id="location">碧の群島 · AZURE ARCHIPELAGO</div>
+  </header>
+  <div class="top-actions">
+    <span class="live"><i id="live-dot"></i><span id="live-text">SAILING</span></span>
+    <button class="icon-btn" id="pause" aria-label="一時停止" title="一時停止 / P" aria-pressed="false"><span id="pause-icon-label">停止</span><svg viewBox="0 0 20 20" id="pause-icon"><path d="M7 4v12M13 4v12"/></svg></button>
+    <button class="icon-btn" id="sound" aria-label="波と風の音をオン" title="波と風の音" aria-pressed="false"><svg viewBox="0 0 20 20"><path d="M9 4L5 7H2v6h3l4 3Z"/><path id="sound-waves" d="M13 7l5 6M18 7l-5 6"/></svg></button>
+    <button class="icon-btn" id="fullscreen" aria-label="全画面表示" title="全画面表示"><svg viewBox="0 0 20 20"><path d="M3 7V3h4m6 0h4v4M17 13v4h-4M7 17H3v-4"/></svg></button>
+    <button class="icon-btn" id="help-button" aria-label="操作方法" title="操作方法"><svg viewBox="0 0 20 20"><path d="M7 6a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v.1"/></svg></button>
+  </div>
+  <aside class="wind-card" aria-label="風の状況"><div class="small-label">TRUE WIND / 風</div><div class="wind-main"><div><div class="wind-value"><span id="wind-speed">14.0</span><small>kn</small></div><div class="wind-sub" id="wind-description">南西の風 · 穏やかなうねり</div></div><div class="wind-rose"><b>N</b><div class="wind-arrow" id="wind-arrow"></div></div></div></aside>
+  <nav class="view-tools" aria-label="カメラ"><button class="view-btn active" data-view="follow">船を追う</button><button class="view-btn" data-view="orbit">海を眺める</button><button class="view-btn" data-view="deck">甲板から</button></nav>
+  <section class="readout" aria-label="航海情報"><div><div class="small-label">SHIP SPEED / 船速</div><div class="speed"><span id="ship-speed">0.0</span><small>KNOTS</small></div></div><div class="readout-divider"></div><div class="readout-detail"><div class="small-label">HEADING</div><b id="heading">000°</b><span id="heading-name">N / 北</span></div><div class="readout-detail distance"><div class="small-label">DISTANCE</div><b id="distance">0.00</b><span>ゲーム海里</span></div></section>
+  <div class="touch-helm" aria-label="タッチ操舵"><button id="port" aria-label="左に舵を切る">↶</button><button id="starboard" aria-label="右に舵を切る">↷</button></div>
+  <section class="helm" aria-label="船と海の操作">
+    <div class="helm-section"><div class="section-title"><span>CAPTAIN’S HELM / 操舵</span><strong id="course-label">自動</strong></div><div class="segmented"><button id="auto" class="active" aria-pressed="true">自動航海</button><button id="manual" aria-pressed="false">自分で操舵</button></div></div>
+    <div class="helm-section"><label class="section-title" for="sails"><span>SET SAIL / 帆を開く</span><strong id="sail-value">100%</strong></label><div class="sail-row"><svg viewBox="0 0 24 24"><path d="M12 2v18M10 4L3 16h7V4ZM14 3v13h7L14 3ZM2 20h20l-3 3H5Z"/></svg><input type="range" min="0" max="100" value="100" id="sails" aria-label="帆の開き具合"></div><div class="sail-hint"><span>畳む</span><span>全帆</span></div></div>
+    <div class="helm-section clock-section"><div class="section-title"><span>VOYAGE / 航海時間</span><strong id="game-day">0.0日</strong></div><div class="segmented" aria-label="航海の速さ"><button data-speed="1" class="active" aria-pressed="true">1倍</button><button data-speed="2" aria-pressed="false">2倍</button><button data-speed="4" aria-pressed="false">4倍</button></div><div class="world-caption">1ゲーム日 = 標準60秒</div></div>
+  </section>
+  <div class="chart"><canvas id="chart" aria-label="周辺の海図。クリックすると目的地を設定します。"></canvas><div class="chart-title">CHART / 碧の群島</div><div class="chart-footer">タップして行き先を指定</div></div>
+<section class="resources" aria-label="船の資源">
+  <div><span>資金</span><b id="gold-value">100G</b></div><div id="food-cell"><span>食料</span><b id="food-value">30 / 30</b></div>
+  <div id="hp-cell"><span>船体</span><b id="hp-value">100 / 100</b></div><div><span>船倉</span><b id="cargo-value">0 / 20</b></div>
+</section>
+<nav class="game-actions" aria-label="航海のメニュー"><button id="open-port" class="game-button">港に立ち寄る</button><button id="open-log" class="game-button">日誌・保存</button></nav>
+<aside class="journey panel"><div class="small-label">NEXT HORIZON / 次の針路</div><h2 id="destination">出発の準備</h2><p id="journey-distance"></p><p id="journey-eta"></p><progress id="journey-progress" max="1" value="0" aria-label="目的地までの進行"></progress><button id="dock-game" class="game-button" disabled>入港する</button></aside>
+<p id="next-goal" class="goal panel">木材を仕入れ、松帆港で売ってみよう。</p>
+<!-- END HUD ADDITIONS -->
+
+
+  <div class="travel-tag" id="travel-tag">BLACK TERN · 3本マストの海賊船</div><div class="camera-hint">DRAG  視点を回す　 SCROLL / PINCH  距離を変える　 H  画面を隠す</div>
+</div>
+<button class="icon-btn restore" id="restore" aria-label="操作画面を表示" title="操作画面を表示"><svg viewBox="0 0 20 20"><path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5Z"/><circle cx="10" cy="10" r="2"/></svg></button>
+<div class="toast" id="toast" role="status"></div>
+
+<section id="title-screen" aria-labelledby="title-heading">
+  <div class="title-content"><div class="eyebrow">THE WANDERING SEA / ADVENTURE</div><h2 id="title-heading">黒潮の航海<span>失われた潮路</span></h2><p class="title-story">遺された小船「凪灯号」と、まだ白い海図。<br>まずは木材を積んで、対岸の港へ。<br>帰ってくるころには、次の航海が見えてくる。</p>
+  <div class="trial-label">二港交易の試作 · v0.1</div><p class="trial-description">交易と補給を重ね、120Gで船を補強しよう。<br>探索・海賊・物語の続きは、これから広がる海に。</p>
+  <label class="name-label" for="captain-name">船長の名前<input id="captain-name" maxlength="24" value="船長" autocomplete="off"></label>
+  <div class="title-buttons"><button id="new-game" class="game-button primary">新しい航海</button><button id="continue-game" class="game-button" disabled>続きから</button></div>
+  <p id="save-status" class="muted"></p><div class="utility-links"><button class="text-button" data-import>JSONを読み込む</button><button class="text-button" id="restore-backup" disabled>前回の記録から</button></div>
+  <a class="simulator-link" href="../index.html">自由航海版で、海を眺める ↗</a></div>
+</section>
+<input id="import-file" type="file" accept="application/json,.json" hidden>
+<dialog id="harbor" class="game-dialog" aria-labelledby="port-name"><div class="dialog-header"><div><div class="small-label">HARBOR / 港</div><h2 id="port-name">灯待ち港</h2></div><button id="close-port" class="icon-btn" aria-label="港を閉じて海を眺める">×</button></div><p id="port-description"></p><p id="port-wallet" class="wallet"></p>
+  <nav class="port-tabs" aria-label="港の施設"><button data-tab="market" class="active" aria-pressed="true">市場</button><button data-tab="supply" aria-pressed="false">補給</button><button data-tab="shipyard" aria-pressed="false">造船</button><button data-tab="departure" aria-pressed="false">出港</button></nav>
+  <section data-panel="market"><div class="commodity"><div class="wood-icon" aria-hidden="true">≋</div><div><h3>木材</h3><p id="wood-stock"></p><p id="wood-owned"></p></div></div><div class="quantity-row"><label for="trade-quantity">数量<input type="number" id="trade-quantity" min="1" max="200" step="1" value="12" inputmode="numeric"></label><button data-quantity="1" class="game-button">1</button><button data-quantity="12" class="game-button">12</button><button data-quantity="max" class="game-button">買える最大</button></div><p class="muted">量が増えると価格も動きます。合計を確かめてから取引できます。</p><div class="trade-options"><div><p id="buy-quote"></p><button id="buy-wood" class="game-button primary">買う</button></div><div><p id="sell-quote"></p><button id="sell-wood" class="game-button">売る</button></div></div><p id="trade-preview" class="muted"></p><div class="job-card"><h3>最初の配送</h3><p id="delivery-description"></p><button id="delivery-job" class="game-button">木材配送を引き受ける</button></div></section>
+  <section data-panel="supply" hidden><h3>次の航海に備える</h3><p id="supply-description"></p><div class="service-buttons"><button id="food-one" class="game-button">食料1単位</button><button id="food-full" class="game-button primary">食料を満載</button><button id="repair-ship" class="game-button">船体を全修理</button><button id="wait-day" class="game-button">一日休む · 6G</button><button id="port-errand" class="game-button" hidden>倉庫の仕事を手伝う · 報酬20G</button></div><p class="muted">食料は1単位1G。修理はHP1点1Gと滞在費2G、0.25日を使います。食料を満載にする料金は不足量を切り上げます。</p></section>
+  <section data-panel="shipyard" hidden><h3>凪灯号を、遠い海へ</h3><p id="current-ship"></p><table class="upgrade-table"><thead><tr><th>船の性能</th><th>沿岸船</th><th>補強後</th></tr></thead><tbody><tr><th>船倉</th><td>20</td><td>28</td></tr><tr><th>食料上限</th><td>30</td><td>45</td></tr><tr><th>船体上限</th><td>100</td><td>115</td></tr><tr><th>標準船速</th><td>6 kn</td><td>6.3 kn</td></tr></tbody></table><button id="upgrade-ship" class="game-button primary">120Gで船を補強する</button><p class="muted">船体上限の増加分だけ現在HPも増えます。食料は補給所で積み足してください。試作では段階2まで改造できます。</p></section>
+  <section data-panel="departure" hidden><h3 id="departure-name">松帆港へ</h3><p id="departure-estimate"></p><p id="departure-reserve"></p><p id="departure-warning" class="departure-note"></p><button id="depart-game" class="game-button primary">帆を上げて出港する</button><p class="muted">港に近づくと「入港する」が使えます。自動航海は沖で止まります。海図をタップして行き先を変えることもできます。</p></section>
+</dialog>
+<dialog id="captain-log" class="game-dialog" aria-labelledby="captain-log-title"><div class="dialog-header"><div><div class="small-label">CAPTAIN’S LOG / 航海日誌</div><h2 id="captain-log-title">船長の航海日誌</h2></div><button id="close-log" class="icon-btn" aria-label="日誌を閉じる">×</button></div><p id="voyage-summary"></p><p id="persistence-status" class="muted">港での取引と定期保存で航海を記録します。</p><div class="log-buttons"><button id="save-game" class="game-button primary">今すぐ保存</button><button class="game-button" data-export>JSONを書き出す</button><button class="game-button" data-import>JSONを読み込む</button><button id="restore-backup-log" class="game-button">前回の記録から</button><button id="request-rescue" class="game-button">救助を要請する</button><button id="new-game-log" class="game-button">新しい航海</button></div><ol id="journal-list" class="journal"></ol><a href="../index.html" class="simulator-link">自由航海版へ ↗</a></dialog>
+
+<dialog id="help"><button class="icon-btn close" id="close-help" aria-label="閉じる">×</button><div class="small-label" style="color:var(--gold);margin-bottom:13px">WELCOME ABOARD, CAPTAIN</div><h2>次の航海は、あなたの針路で。</h2><p>凪灯号で二つの港を往復します。港で木材を仕入れ、対岸で売って利益を得たら、120Gで船を補強しましょう。最初の配送は船倉4単位、報酬40Gです。</p><dl><dt>出港</dt><dd>港の「出港」で行き先と食料を確認する</dd><dt>入港</dt><dd>沖の入港地点に近づくと「入港する」が使える</dd><dt>ドラッグ / スワイプ</dt><dd>カメラを回す。スクロール / ピンチで距離を変える</dd><dt>← → / A D</dt><dd>手動で操舵。↑ ↓ / W S で帆を調整</dd><dt>海図をタップ</dt><dd>出港後に行き先を変える。島の沖を選ぼう</dd><dt>P / H / R</dt><dd>停止 / 表示切替 / 救助を要請</dd></dl><p class="help-note">港とメニューを開いている間、背景のタブでは航海時間が止まります。保存はこのブラウザに記録されます。日誌からJSONを書き出すと別の環境へ持ち出せます。試作では風向きによる船速変化、探索、遭遇、海戦はまだ入りません。</p>
+</dialog>
+<div class="loader" id="loader"><div class="loader-content"><svg viewBox="0 0 64 64"><path d="M32 5v44M29 12L12 40h17ZM35 8v32h17L35 8ZM5 48h54l-9 9H15Z"/></svg><h2>帆を上げよう。</h2><p>PREPARING YOUR VOYAGE</p></div></div>
+<div class="error" id="error"><h2>このブラウザでは海を描画できませんでした。</h2><p>WebGLが有効なSafari、Chrome、Edgeなどで、このHTMLファイルを開いてください。プレビュー画面で動かない場合は、ファイルを保存してブラウザで開くと動くことがあります。</p><code id="error-detail"></code><p><button class="game-button" data-export>航海のJSONを書き出す</button></p></div>
+<noscript><div style="position:fixed;inset:0;z-index:20;background:#082932;padding:40px">この航海シミュレーションにはJavaScriptが必要です。JavaScriptを有効にしたブラウザでHTMLを開いてください。</div></noscript>
+<script id="adventure-core">
+/* Pure game rules. Embedded in adventure/index.html; no runtime dependencies. */
+const AdventureCore = (() => {
+  'use strict';
+  const VERSION = '0.1.0';
+  const WORLD = 'two-ports-1';
+  const SAVE_KEY = 'pirate-voyage:adventure:save:v1';
+  const BACKUP_KEY = 'pirate-voyage:adventure:backup:v1';
+  const PORTS = Object.freeze([
+    Object.freeze({id:'p_light', name:'灯待ち港', x:0, z:0, wood:4, recovery:15,
+      description:'島々へ向かう小船が集まる港。木材を仕入れ、次の航海に備える。'}),
+    Object.freeze({id:'p_pine', name:'松帆港', x:240, z:0, wood:10, recovery:8,
+      description:'造船の音が響く港。船大工たちは、灯待ち港から届く木材を待っている。'})
+  ]);
+  const TIERS = Object.freeze([
+    Object.freeze({tier:1, name:'沿岸船', cost:0, capacity:20, food:30, hp:100, speed:6}),
+    Object.freeze({tier:2, name:'補強沿岸船', cost:120, capacity:28, food:45, hp:115, speed:6.3})
+  ]);
+  const LAND = Object.freeze(PORTS.map(p => Object.freeze({x:p.x, z:9, radius:8.15})));
+  const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+  const copy = v => JSON.parse(JSON.stringify(v));
+  const ceilCost = n => Math.ceil(n - 1e-9);
+  const port = id => PORTS.find(p => p.id === id);
+  const tier = s => TIERS[s.ship.tier - 1];
+  const cargoUsed = s => s.ship.cargo.reduce((n,c) => n+c.qty,0);
+  const woodOwned = s => s.ship.cargo.filter(c => !c.contractId).reduce((n,c) => n+c.qty,0);
+  const goodNumber = (n,a,b) => Number.isFinite(n) && n>=a && n<=b;
+  const integer = (n,a,b) => Number.isSafeInteger(n) && n>=a && n<=b;
+  const object = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+  const failure = message => ({ok:false,message});
+  function price(base, stock, demandPercent=100) {
+    const numerator = base*clamp(1000+6*(100-stock),650,1600)*demandPercent;
+    return {ask:Math.floor((numerator*105+9999999)/10000000),
+      bid:Math.floor(numerator*95/10000000)};
+  }
+  function fresh(name='船長') {
+    return {
+      schemaVersion:1, worldVersion:WORLD, mode:'adventure', phase:'PORT', paused:false,
+      worldSeed:726199, rngStates:{encounter:17,combat:31,market:47},
+      clock:{gameDays:0,speedMultiplier:1},
+      player:{name:String(name).trim().slice(0,24)||'船長',gold:100,infamy:0},
+      ship:{id:'ship_nagito',tier:1,hp:100,food:30,crewCount:8,morale:80,cargo:[],officers:[]},
+      position:{regionId:'azure',xNm:0,zNm:0}, portId:'p_light', lastSafePortId:'p_light',
+      navigation:{auto:true,sails:1,heading:Math.PI/2,speed:0,distance:0,
+        waypoint:null,destinationPortId:null,legDistance:0,blockedSeconds:0},
+      discovery:{ports:['p_light','p_pine'],fogChunks:{}},
+      quests:{firstDelivery:{status:'AVAILABLE',rewardClaimed:false}},
+      storyFlags:{},factions:{},completedRewardIds:[],pendingEncounter:null,
+      markets:Object.fromEntries(PORTS.map(p=>[p.id,{wood:{stock:100,demandPercent:100,lastUpdatedDay:0}}])),
+      stats:{tradeProfit:0,firstVoyage:false,firstSale:false,upgraded:false},
+      journal:[{day:0,text:'凪灯号を受け取った。灯待ち港の木材を、松帆港へ運んでみよう。'}]
+    };
+  }
+  function validate(raw) {
+    const bad = () => {throw new Error('保存データの内容が不正です。現在の航海は変更しません。');};
+    if(!object(raw) || raw.schemaVersion!==1 || raw.worldVersion!==WORLD || raw.mode!=='adventure')
+      throw new Error('このファイルは対応していない版の保存データです。');
+    const s=raw, t=object(s.ship)&&TIERS[s.ship.tier-1];
+    if(!t || !integer(s.ship.tier,1,2) || !['PORT','SAILING'].includes(s.phase) || typeof s.paused!=='boolean') bad();
+    if(!object(s.player)||typeof s.player.name!=='string'||s.player.name.length<1||s.player.name.length>24||
+      !integer(s.player.gold,0,100000000)||s.player.infamy!==0) bad();
+    if(s.worldSeed!==726199 || !object(s.rngStates) || !['encounter','combat','market'].every(k=>integer(s.rngStates[k],0,4294967295))) bad();
+    if(!object(s.clock)||!goodNumber(s.clock.gameDays,0,1000000)||![1,2,4].includes(s.clock.speedMultiplier)) bad();
+    if(s.ship.id!=='ship_nagito'||s.ship.crewCount!==8||!goodNumber(s.ship.food,0,t.food)||
+      !goodNumber(s.ship.hp,0,t.hp)||!goodNumber(s.ship.morale,0,100)||!Array.isArray(s.ship.officers)||s.ship.officers.length) bad();
+    if(!object(s.position)||s.position.regionId!=='azure'||!goodNumber(s.position.xNm,-1000,1000)||
+      !goodNumber(s.position.zNm,-1000,1000)||!port(s.lastSafePortId)) bad();
+    if(s.phase==='PORT' && (!port(s.portId)||Math.hypot(s.position.xNm-port(s.portId).x,s.position.zNm-port(s.portId).z)>2.001||s.ship.hp<=0)) bad();
+    if(s.phase==='SAILING' && s.portId!==null) bad();
+    const n=s.navigation;
+    if(!object(n)||typeof n.auto!=='boolean'||!goodNumber(n.sails,0,1)||!goodNumber(n.heading,-Math.PI,Math.PI)||
+      !goodNumber(n.speed,0,10)||!goodNumber(n.distance,0,100000000)||!goodNumber(n.legDistance,0,3000)||
+      !goodNumber(n.blockedSeconds,0,30)||(n.destinationPortId!==null&&!port(n.destinationPortId))) bad();
+    if(n.waypoint!==null&&(!Array.isArray(n.waypoint)||n.waypoint.length!==2||!n.waypoint.every(v=>goodNumber(v,-1000,1000)))) bad();
+    if(!Array.isArray(s.ship.cargo)||s.ship.cargo.length>28) bad();
+    for(const c of s.ship.cargo) {
+      if(!object(c)||c.goodId!=='wood'||!integer(c.qty,1,t.capacity)||!port(c.originPortId)||
+        !integer(c.paidGold,0,100000000)||c.stolen!==false||c.victimFactionId!==null||
+        ![null,'first_delivery'].includes(c.contractId)) bad();
+    }
+    if(cargoUsed(s)>t.capacity) bad();
+    if(!object(s.quests)||!object(s.quests.firstDelivery)) bad();
+    const q=s.quests.firstDelivery;
+    if(!['AVAILABLE','ACTIVE','COMPLETED','FAILED'].includes(q.status)||typeof q.rewardClaimed!=='boolean'||
+      q.rewardClaimed!==(q.status==='COMPLETED')) bad();
+    const contracts=s.ship.cargo.filter(c=>c.contractId);
+    if(q.status==='ACTIVE' ? contracts.length!==1||contracts[0].qty!==4||contracts[0].paidGold!==0||contracts[0].originPortId!=='p_light' : contracts.length!==0) bad();
+    if(!Array.isArray(s.completedRewardIds)||s.completedRewardIds.length>1||
+      (q.rewardClaimed ? s.completedRewardIds.length!==1||s.completedRewardIds[0]!=='first_delivery' : s.completedRewardIds.length!==0)) bad();
+    if(!object(s.markets)) bad();
+    for(const p of PORTS) {
+      const m=s.markets[p.id]?.wood;
+      if(!object(m)||!integer(m.stock,0,200)||!integer(m.demandPercent,80,125)||
+        !integer(m.lastUpdatedDay,0,Math.floor(s.clock.gameDays+1e-8))) bad();
+    }
+    if(!object(s.stats)||!goodNumber(s.stats.tradeProfit,-100000000,100000000)||
+      !['firstVoyage','firstSale','upgraded'].every(k=>typeof s.stats[k]==='boolean')||
+      s.stats.upgraded!==(s.ship.tier===2)) bad();
+    if(!object(s.discovery)||!Array.isArray(s.discovery.ports)||s.discovery.ports.length!==2||
+      new Set(s.discovery.ports).size!==2||!s.discovery.ports.every(id=>port(id))||!object(s.discovery.fogChunks)) bad();
+    if(!Array.isArray(s.journal)||s.journal.length>40||!s.journal.every(l=>object(l)&&
+      goodNumber(l.day,0,s.clock.gameDays+1e-8)&&typeof l.text==='string'&&l.text.length<=180)) bad();
+    // Reconstruct known fields. Imported extra properties never become commands or HTML.
+    const clean=fresh(s.player.name);
+    for(const k of ['phase','paused','rngStates','clock','player','ship','position','portId','lastSafePortId',
+      'navigation','quests','completedRewardIds','markets','stats','journal']) clean[k]=copy(s[k]);
+    return clean;
+  }
+  function create(saved=null,name='船長') {
+    let s=saved===null?fresh(name):validate(saved);
+    const log=text=>{s.journal.push({day:s.clock.gameDays,text:String(text).slice(0,180)});if(s.journal.length>40)s.journal.shift();};
+    function advanceDays(days) {
+      s.clock.gameDays+=days;
+      const day=Math.floor(s.clock.gameDays+1e-8);
+      for(const p of PORTS) {
+        const m=s.markets[p.id].wood,elapsed=day-m.lastUpdatedDay;
+        if(elapsed>0) {
+          m.stock+=Math.sign(100-m.stock)*Math.min(Math.abs(100-m.stock),elapsed*p.recovery);
+          m.lastUpdatedDay=day;
+        }
+      }
+    }
+    function quote(side,qty) {
+      if(s.phase!=='PORT') return failure('売買は入港後にできます。');
+      if(!['buy','sell'].includes(side)||!integer(qty,1,200)) return failure('数量は1〜200の整数で指定してください。');
+      const p=port(s.portId),m=s.markets[p.id].wood;
+      if(side==='buy'&&qty>m.stock) return failure('港の在庫が足りません。');
+      if(side==='buy'&&qty>tier(s).capacity-cargoUsed(s)) return failure('船倉に入りません。');
+      if(side==='sell'&&qty>woodOwned(s)) return failure('売却できる木材が足りません。依頼の積荷は売れません。');
+      if(side==='sell'&&m.stock+qty>200) return failure('港の倉庫が満杯です。');
+      let stock=m.stock,total=0,first=0,last=0;
+      for(let i=0;i<qty;i++) {
+        const unit=price(p.wood,stock,m.demandPercent)[side==='buy'?'ask':'bid'];
+        if(i===0)first=unit;last=unit;total+=unit;stock+=side==='buy'?-1:1;
+      }
+      const result={ok:true,side,qty,total,first,last,stockAfter:stock};
+      if(side==='buy'&&total>s.player.gold) return {...result,ok:false,message:'資金が足りません。'};
+      return result;
+    }
+    function takeWood(qty) {
+      let left=qty,cost=0;
+      s.ship.cargo=s.ship.cargo.filter(c=>{
+        if(c.contractId||left===0)return true;
+        const take=Math.min(c.qty,left),paid=take===c.qty?c.paidGold:Math.floor(c.paidGold*take/c.qty);
+        cost+=paid;c.paidGold-=paid;c.qty-=take;left-=take;return c.qty>0;
+      });
+      return cost;
+    }
+    function trade(side,qty) {
+      const q=quote(side,qty);if(!q.ok)return q;
+      if(side==='buy') {
+        s.player.gold-=q.total;
+        s.ship.cargo.push({goodId:'wood',qty,originPortId:s.portId,paidGold:q.total,
+          stolen:false,victimFactionId:null,contractId:null});
+        // Merge lots from the same port; preserve total acquisition cost.
+        const merged=[];
+        for(const c of s.ship.cargo) {
+          const prior=merged.find(a=>a.originPortId===c.originPortId&&a.contractId===c.contractId);
+          if(prior){prior.qty+=c.qty;prior.paidGold+=c.paidGold;}else merged.push(c);
+        }
+        s.ship.cargo=merged;
+      } else {
+        const paid=takeWood(qty);s.player.gold+=q.total;s.stats.tradeProfit+=q.total-paid;s.stats.firstSale=true;
+      }
+      s.markets[s.portId].wood.stock=q.stockAfter;
+      log(`${port(s.portId).name}で木材${qty}単位を${q.total}Gで${side==='buy'?'購入':'売却'}した。`);
+      return {...q,message:side==='buy'?`木材${qty}単位を仕入れました。`:`木材${qty}単位を売りました。`};
+    }
+    function supplyQuote(kind) {
+      if(s.phase!=='PORT')return failure('補給と修理は入港後にできます。');
+      let amount,total,stay=0;
+      if(kind==='foodOne'){amount=1;if(s.ship.food+1>tier(s).food+1e-9)return failure('食料庫に一単位分の空きがありません。');total=1;}
+      else if(kind==='foodFull'){amount=tier(s).food-s.ship.food;total=ceilCost(amount);}
+      else if(kind==='repair'){amount=tier(s).hp-s.ship.hp;stay=2;total=ceilCost(amount)+stay;}
+      else return failure('利用できないサービスです。');
+      if(amount<1e-8)return failure(kind==='repair'?'船体は修理済みです。':'食料は満載です。');
+      return {ok:total<=s.player.gold,message:total>s.player.gold?'資金が足りません。':'',amount,total,stay};
+    }
+    function supply(kind) {
+      const q=supplyQuote(kind);if(!q.ok)return q;
+      s.player.gold-=q.total;
+      if(kind==='repair'){s.ship.hp=tier(s).hp;advanceDays(.25);log(`船体を修理した。滞在費込み${q.total}G。`);}
+      else{s.ship.food=Math.min(tier(s).food,s.ship.food+q.amount);log(`食料を${q.amount.toFixed(1)}単位補給した。${q.total}G。`);}
+      return {...q,message:kind==='repair'?'修理が終わりました。':'食料を補給しました。'};
+    }
+    function upgrade() {
+      if(s.phase!=='PORT')return failure('船の改造は入港後にできます。');
+      if(s.ship.tier===2)return failure('二港試作の改造は段階2までです。');
+      const next=TIERS[1];if(s.player.gold<next.cost)return failure('改造には120G必要です。');
+      s.player.gold-=next.cost;s.ship.hp+=next.hp-tier(s).hp;s.ship.tier=2;s.stats.upgraded=true;
+      log('凪灯号を補強沿岸船に改造した。船倉28、食料上限45になった。');
+      return {ok:true,message:'凪灯号の船倉と食料庫が広がりました。'};
+    }
+    function voyageQuote(id) {
+      const p=port(id);if(!p)return failure('行き先を選んでください。');
+      const distance=Math.hypot(p.x-s.position.xNm,p.z-s.position.zNm);
+      const speed=tier(s).speed*(s.ship.hp<35?.8:1)*(s.ship.food<=0?.6:1)*(s.ship.morale<30?.85:1);
+      const days=distance/(speed*24);
+      return {ok:true,distance,speed,realSeconds:days*60,food:days*4,roundTripFood:days*4*2*1.3};
+    }
+    function depart(id) {
+      if(s.phase!=='PORT')return failure('すでに航海中です。');
+      const p=port(id);if(!p||id===s.portId)return failure('別の港を選んでください。');
+      const q=voyageQuote(id);s.phase='SAILING';s.portId=null;s.paused=false;
+      Object.assign(s.navigation,{waypoint:[p.x,p.z],destinationPortId:id,auto:true,sails:1,
+        heading:Math.atan2(p.x-s.position.xNm,p.z-s.position.zNm),speed:0,legDistance:q.distance,blockedSeconds:0});
+      s.stats.firstVoyage=true;log(`${p.name}へ出港した。`);
+      return {ok:true,message:`${p.name}へ出港しました。`};
+    }
+    function nearestPort() {
+      return PORTS.map(p=>({...p,distance:Math.hypot(p.x-s.position.xNm,p.z-s.position.zNm)})).sort((a,b)=>a.distance-b.distance)[0];
+    }
+    function dock() {
+      if(s.phase!=='SAILING')return failure('航海中に入港できます。');
+      const p=nearestPort();if(p.distance>2.001)return failure('入港地点まで2ゲーム海里以内に近づいてください。');
+      if(s.ship.hp<=0)return recover();
+      s.position.xNm=p.x;s.position.zNm=p.z;s.phase='PORT';s.portId=p.id;s.lastSafePortId=p.id;
+      s.navigation.speed=0;s.navigation.waypoint=null;s.navigation.destinationPortId=null;s.paused=false;
+      log(`${p.name}へ入港した。`);return {ok:true,message:`${p.name}へようこそ。`};
+    }
+    function delivery() {
+      if(s.phase!=='PORT')return failure('依頼は港で受け付けます。');
+      const q=s.quests.firstDelivery;
+      if(q.status==='COMPLETED')return failure('この依頼の報酬は受け取り済みです。');
+      if(q.status==='ACTIVE') {
+        if(s.portId!=='p_pine')return failure('積荷の届け先は松帆港です。');
+        s.ship.cargo=s.ship.cargo.filter(c=>c.contractId!=='first_delivery');
+        q.status='COMPLETED';q.rewardClaimed=true;s.player.gold+=40;s.completedRewardIds.push('first_delivery');
+        log('松帆港に依頼の木材を届け、報酬40Gを受け取った。');
+        return {ok:true,message:'木材が届きました。報酬40Gを受け取りました。'};
+      }
+      if(s.portId!=='p_light')return failure('灯待ち港で依頼を受けられます。');
+      if(tier(s).capacity-cargoUsed(s)<4)return failure('依頼の積荷には船倉4単位が必要です。');
+      q.status='ACTIVE';s.ship.cargo.push({goodId:'wood',qty:4,originPortId:'p_light',paidGold:0,
+        stolen:false,victimFactionId:null,contractId:'first_delivery'});
+      log('松帆港への木材配送を引き受けた。契約の積荷は4単位、報酬は40G。');
+      return {ok:true,message:'松帆港へ木材を届けてください。'};
+    }
+    function waitDay() {
+      if(s.phase!=='PORT')return failure('港で一日待てます。');
+      if(s.player.gold<6)return failure('食事と停泊に6G必要です。');
+      s.player.gold-=6;advanceDays(1);s.ship.morale=Math.min(100,s.ship.morale+4);
+      log('港で一日休んだ。食事と停泊に6Gを支払った。');return {ok:true,message:'港で一日休みました。'};
+    }
+    function errand() {
+      if(s.phase!=='PORT'||s.portId!=='p_light'||s.player.gold!==0||woodOwned(s)!==0)
+        return failure('資金と売却できる積荷がないとき、灯待ち港で手伝えます。');
+      advanceDays(.25);s.player.gold+=20;log('灯待ち港で倉庫の仕事を手伝い、再出発の資金20Gを得た。');
+      return {ok:true,message:'手伝いの報酬20Gを受け取りました。'};
+    }
+    function recover() {
+      if(s.phase!=='SAILING')return failure('救助は航海中に要請できます。');
+      const lostGold=ceilCost(s.player.gold*.2),lostCargo=ceilCost(woodOwned(s)*.3);
+      s.player.gold-=lostGold;takeWood(lostCargo);
+      if(s.quests.firstDelivery.status==='ACTIVE')s.quests.firstDelivery.status='FAILED';
+      s.ship.cargo=s.ship.cargo.filter(c=>!c.contractId);
+      const p=port(s.lastSafePortId);s.position.xNm=p.x;s.position.zNm=p.z;
+      s.phase='PORT';s.portId=p.id;s.paused=false;s.ship.hp=Math.ceil(tier(s).hp*.35);s.ship.food=12;
+      s.navigation.waypoint=null;s.navigation.destinationPortId=null;s.navigation.speed=0;s.navigation.blockedSeconds=0;
+      log(`${p.name}へ救助された。${lostGold}Gと通常の木材${lostCargo}単位を失った。`);
+      return {ok:true,recovered:true,message:`${p.name}へ救助されました。記録と船の改造は残っています。`};
+    }
+    function waypoint(x,z,id=null) {
+      if(s.phase!=='SAILING')return failure('海図の目的地は出港後に変更できます。');
+      if(!goodNumber(x,-1000,1000)||!goodNumber(z,-1000,1000)||LAND.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius))
+        return failure('島の沖に行き先を置いてください。');
+      if(id!==null&&!port(id))return failure('行き先が不正です。');
+      s.navigation.waypoint=[x,z];s.navigation.destinationPortId=id;s.navigation.auto=true;
+      s.navigation.legDistance=Math.hypot(x-s.position.xNm,z-s.position.zNm);s.navigation.blockedSeconds=0;
+      return {ok:true,message:id?`${port(id).name}へ針路を変えました。`:'海図に行き先を置きました。'};
+    }
+    function setAuto(on) {
+      if(s.phase!=='SAILING')return failure('操舵は出港後に変更できます。');
+      if(typeof on!=='boolean')return failure('操舵の指定が不正です。');
+      if(on&&!s.navigation.waypoint)return failure('海図で行き先を選んでください。');
+      s.navigation.auto=on;return {ok:true};
+    }
+    function setSails(amount) {
+      if(s.phase!=='SAILING'||!goodNumber(amount,0,1))return failure('帆は出港後に調整できます。');
+      s.navigation.sails=amount;return {ok:true};
+    }
+    function step(realSeconds,steer=0) {
+      if(!goodNumber(realSeconds,0,.05000001))throw new Error('固定刻みは0.05秒以下です。');
+      if(s.phase!=='SAILING'||s.paused||realSeconds===0)return {ok:true};
+      if(s.ship.hp<=0)return recover();
+      const days=realSeconds/60,foodDays=Math.min(days,s.ship.food/4),starvingDays=days-foodDays;
+      s.ship.food=Math.max(0,s.ship.food-4*days);
+      s.ship.hp=Math.max(0,s.ship.hp-4*starvingDays);s.ship.morale=Math.max(0,s.ship.morale-8*starvingDays);
+      advanceDays(days);
+      if(s.ship.hp<=0)return recover();
+      const n=s.navigation,position=s.position;
+      let angle=n.heading,remaining=Infinity;
+      if(n.auto&&n.waypoint) {
+        const [x,z]=n.waypoint;remaining=Math.hypot(x-position.xNm,z-position.zNm);
+        angle=Math.atan2(x-position.xNm,z-position.zNm);
+      } else angle+=clamp(Number.isFinite(steer)?steer:0,-1,1)*realSeconds*.65;
+      n.heading=Math.atan2(Math.sin(angle),Math.cos(angle));
+      const approach=n.auto&&n.destinationPortId?clamp(remaining/12,.25,1):1;
+      let speed=tier(s).speed*n.sails*(s.ship.hp<35?.8:1)*(s.ship.food<=0?.6:1)*(s.ship.morale<30?.85:1)*approach;
+      if(n.auto&&remaining<1.5)speed=0;
+      const distance=Math.min(speed*24*days,remaining);
+      let x=position.xNm+Math.sin(angle)*distance,z=position.zNm+Math.cos(angle)*distance;
+      let blocked=x<-1000||x>1000||z<-1000||z>1000;
+      for(const land of LAND) {
+        const dx=x-position.xNm,dz=z-position.zNm,l2=dx*dx+dz*dz;
+        const f=l2?clamp(((land.x-position.xNm)*dx+(land.z-position.zNm)*dz)/l2,0,1):0;
+        if(Math.hypot(position.xNm+dx*f-land.x,position.zNm+dz*f-land.z)<land.radius)blocked=true;
+      }
+      if(blocked){x=position.xNm;z=position.zNm;speed=0;n.blockedSeconds=Math.min(30,n.blockedSeconds+realSeconds);}
+      else n.blockedSeconds=0;
+      if(n.auto&&n.blockedSeconds>=20){n.auto=false;log('浅瀬の手前で自動操舵を止めた。沖に行き先を置き直そう。');}
+      n.speed=speed;n.distance+=Math.hypot(x-position.xNm,z-position.zNm);position.xNm=x;position.zNm=z;
+      return {ok:true,blocked};
+    }
+    return Object.freeze({
+      snapshot:()=>copy(s),quote,trade,supplyQuote,supply,upgrade,voyageQuote,depart,dock,
+      nearestPort,delivery,waitDay,errand,recover,waypoint,setAuto,setSails,step,
+      setPaused:on=>{if(typeof on==='boolean')s.paused=on;},
+      setSpeed:n=>{if([1,2,4].includes(n))s.clock.speedMultiplier=n;},
+      maxBuy:()=>{let n=0;for(let q=1;q<=tier(s).capacity;q++){if(!quote('buy',q).ok)break;n=q;}return n;},
+      export:()=>JSON.stringify(validate(s),null,2)
+    });
+  }
+  return Object.freeze({VERSION,WORLD,SAVE_KEY,BACKUP_KEY,PORTS,TIERS,LAND,price,create,validate,cargoUsed,woodOwned});
+})();
+
+</script>
+<script id="adventure-ui">
+/* DOM and persistence are independent of WebGL, including export after a rendering failure. */
+const Adventure = (() => {
+  'use strict';
+  const C=AdventureCore,$=id=>document.getElementById(id);
+  let model=C.create(),active=false,saved=null,storageWarning='',saveElapsed=0,toastTimer=0;
+  const fmt=n=>n.toFixed(1),text=(id,value)=>{$(id).textContent=value;};
+  const port=id=>C.PORTS.find(p=>p.id===id),tier=s=>C.TIERS[s.ship.tier-1];
+  function message(value){text('toast',value);$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),4200);}
+  function load(key){try{const raw=localStorage.getItem(key);return raw?C.validate(JSON.parse(raw)):null;}catch(e){storageWarning=e.message;return null;}}
+  saved=load(C.SAVE_KEY);
+  function hasSave(){try{return localStorage.getItem(C.SAVE_KEY)!==null;}catch{return false;}}
+  function titleStatus(){
+    $('continue-game').disabled=!saved;
+    const backup=load(C.BACKUP_KEY);$('restore-backup').disabled=!backup;
+    text('save-status',storageWarning?'保存を読み込めません。JSONファイルか前回の記録から再開できます。':saved?`${saved.player.name}の記録 · ${port(saved.portId)?.name||'航海中'} · ${saved.player.gold}G`:'新しい航海を始められます。');
+  }
+  function save(silent=false){
+    if(!active)return false;
+    try {
+      const data=model.export(),previous=localStorage.getItem(C.SAVE_KEY);
+      if(previous&&previous!==data){try{C.validate(JSON.parse(previous));localStorage.setItem(C.BACKUP_KEY,previous);}catch{/* Do not use corrupt data as a backup. */}}
+      localStorage.setItem(C.SAVE_KEY,data);saved=C.validate(JSON.parse(data));saveElapsed=0;
+      text('persistence-status','航海を保存しました。');if(!silent)message('航海を保存しました。');return true;
+    }catch(e){text('persistence-status','この環境では保存できません。JSONを書き出して記録を持ち帰ってください。');if(!silent)message('保存できません。JSONを書き出してください。');return false;}
+  }
+  function run(method,...args){
+    const result=model[method](...args);if(result.message)message(result.message);
+    if(result.ok)save(true);update();return result;
+  }
+  function begin(data){
+    // Validate before swapping the current game or writing storage.
+    const next=data?C.create(data):C.create(null,$('captain-name').value);
+    model=next;active=true;$('title-screen').hidden=true;$('ui').classList.remove('hidden');$('ui').inert=false;
+    document.querySelectorAll('dialog[open]').forEach(d=>d.close());save(true);update();
+    if(model.snapshot().phase==='PORT')openHarbor();
+  }
+  function newGame(){if((active||hasSave())&&!confirm('ゲーム版の航海記録を新しい航海で置き換えます。よろしいですか？'))return;begin(null);}
+  function openHarbor(){
+    if(!active)return;
+    if(model.snapshot().phase!=='PORT'){message('港の沖へ近づき、「入港する」を押してください。');return;}
+    update();if(!$('harbor').open)$('harbor').showModal();
+  }
+  function selectTab(name){
+    document.querySelectorAll('[data-tab]').forEach(b=>{const on=b.dataset.tab===name;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+    document.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==name);
+  }
+  function exportSave(){
+    try{const data=active?model.export():saved?JSON.stringify(saved,null,2):null;
+      if(!data){message('書き出せる航海記録がありません。');return;}
+      const url=URL.createObjectURL(new Blob([data],{type:'application/json'})),a=document.createElement('a');
+      a.href=url;a.download='pirate-voyage-adventure-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('航海のJSONを書き出しました。');
+    }catch(e){message('航海記録を書き出せませんでした。');}
+  }
+  async function importSave(file){
+    if(!file)return;
+    try{
+      if(file.size>1024*1024)throw new Error('1MB以下の航海JSONを選んでください。');
+      const data=C.validate(JSON.parse(await file.text()));
+      if((active||hasSave())&&!confirm('選んだ航海記録で、ゲーム版の現在の航海を置き換えます。よろしいですか？'))return;
+      begin(data);message('航海記録を読み込みました。');
+    }catch(e){message(e instanceof SyntaxError?'JSONの形式を確認してください。現在の航海は変更しません。':e.message);}
+    finally{$('import-file').value='';}
+  }
+  function restoreBackup(){const data=load(C.BACKUP_KEY);if(!data){message('読み込める前回の記録がありません。');return;}
+    if(!confirm('前回の記録でゲーム版の現在の航海を置き換えます。よろしいですか？'))return;begin(data);message('前回の記録から再開しました。');}
+  function rescue(){if(!active||model.snapshot().phase!=='SAILING'){message('救助は航海中に要請できます。');return;}
+    if(!confirm('救助で最後の港へ戻ります。資金の20％、通常の積荷の30％を失い、配送中の依頼は失敗します。要請しますか？'))return;
+    if(run('recover').ok){document.querySelectorAll('dialog[open]').forEach(d=>d.close());openHarbor();}}
+  function quoteText(q,side){return q.total!==undefined?`${side==='buy'?'購入':'売却'}合計 ${q.total}G · 一単位 ${q.first}〜${q.last}G${q.ok?'':` · ${q.message}`}`:q.message;}
+  function update(){
+    const s=model.snapshot(),t=tier(s),p=port(s.portId),used=C.cargoUsed(s);
+    text('gold-value',`${s.player.gold}G`);text('food-value',`${fmt(s.ship.food)} / ${t.food}`);
+    text('hp-value',`${fmt(s.ship.hp)} / ${t.hp}`);text('cargo-value',`${used} / ${t.capacity}`);
+    $('food-cell').classList.toggle('warning',s.ship.food<10);$('hp-cell').classList.toggle('warning',s.ship.hp<35);
+    text('location',p?`${p.name} · 停泊中`:'碧の群島 · 航海中');text('travel-tag',`凪灯号 · ${t.name}`);
+    text('game-day',`${fmt(s.clock.gameDays)}日`);text('course-label',s.phase==='PORT'?'停泊':s.navigation.auto?'自動':'手動');
+    const quest=s.quests.firstDelivery;
+    const goal=s.stats.upgraded?'船倉が広がった。次の航海は、あなたの選ぶ針路で。':quest.status==='ACTIVE'?'松帆港へ木材を届けよう。':!s.stats.firstSale?'木材を仕入れ、松帆港で売ってみよう。':`補強沿岸船まであと${Math.max(0,120-s.player.gold)}G。`;
+    text('next-goal',goal);text('live-text',s.phase==='PORT'?'IN PORT':s.paused?'PAUSED':'SAILING');
+    text('pause-icon-label',s.paused?'再開':'停止');$('pause').setAttribute('aria-pressed',String(s.paused));
+    $('pause').setAttribute('aria-label',s.paused?'航海を再開':'一時停止');
+    $('pause-icon').innerHTML=s.paused?'<path d="M6 3l10 7-10 7Z"/>':'<path d="M7 4v12M13 4v12"/>';
+    $('auto').classList.toggle('active',s.navigation.auto);$('manual').classList.toggle('active',!s.navigation.auto);
+    $('auto').setAttribute('aria-pressed',String(s.navigation.auto));$('manual').setAttribute('aria-pressed',String(!s.navigation.auto));
+    ['auto','manual','sails','port','starboard','pause'].forEach(id=>$(id).disabled=s.phase==='PORT'||!active);
+    if(document.activeElement!==$('sails'))$('sails').value=Math.round(s.navigation.sails*100);
+    text('sail-value',`${Math.round(s.navigation.sails*100)}%`);
+    document.querySelectorAll('[data-speed]').forEach(b=>{const on=+b.dataset.speed===s.clock.speedMultiplier;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+    const n=model.nearestPort(),target=port(s.navigation.destinationPortId);
+    const remaining=s.navigation.waypoint?Math.hypot(s.navigation.waypoint[0]-s.position.xNm,s.navigation.waypoint[1]-s.position.zNm):0;
+    text('destination',p?'港で出発の準備':target?target.name:s.navigation.waypoint?'海図の行き先':'手動航海');
+    text('journey-distance',s.phase==='PORT'?'停泊中は時間が止まります。':`残り ${fmt(remaining)} ゲーム海里`);
+    const estimate=remaining/(Math.max(.1,s.navigation.speed||t.speed)*24)*60/s.clock.speedMultiplier;
+    text('journey-eta',s.phase==='PORT'?'木材と食料を整えよう。':s.navigation.sails===0?'帆を畳んでいます。':`目安 ${Math.ceil(estimate)}秒 · ${s.clock.speedMultiplier}倍速`);
+    $('journey-progress').value=s.navigation.legDistance>0?Math.max(0,Math.min(1,1-remaining/s.navigation.legDistance)):0;
+    $('dock-game').disabled=s.phase!=='SAILING'||n.distance>2.001;
+    text('dock-game',n.distance<=2.001&&s.phase==='SAILING'?`${n.name}へ入港`:'入港する');
+    text('open-port',s.phase==='PORT'?'港に立ち寄る':'出港中');$('open-port').disabled=s.phase!=='PORT';
+    if(p){
+      text('port-name',p.name);text('port-description',p.description);text('port-wallet',`${s.player.gold}G · 船倉 ${used}/${t.capacity}`);
+      const m=s.markets[p.id].wood,unit=C.price(p.wood,m.stock,m.demandPercent);
+      text('wood-stock',`港の在庫 ${m.stock} · 買値 ${unit.ask}G / 売値 ${unit.bid}G`);
+      text('wood-owned',`売却できる木材 ${C.woodOwned(s)} · 依頼の木材 ${used-C.woodOwned(s)}`);
+      const qty=Number($('trade-quantity').value),buy=model.quote('buy',qty),sell=model.quote('sell',qty);
+      text('buy-quote',quoteText(buy,'buy'));text('sell-quote',quoteText(sell,'sell'));
+      $('buy-wood').disabled=!buy.ok;$('sell-wood').disabled=!sell.ok;
+      text('buy-wood',buy.total!==undefined?`${buy.total}Gで買う`:'買う');text('sell-wood',sell.total!==undefined?`${sell.total}Gで売る`:'売る');
+      text('trade-preview',buy.ok?`購入後 ${s.player.gold-buy.total}G · 船倉 ${used+qty}/${t.capacity}`:sell.ok?`売却後 ${s.player.gold+sell.total}G · 船倉 ${used-qty}/${t.capacity}`:'数量と資金、船倉の空きを確認してください。');
+      text('delivery-description',quest.status==='COMPLETED'?'木材を届け終えた。船大工たちは凪灯号を覚えている。':quest.status==='ACTIVE'?'配送中：木材4単位を松帆港へ。港の通常売買では手放せない。':'松帆港の船大工へ木材4単位を届ける。仕入れ不要、報酬40G。');
+      $('delivery-job').hidden=quest.status==='COMPLETED';
+      $('delivery-job').disabled=quest.status==='ACTIVE'?p.id!=='p_pine':p.id!=='p_light'||t.capacity-used<4;
+      text('delivery-job',quest.status==='ACTIVE'?'木材を届けて40Gを受け取る':'木材配送を引き受ける');
+      for(const [id,kind,label]of[['food-one','foodOne','食料1単位'],['food-full','foodFull','食料を満載'],['repair-ship','repair','船体を全修理']]){
+        const q=model.supplyQuote(kind);$(id).disabled=!q.ok;text(id,q.total!==undefined?`${label} · ${q.total}G`:q.message);}
+      text('supply-description',`食料 ${fmt(s.ship.food)}/${t.food} · 船体 ${fmt(s.ship.hp)}/${t.hp} · 士気 ${fmt(s.ship.morale)}`);
+      $('wait-day').disabled=s.player.gold<6;$('port-errand').hidden=!(p.id==='p_light'&&s.player.gold===0&&C.woodOwned(s)===0);
+      $('upgrade-ship').disabled=s.ship.tier===2||s.player.gold<120;text('upgrade-ship',s.ship.tier===2?'補強沿岸船に改造済み':'120Gで船を補強する');
+      text('current-ship',`現在：${t.name} · 船倉${t.capacity} · 食料上限${t.food}`);
+      const other=C.PORTS.find(o=>o.id!==p.id),q=model.voyageQuote(other.id);$('depart-game').dataset.destination=other.id;
+      text('departure-name',`${other.name}へ`);text('departure-estimate',`${fmt(q.distance)}ゲーム海里 · 標準${Math.ceil(q.realSeconds)}秒 · 食料消費目安${fmt(q.food)}`);
+      text('departure-reserve',`往復と予備の目安 ${fmt(q.roundTripFood)}単位 · 現在 ${fmt(s.ship.food)}単位`);
+      text('departure-warning',s.ship.food<q.roundTripFood?'食料が往復の目安を下回っています。補給してからの出発をおすすめします。':s.ship.hp<35?'船体が傷んでいます。修理で航海が速くなります。':'穏やかな海です。自動航海で沖の入港地点へ向かいます。');
+    }
+    if($('captain-log').open){
+      text('captain-log-title',`${s.player.name}の航海日誌`);const list=$('journal-list');list.replaceChildren();
+      for(const item of [...s.journal].reverse()){const li=document.createElement('li');li.textContent=`${fmt(item.day)}日 · ${item.text}`;list.append(li);}
+      text('voyage-summary',`交易利益 ${s.stats.tradeProfit}G · 航海 ${fmt(s.navigation.distance)}ゲーム海里`);
+    }
+    $('request-rescue').disabled=s.phase!=='SAILING';
+  }
+  $('new-game').addEventListener('click',newGame);$('new-game-log').addEventListener('click',newGame);
+  $('continue-game').addEventListener('click',()=>{if(saved)begin(saved);});
+  document.querySelectorAll('[data-import]').forEach(b=>b.addEventListener('click',()=>$('import-file').click()));
+  $('import-file').addEventListener('change',e=>importSave(e.target.files[0]));
+  document.querySelectorAll('[data-export]').forEach(b=>b.addEventListener('click',exportSave));
+  $('restore-backup').addEventListener('click',restoreBackup);$('restore-backup-log').addEventListener('click',restoreBackup);
+  $('open-port').addEventListener('click',openHarbor);$('close-port').addEventListener('click',()=>$('harbor').close());
+  $('open-log').addEventListener('click',()=>{if(!$('captain-log').open)$('captain-log').showModal();update();});
+  $('close-log').addEventListener('click',()=>$('captain-log').close());
+  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>selectTab(b.dataset.tab)));
+  $('trade-quantity').addEventListener('input',update);
+  document.querySelectorAll('[data-quantity]').forEach(b=>b.addEventListener('click',()=>{$('trade-quantity').value=b.dataset.quantity==='max'?model.maxBuy():b.dataset.quantity;update();}));
+  $('buy-wood').addEventListener('click',()=>run('trade','buy',Number($('trade-quantity').value)));
+  $('sell-wood').addEventListener('click',()=>run('trade','sell',Number($('trade-quantity').value)));
+  $('delivery-job').addEventListener('click',()=>run('delivery'));
+  $('food-one').addEventListener('click',()=>run('supply','foodOne'));$('food-full').addEventListener('click',()=>run('supply','foodFull'));
+  $('repair-ship').addEventListener('click',()=>run('supply','repair'));$('wait-day').addEventListener('click',()=>run('waitDay'));
+  $('port-errand').addEventListener('click',()=>run('errand'));$('upgrade-ship').addEventListener('click',()=>run('upgrade'));
+  $('depart-game').addEventListener('click',()=>{if(run('depart',$('depart-game').dataset.destination).ok)$('harbor').close();});
+  $('dock-game').addEventListener('click',()=>{if(run('dock').ok){selectTab('market');openHarbor();}});
+  document.querySelectorAll('[data-speed]').forEach(b=>b.addEventListener('click',()=>{model.setSpeed(+b.dataset.speed);save(true);update();}));
+  $('save-game').addEventListener('click',()=>save());$('request-rescue').addEventListener('click',rescue);
+  window.addEventListener('pagehide',()=>save(true));document.addEventListener('visibilitychange',()=>{if(document.hidden)save(true);});
+  titleStatus();update();
+  const bridge=Object.freeze({snapshot:()=>model.snapshot(),run,message,update,save,rescue,
+    shouldAdvance:()=>active&&!document.hidden&&!document.querySelector('dialog[open]')&&!model.snapshot().paused&&model.snapshot().phase==='SAILING',
+    autosave:seconds=>{saveElapsed+=seconds;if(saveElapsed>=30)save(true);},
+    step:(seconds,steer)=>{const result=model.step(seconds,steer);
+      if(result.recovered){save(true);update();message(result.message);openHarbor();}},
+    setSails:value=>{const r=model.setSails(value);if(r.ok)update();},
+    togglePause:()=>{const s=model.snapshot();if(active&&s.phase==='SAILING'){model.setPaused(!s.paused);save(true);update();}},
+    renderingFailed:()=>{model.setPaused(true);save(true);update();}
+  });
+  Object.defineProperty(window,'adventure',{value:Object.freeze({version:C.VERSION,getState:()=>model.snapshot()}),writable:false});
+  return bridge;
+})();
+
+</script>
+<script id="adventure-renderer">
+/* The Wandering Sea — original, self-contained WebGL / HTML / CSS / JavaScript.
+ * No libraries, remote assets, fetches, tracking, installation, or build step.
+ * Renderer units = 40 per game nautical mile. Game rules use fixed 0.05s ticks.
+ */
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const canvas = $('sea');
+let gl;
+try {
+gl = canvas.getContext('webgl', {alpha:false,antialias:true,powerPreference:'high-performance'}) || canvas.getContext('experimental-webgl',{alpha:false,antialias:true});
+if (!gl) throw new Error('WebGLを初期化できません。');
+const TAU = Math.PI * 2;
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const lerp = (a,b,t) => a+(b-a)*t;
+const wrapAngle = a => Math.atan2(Math.sin(a),Math.cos(a));
+const norm = v => {const l=Math.hypot(...v)||1;return v.map(n=>n/l);};
+const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const sub = (a,b) => a.map((v,i)=>v-b[i]);
+const add = (a,b) => a.map((v,i)=>v+b[i]);
+const mul = (a,s) => a.map(v=>v*s);
+const I = () => new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);
+function mm(a,b){const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)for(let k=0;k<4;k++)r[c*4+row]+=a[k*4+row]*b[c*4+k];return r;}
+function translation(x,y,z){const m=I();m[12]=x;m[13]=y;m[14]=z;return m;}
+function ry(a){const m=I(),c=Math.cos(a),s=Math.sin(a);m[0]=c;m[2]=-s;m[8]=s;m[10]=c;return m;}
+function rx(a){const m=I(),c=Math.cos(a),s=Math.sin(a);m[5]=c;m[6]=s;m[9]=-s;m[10]=c;return m;}
+function rz(a){const m=I(),c=Math.cos(a),s=Math.sin(a);m[0]=c;m[1]=s;m[4]=-s;m[5]=c;return m;}
+function scale(x,y,z){const m=I();m[0]=x;m[5]=y;m[10]=z;return m;}
+function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),m=new Float32Array(16);m[0]=f/aspect;m[5]=f;m[10]=(far+near)/(near-far);m[11]=-1;m[14]=2*far*near/(near-far);return m;}
+function lookAt(eye,target){const z=norm(sub(eye,target)),x=norm(cross([0,1,0],z)),y=cross(z,x),m=I();m[0]=x[0];m[4]=x[1];m[8]=x[2];m[1]=y[0];m[5]=y[1];m[9]=y[2];m[2]=z[0];m[6]=z[1];m[10]=z[2];m[12]=-x.reduce((n,v,i)=>n+v*eye[i],0);m[13]=-y.reduce((n,v,i)=>n+v*eye[i],0);m[14]=-z.reduce((n,v,i)=>n+v*eye[i],0);return {matrix:m,right:x,up:y,forward:mul(z,-1)};}
+let seed=726199;
+function random(){seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;}
+function makeProgram(vs,fs){function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}const p=gl.createProgram();const v=shader(gl.VERTEX_SHADER,vs),f=shader(gl.FRAGMENT_SHADER,fs);gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));gl.deleteShader(v);gl.deleteShader(f);return {p,uniforms:{},attrs:{}};}
+function uniform(prog,name,value){let l=prog.uniforms[name];if(l===undefined){l=gl.getUniformLocation(prog.p,name);prog.uniforms[name]=l;}if(l===null)return;if(typeof value==='number')gl.uniform1f(l,value);else if(value.length===16)gl.uniformMatrix4fv(l,false,value);else if(value.length===3)gl.uniform3fv(l,value);else if(value.length===2)gl.uniform2fv(l,value);else if(value.length===4)gl.uniform4fv(l,value);}
+const meshProgram=makeProgram(`
+attribute vec3 aPosition;attribute vec3 aNormal;attribute vec4 aColor;attribute vec2 aUV;attribute float aFlex;
+uniform mat4 uModel,uVP;uniform float uTime,uWind,uSails;
+varying vec3 vWorld,vNormal;varying vec4 vColor;varying vec2 vUV;
+void main(){vec3 p=aPosition;float billow=sin(aUV.x*3.14159)*sin(aUV.y*3.14159);if(aFlex>100.0){p=mix(vec3(0.0,17.5,6.2),p,max(0.02,uSails));}else if(aFlex>2.0){p.y=aFlex-(aFlex-p.y)*max(0.055,uSails);p.z+=billow*(0.5+uWind*0.025)*uSails+sin(p.x*1.3-uTime*3.3+p.y)*0.12*uSails;}else if(aFlex<0.0){p.z+=aUV.x*(sin(aUV.x*5.0-uTime*4.0)*0.38+sin(aUV.x*9.0-uTime*6.0+aUV.y)*0.12);}else if(aFlex>0.0){p.z+=billow*uSails*.5;}vec4 world=uModel*vec4(p,1.0);vWorld=world.xyz;vNormal=mat3(uModel)*aNormal;vColor=aColor;vUV=aUV;gl_Position=uVP*world;}`,
+`precision highp float;uniform vec3 uEye,uSun,uFog;uniform float uDay,uStorm,uTexture,uUnlit;uniform sampler2D uMap;
+varying vec3 vWorld,vNormal;varying vec4 vColor;varying vec2 vUV;
+void main(){vec4 color=vColor;if(uTexture>0.5)color*=texture2D(uMap,vUV);if(color.a<0.015)discard;vec3 n=normalize(vNormal);if(!gl_FrontFacing)n=-n;float diffuse=max(dot(n,uSun),0.0);float hemi=n.y*0.16+0.84;vec3 light=vec3(0.39,0.45,0.46)*hemi+vec3(1.02,0.86,0.62)*diffuse*(0.15+uDay*0.79)*(1.0-uStorm*0.42);vec3 lit=color.rgb*light;lit+=color.rgb*vec3(0.04,0.04,0.025);if(uUnlit>0.5)lit=color.rgb*(0.24+uDay*0.76);float fog=1.0-exp(-length(vWorld-uEye)*(0.0008+uStorm*0.0009));vec3 outColor=mix(lit,uFog,clamp(fog,0.0,0.95));gl_FragColor=vec4(outColor,color.a);}`);
+const skyProgram=makeProgram(`attribute vec2 aPosition;varying vec2 vUV;void main(){vUV=aPosition;gl_Position=vec4(aPosition,0.9999,1.0);}`,
+`precision highp float;varying vec2 vUV;uniform vec3 uForward,uRight,uUp,uSun,uFog;uniform float uAspect,uTan,uDay,uStorm,uTime;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}float fbm(vec2 p){return noise(p)*0.52+noise(p*2.1)*0.26+noise(p*4.1)*0.13+noise(p*8.3)*0.06;}
+void main(){vec3 ray=normalize(uForward+uRight*vUV.x*uAspect*uTan+uUp*vUV.y*uTan);float h=max(ray.y,0.0);vec3 top=mix(vec3(0.018,0.037,0.087),vec3(0.28,0.52,0.62),uDay);top=mix(top,vec3(0.12,0.19,0.24),uStorm*0.78);vec3 sky=mix(uFog,top,pow(h,0.44));float sun=max(dot(ray,uSun),0.0);vec3 gold=mix(vec3(0.43,0.59,0.8),vec3(1.0,0.71,0.36),uDay);sky+=gold*pow(sun,14.0)*0.18*(1.0-uStorm*0.8);sky+=gold*pow(sun,350.0)*0.47*(1.0-uStorm);sky+=vec3(1.0,0.86,0.57)*smoothstep(0.99978,0.99992,sun)*(0.55+uDay*0.6)*(1.0-uStorm);
+if(ray.y>0.015){vec2 p=ray.xz/(ray.y+0.17)*1.7+vec2(uTime*0.004,uTime*0.002);float clouds=fbm(p);float cover=smoothstep(0.52-uStorm*0.18,0.78-uStorm*0.14,clouds)*smoothstep(0.012,0.20,h);vec3 cloud=mix(vec3(0.1,0.15,0.23),mix(vec3(0.83,0.83,0.73),vec3(0.31,0.39,0.43),uStorm),uDay);cloud+=vec3(0.18,0.12,0.055)*pow(sun,9.0)*uDay;sky=mix(sky,cloud,cover*(0.80+uStorm*0.16));vec2 starP=ray.xz/(h+0.22)*430.0;float star=step(0.997,hash(floor(starP)))*pow(max(0.0,1.0-length(fract(starP)-0.5)*2.0),5.0);sky+=star*(1.0-uDay)*(1.0-uStorm)*vec3(0.85,0.93,1.0);}
+gl_FragColor=vec4(sky,1.0);}`);
+const waveFunction=`
+float wave(vec2 p,float t,float a){return a*(sin(dot(p,vec2(0.09,0.048))+t*1.10)*0.60+sin(dot(p,vec2(-0.059,0.12))+t*0.85)*0.32+sin(dot(p,vec2(0.19,-0.14))+t*1.67)*0.14);}
+vec2 slope(vec2 p,float t,float a){return a*(cos(dot(p,vec2(0.09,0.048))+t*1.10)*0.60*vec2(0.09,0.048)+cos(dot(p,vec2(-0.059,0.12))+t*0.85)*0.32*vec2(-0.059,0.12)+cos(dot(p,vec2(0.19,-0.14))+t*1.67)*0.14*vec2(0.19,-0.14));}`;
+const oceanProgram=makeProgram(`attribute vec2 aPosition;uniform mat4 uVP;uniform vec2 uCenter;uniform float uTime,uAmplitude;varying vec3 vWorld,vNormal;${waveFunction}
+void main(){vec2 p=aPosition+uCenter;vWorld=vec3(p.x,wave(p,uTime,uAmplitude)-0.25,p.y);vec2 s=slope(p,uTime,uAmplitude);vNormal=normalize(vec3(-s.x,1.0,-s.y));gl_Position=uVP*vec4(vWorld,1.0);}`,
+`precision highp float;uniform vec3 uEye,uSun,uFog;uniform vec2 uShip,uDirection;uniform float uTime,uDay,uStorm,uAmplitude,uSpeed;varying vec3 vWorld,vNormal;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+void main(){vec2 p=vWorld.xz;float distanceToEye=length(uEye-vWorld);float detail=exp(-distanceToEye*0.009);vec3 n=normalize(vNormal+vec3(sin(p.x*1.30+p.y*.81+uTime*2.0)*0.07*detail,0.0,cos(p.y*1.23-p.x*.62+uTime*1.7)*0.07*detail));vec3 view=normalize(uEye-vWorld);float fresnel=pow(1.0-max(dot(view,n),0.0),3.4);float swell=noise(p*0.025+uTime*.008);vec3 deep=mix(vec3(0.012,0.13,0.19),vec3(0.022,0.28,0.32),uDay);vec3 shallow=mix(vec3(0.021,0.18,0.22),vec3(0.045,0.40,0.43),uDay);vec3 color=mix(deep,shallow,swell*.55+max(n.y-.96,0.0)*5.0);color=mix(color,uFog*vec3(0.75,0.91,0.98),fresnel*.70);vec3 halfDir=normalize(view+uSun);float spec=pow(max(dot(n,halfDir),0.0),190.0);color+=vec3(1.0,.81,.48)*spec*(.55+uDay*.7)*(1.0-uStorm*.75);float crest=smoothstep(uAmplitude*.40,uAmplitude*.8,vWorld.y+.25);float streak=sin(p.x*.36+p.y*.27+sin(p.y*.14+uTime)*2.8+uTime*.6);float foam=smoothstep(.94,1.0,streak)*crest*.23*detail;float ripple=noise(p*.65-uTime*.11);foam+=smoothstep(.78,.88,ripple)*crest*.12*detail;
+vec2 d=p-uShip;float along=dot(d,uDirection),side=abs(dot(d,vec2(uDirection.y,-uDirection.x)));float bow=exp(-pow((along-11.8)*.4,2.0))*exp(-pow((side-2.1)*1.0,2.0))*clamp(uSpeed*.13,0.0,.7);foam+=bow*.65;color=mix(color,vec3(.66,.84,.81)*(.17+uDay*.83),clamp(foam,0.0,.8));float fog=1.0-exp(-distanceToEye*(.00083+uStorm*.001));color=mix(color,uFog,clamp(fog,0.0,.96));gl_FragColor=vec4(color,1.0);}`);
+class Builder{
+  constructor(){this.data=[];}
+  tri(a,b,c,color,uvs=[[0,0],[0,0],[0,0]],flex=0,normal=null){const n=normal||norm(cross(sub(b,a),sub(c,a)));for(let i=0;i<3;i++)this.data.push(...[a,b,c][i],...n,...color.slice(0,3),color[3]===undefined?1:color[3],...uvs[i],flex);return this;}
+  quad(a,b,c,d,color,uvs=[[0,0],[1,0],[1,1],[0,1]],flex=0,n=null){this.tri(a,b,c,color,[uvs[0],uvs[1],uvs[2]],flex,n);this.tri(a,c,d,color,[uvs[0],uvs[2],uvs[3]],flex,n);return this;}
+  box(x,y,z,w,h,l,c){const p=[[x-w/2,y-h/2,z-l/2],[x+w/2,y-h/2,z-l/2],[x+w/2,y+h/2,z-l/2],[x-w/2,y+h/2,z-l/2],[x-w/2,y-h/2,z+l/2],[x+w/2,y-h/2,z+l/2],[x+w/2,y+h/2,z+l/2],[x-w/2,y+h/2,z+l/2]];for(const f of [[0,3,2,1],[4,5,6,7],[0,4,7,3],[1,2,6,5],[3,7,6,2],[0,1,5,4]])this.quad(...f.map(i=>p[i]),c);return this;}
+  cylinder(a,b,r,c,segments=8,r2=r){const axis=norm(sub(b,a)),e=norm(cross(axis,Math.abs(axis[1])<.9?[0,1,0]:[1,0,0])),f=cross(axis,e);for(let i=0;i<segments;i++){const t=i/segments*TAU,t2=(i+1)/segments*TAU,q=add(mul(e,Math.cos(t)),mul(f,Math.sin(t))),q2=add(mul(e,Math.cos(t2)),mul(f,Math.sin(t2)));const p0=add(a,mul(q,r)),p1=add(a,mul(q2,r)),p2=add(b,mul(q2,r2)),p3=add(b,mul(q,r2));this.quad(p0,p3,p2,p1,c);this.tri(a,p1,p0,c);this.tri(b,p3,p2,c);}return this;}
+  sphere(x,y,z,sx,sy,sz,c,lat=6,lon=10){function p(a,b){return[x+Math.sin(a)*Math.cos(b)*sx,y+Math.cos(a)*sy,z+Math.sin(a)*Math.sin(b)*sz];}for(let i=0;i<lat;i++)for(let j=0;j<lon;j++)this.quad(p(i/lat*Math.PI,j/lon*TAU),p(i/lat*Math.PI,(j+1)/lon*TAU),p((i+1)/lat*Math.PI,(j+1)/lon*TAU),p((i+1)/lat*Math.PI,j/lon*TAU),c);return this;}
+  mesh(dynamic=false){const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(this.data),dynamic?gl.DYNAMIC_DRAW:gl.STATIC_DRAW);return{buffer,count:this.data.length/13};}
+}
+const wood=[.34,.18,.095],darkWood=[.19,.095,.048],plank=[.49,.32,.17],gold=[.77,.54,.22],rope=[.42,.34,.22],black=[.055,.065,.063],cream=[.95,.88,.70];
+function coastalShip(level){
+ const body=new Builder(),sails=new Builder(),flag=new Builder(),length=level===1?9:10.5,width=level===1?2.8:3.3;
+ const rings=[[-length,.18,.25],[-length*.8,width*.7,1.8],[-length*.3,width,2.5],[length*.4,width*.85,2.7],[length,.10,3.1]];
+ for(let i=0;i<rings.length-1;i++){const[z,w,y]=rings[i],[zz,ww,yy]=rings[i+1];
+  for(const side of[-1,1]){body.quad([side*w,y,z],[side*ww,yy,zz],[side*ww*.65,-.6,zz],[side*w*.65,-.6,z],wood);body.quad([side*w,y,z],[side*ww,yy,zz],[0,yy,zz],[0,y,z],plank);body.cylinder([side*w,y+.6,z],[side*ww,yy+.6,zz],.11,darkWood,6);}
+  body.quad([-w*.65,-.6,z],[-ww*.65,-.6,zz],[ww*.65,-.6,zz],[w*.65,-.6,z],darkWood);}
+ body.box(0,3.4,-5,3,1.9,3.5,darkWood);body.box(0,4.5,-5,3.2,.2,3.8,plank);
+ body.cylinder([0,2.5,0],[0,18,0],.24,darkWood,9,.09);body.cylinder([-5,16.5,0],[5,16.5,0],.13,wood,8);
+ sails.quad([-5,16.3,.1],[5,16.3,.1],[4.2,7.3,.4],[-4.2,7.3,.4],cream,[[0,0],[1,0],[1,1],[0,1]],16.3);
+ body.cylinder([0,3,length-1],[0,5,length+3],.15,wood,7,.08);body.cylinder([0,17,0],[0,5,length+3],.025,rope,4);
+ sails.tri([0,16,1],[0,5,length+2],[0,5,1],cream,[[0,0],[1,1],[0,1]],1);
+ flag.quad([0,17.8,0],[3.4,17.8,0],[3.4,16.5,0],[0,16.5,0],[.13,.42,.42],[[0,0],[1,0],[1,1],[0,1]],-1);
+ for(let side of[-1,1])for(let z of[-3,3])body.cylinder([side*2.0,3.1,z],[side*2.0,3.8,z],.55,[.4,.27,.13],9);
+ if(level===2){body.box(0,3.3,4,3.1,1.2,2.3,plank);for(let side of[-1,1])body.cylinder([side*3.0,3.7,-3],[side*3.0,3.7,4],.17,gold,6);}
+ return {body:body.mesh(),sail:sails.mesh(),flag:flag.mesh()};
+}
+const coastalShips=[coastalShip(1),coastalShip(2)];
+function skull(ctx,cx,cy,r,color){ctx.save();ctx.fillStyle=color;ctx.strokeStyle=color;ctx.lineCap='round';ctx.lineWidth=r*.13;for(const s of[-1,1]){ctx.beginPath();ctx.moveTo(cx-r*.76,cy+r*.58*s+r*.65);ctx.lineTo(cx+r*.76,cy-r*.58*s+r*.65);ctx.stroke();for(const e of[-1,1]){ctx.beginPath();ctx.arc(cx+e*r*.76,cy-e*r*.58*s+r*.65,r*.10,0,TAU);ctx.fill();}}ctx.beginPath();ctx.ellipse(cx,cy-r*.1,r*.59,r*.65,0,0,TAU);ctx.fill();ctx.fillRect(cx-r*.31,cy+r*.25,r*.62,r*.48);ctx.globalCompositeOperation='destination-out';for(const s of[-1,1]){ctx.beginPath();ctx.ellipse(cx+s*r*.23,cy-r*.08,r*.16,r*.18,s*.25,0,TAU);ctx.fill();}ctx.beginPath();ctx.moveTo(cx,cy+r*.12);ctx.lineTo(cx-r*.08,cy+r*.30);ctx.lineTo(cx+r*.08,cy+r*.30);ctx.fill();for(let i=-1;i<=1;i++)ctx.fillRect(cx+i*r*.14-r*.022,cy+r*.53,r*.045,r*.21);ctx.restore();}
+function texture(flag=false,emblem=true){const c=document.createElement('canvas');c.width=512;c.height=512;const ctx=c.getContext('2d');ctx.fillStyle=flag?'#172023':'#f4e8c7';ctx.fillRect(0,0,512,512);if(!flag){for(let i=0;i<5000;i++){ctx.fillStyle=`rgba(103,77,39,${random()*.095})`;ctx.fillRect(random()*512,random()*512,1+random()*3,1);}ctx.strokeStyle='#9e805834';ctx.lineWidth=1;for(let x=42;x<512;x+=61){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+3,512);ctx.stroke();}ctx.strokeStyle='#6b4b3849';ctx.strokeRect(9,9,494,494);}
+const symbol=document.createElement('canvas');symbol.width=512;symbol.height=512;skull(symbol.getContext('2d'),256,245,flag?130:105,flag?'#e5ddc0':'#3d342b');if(emblem)ctx.drawImage(symbol,0,0);const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);return tex;}
+const plainSailTexture=texture(false,false);
+const islands=[];
+const islandSpecs=[[0,360,250,64,'灯待ち港'],[9600,360,250,72,'松帆港']];
+function islandHeight(t,a,h,r){if(t>.86)return -2.4+(1-t)*26;const peaks=.79+.23*Math.sin(a*3.0+.7)+.14*Math.cos(a*5.0-1.5);return 3.2+Math.pow(1-t,1.48)*h*peaks+Math.sin(a*4+t*12)*Math.sin(t*Math.PI)*h*.07;}
+for(const[ix,iz,r,h,name]of islandSpecs){const b=new Builder(),segments=40,rows=13;const radial=a=>1+.12*Math.sin(a*3+.4)+.09*Math.sin(a*5+2.0);function point(t,a){return[Math.cos(a)*r*t*radial(a),islandHeight(t,a,h,r),Math.sin(a)*r*t*radial(a)];}for(let k=0;k<rows;k++)for(let j=0;j<segments;j++){const t=k/rows,t2=(k+1)/rows,a=j/segments*TAU,a2=(j+1)/segments*TAU;const v=[point(t,a),point(t2,a),point(t2,a2),point(t,a2)];const y=v.reduce((s,p)=>s+p[1],0)/4;const shade=.84+random()*.23;let color=y<4.4?[.79*shade,.73*shade,.51*shade]:y>h*.58?[.25*shade,.32*shade,.25*shade]:[.16*shade,.34*shade,.23*shade];b.quad(...v,color);}
+for(let k=0;k<14;k++){const a=random()*TAU,t=.61+random()*.22,p=point(t,a);if(p[1]<2)continue;const ht=5+random()*7,lean=1.5+random()*2.2;let prev=p;for(let j=1;j<=4;j++){const top=[p[0]+Math.cos(a)*lean*Math.pow(j/4,2),p[1]+ht*j/4,p[2]+Math.sin(a)*lean*Math.pow(j/4,2)];b.cylinder(prev,top,.25*(1-j*.12),[.36,.27,.15],5);prev=top;}for(let f=0;f<6;f++){const angle=f/6*TAU+random()*.3,len=4+random()*2;const middle=add(prev,[Math.cos(angle)*len*.48,1,Math.sin(angle)*len*.48]),tip=add(prev,[Math.cos(angle)*len,-2.2,Math.sin(angle)*len]);const side=[-Math.sin(angle)*.75,0,Math.cos(angle)*.75];b.tri(prev,add(middle,side),tip,[.16,.32,.12]);b.tri(prev,tip,sub(middle,side),[.23,.42,.17]);}}
+for(let j=0;j<12;j++){const a=random()*TAU,t=.38+random()*.36,p=point(t,a),s=3+random()*7;b.sphere(p[0],p[1]+s*.3,p[2],s,s*.8,s*.9,[.29,.32,.25],4,6);}
+// Simple harbor buildings and a pier, all native procedural geometry.
+for(let j=0;j<5;j++){const px=(j-2)*24,pz=-120,py=islandHeight(Math.hypot(px,pz)/r,Math.atan2(pz,px),h,r);b.box(px,py+6,pz,18,12,16,[.70,.65,.46]);b.box(px,py+13,pz,21,3,19,[.28,.32,.27]);}
+b.box(0,1.7,-265,12,1.3,130,plank);for(let j=0;j<5;j++)for(let side of[-1,1])b.cylinder([side*5,-3,-205-j*26],[side*5,2.2,-205-j*26],.8,darkWood,6);
+islands.push({x:ix,z:iz,r,h,name,mesh:b.mesh(),matrix:translation(ix,0,iz),visited:false});}
+const birdBuilder=new Builder();birdBuilder.tri([0,0,.5],[-2.8,.15,-.1],[-.65,0,-.36],[.18,.24,.23]);birdBuilder.tri([0,0,.5],[.65,0,-.36],[2.8,.15,-.1],[.18,.24,.23]);birdBuilder.sphere(0,0,0,.21,.17,.63,[.37,.42,.39],4,6);const birdMesh=birdBuilder.mesh();
+const skyBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,skyBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+const oceanVertices=[],oceanIndices=[],GRID=100;
+// A non-linear grid keeps fine geometry under the ship and reaches the horizon.
+function grid(v){const s=(v/GRID*2-1);return Math.sign(s)*Math.pow(Math.abs(s),2.1)*4600;}
+for(let z=0;z<=GRID;z++)for(let x=0;x<=GRID;x++)oceanVertices.push(grid(x),grid(z));
+for(let z=0;z<GRID;z++)for(let x=0;x<GRID;x++){const a=z*(GRID+1)+x,b=a+1,c=a+GRID+1,d=c+1;oceanIndices.push(a,c,b,b,c,d);}
+const oceanBuffer=gl.createBuffer(),oceanIndex=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,oceanBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(oceanVertices),gl.STATIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,oceanIndex);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(oceanIndices),gl.STATIC_DRAW);
+const wakeMesh=new Builder().mesh(true);
+const initialZoom=innerWidth<700&&innerHeight>innerWidth?76:54;
+const state={x:0,z:0,heading:.04,speed:3.8,distance:0,sails:1,sailVisual:1,time:0,paused:false,auto:true,weather:'breeze',storm:0,amplitude:.95,wind:14,windAngle:.68,day:1,hour:17.1,timeIndex:2,view:'follow',yaw:.78,pitch:.31,zoom:initialZoom,waypoint:null,routeIndex:0,helm:0,roll:0,pitchShip:0,height:0,hidden:false,audio:false};
+const weatherPresets={calm:{wind:7,amp:.42,storm:0,description:'弱い南西の風 · 静かな海',caption:'静かな海、ゆっくりと進む船。'},breeze:{wind:14,amp:.95,storm:0,description:'南西の風 · 穏やかなうねり',caption:'晴れた空、帆を満たす風。'},storm:{wind:28,amp:2.95,storm:1,description:'強い南西の風 · 高い波',caption:'荒れる海。帆を絞って進もう。'}};
+const timePresets=[{hour:7.0,name:'朝景',icon:'☀'},{hour:12.4,name:'昼景',icon:'☼'},{hour:17.1,name:'夕景',icon:'◑'},{hour:22,name:'夜景',icon:'☾'}];
+const keys=new Set(),wake=[],pointers=new Map();let chartTimer=0,hudTimer=0,wakeTimer=0,lastFrame=0,toastTimer=0,running=true,width=1,height=1,aspect=1,chartScale=1800,audioCtx=null,audioGain=null,audioFilter=null;
+let eye=[Math.sin(.82)*initialZoom*Math.cos(.31),7.3+Math.sin(.31)*initialZoom,Math.cos(.82)*initialZoom*Math.cos(.31)],vp=I(),sun=[-.45,.28,-.84],fog=[.66,.70,.65];
+function waveHeight(x,z,t=state.time){return state.amplitude*(Math.sin(x*.09+z*.048+t*1.10)*.60+Math.sin(x*-.059+z*.12+t*.85)*.32+Math.sin(x*.19-z*.14+t*1.67)*.14)-.25;}
+function waveSlope(x,z){const t=state.time,a=state.amplitude;return[a*(Math.cos(x*.09+z*.048+t*1.1)*.60*.09+Math.cos(x*-.059+z*.12+t*.85)*.32*-.059+Math.cos(x*.19-z*.14+t*1.67)*.14*.19),a*(Math.cos(x*.09+z*.048+t*1.1)*.60*.048+Math.cos(x*-.059+z*.12+t*.85)*.32*.12+Math.cos(x*.19-z*.14+t*1.67)*.14*-.14)];}
+function message(str){$('toast').textContent=str;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600);}
+function autopilot(on){const r=Adventure.run('setAuto',on);if(r.ok)state.auto=on;}
+function togglePause(){Adventure.togglePause();state.paused=Adventure.snapshot().paused;}
+function toggleUI(){state.hidden=!state.hidden;$('ui').classList.toggle('hidden',state.hidden);$('restore').classList.toggle('show',state.hidden);}
+function resize(){width=innerWidth;height=innerHeight;const mobile=matchMedia('(pointer:coarse)').matches;const dpr=Math.min(devicePixelRatio||1,mobile?1.45:1.7);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);gl.viewport(0,0,canvas.width,canvas.height);aspect=width/height;const c=$('chart'),s=c.clientWidth||196;c.width=Math.round(s*2);c.height=Math.round(s*2);}
+window.addEventListener('resize',resize);resize();
+function bindMesh(mesh){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);for(const[name,size,offset]of[['aPosition',3,0],['aNormal',3,12],['aColor',4,24],['aUV',2,40],['aFlex',1,48]]){let a=meshProgram.attrs[name];if(a===undefined)a=meshProgram.attrs[name]=gl.getAttribLocation(meshProgram.p,name);if(a>=0){gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,size,gl.FLOAT,false,52,offset);}}}
+function drawMesh(mesh,model,tex=null,unlit=0){uniform(meshProgram,'uModel',model);uniform(meshProgram,'uTexture',tex?1:0);uniform(meshProgram,'uUnlit',unlit);if(tex){gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);}bindMesh(mesh);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}
+function attr(program,name,size,buffer){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);const a=gl.getAttribLocation(program.p,name);gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,size,gl.FLOAT,false,0,0);}
+let accumulator=0;
+function update(dt){
+ const keyboard=(keys.has('ArrowRight')||keys.has('d')?1:0)-(keys.has('ArrowLeft')||keys.has('a')?1:0),steer=clamp(state.helm+keyboard,-1,1);
+ if(Adventure.shouldAdvance()){
+  const game=Adventure.snapshot();Adventure.autosave(dt);accumulator+=dt*game.clock.speedMultiplier;
+  if(game.phase==='SAILING'){if(keys.has('ArrowUp')||keys.has('w'))Adventure.setSails(Math.min(1,game.navigation.sails+dt*.25));if(keys.has('ArrowDown')||keys.has('s'))Adventure.setSails(Math.max(0,game.navigation.sails-dt*.25));}
+  let ticks=0;while(accumulator>=.05&&ticks<40&&Adventure.shouldAdvance()){Adventure.step(.05,steer);accumulator-=.05;ticks++;}
+ }else accumulator=0;
+ const game=Adventure.snapshot(),n=game.navigation;state.x=game.position.xNm*40;state.z=game.position.zNm*40;state.heading=n.heading;state.speed=n.speed*.514444;state.sails=n.sails;state.auto=n.auto;state.paused=game.paused;
+ state.time+=dt;state.windAngle=.68+Math.sin(state.time*.016)*.10;
+ const slope=waveSlope(state.x,state.z),direction=[Math.sin(state.heading),Math.cos(state.heading)],frontSlope=slope[0]*direction[0]+slope[1]*direction[1],sideSlope=slope[0]*direction[1]-slope[1]*direction[0];state.height=lerp(state.height,waveHeight(state.x,state.z)+.26,1-Math.exp(-dt*2.5));state.pitchShip=lerp(state.pitchShip,-Math.atan(frontSlope)*.72,1-Math.exp(-dt*1.8));state.roll=lerp(state.roll,Math.atan(sideSlope)*.64+steer*.026+Math.sin(state.time*.66)*.012,1-Math.exp(-dt*1.6));state.sailVisual=lerp(state.sailVisual,state.sails,1-Math.exp(-dt*2));
+ wakeTimer+=dt;if(wakeTimer>.19&&state.speed>.1){wakeTimer=0;wake.unshift({x:state.x-direction[0]*9,z:state.z-direction[1]*9,t:state.time,speed:state.speed,heading:state.heading});if(wake.length>100)wake.pop();}while(wake.length&&state.time-wake[wake.length-1].t>20)wake.pop();
+ if(state.view==='orbit')state.yaw+=dt*.034;
+ if(audioGain)audioGain.gain.setTargetAtTime(state.audio&&!document.hidden&&!document.querySelector('dialog[open]')&&!state.paused?.14:0,audioCtx.currentTime,.7);
+}
+function setSails(n){Adventure.setSails(clamp(n,0,1));}
+function environment(dt){const hour=(8+Adventure.snapshot().clock.gameDays*24)%24;state.hour=hour;const night=state.hour>19.4;const elevation=night?.40:Math.max(.045,Math.sin((state.hour-6)/12*Math.PI)*.72);sun=norm([-.48,elevation,-.80]);const daylight=night?.035:clamp(elevation*1.7+.21,.1,1);state.day=lerp(state.day,daylight,1-Math.exp(-dt*1.4));const warm=clamp(1-elevation*1.65,0,1);fog=[lerp(.025,lerp(.60,.78,warm),state.day),lerp(.065,lerp(.73,.72,warm),state.day),lerp(.12,lerp(.76,.60,warm),state.day)];fog=fog.map((v,i)=>lerp(v,[.31,.39,.43][i],state.storm*.66));}
+function drawWake(){if(wake.length<3)return;const b=new Builder();for(let i=0;i<wake.length-1;i++){const a=wake[i],c=wake[i+1],age=state.time-a.t,age2=state.time-c.t;if(a.speed<.3)continue;const w=2.5+age*.37,w2=2.5+age2*.37,alpha=Math.pow(clamp(1-age/35,0,1),2)*.23*Math.min(a.speed/4,1),alpha2=Math.pow(clamp(1-age2/35,0,1),2)*.23;for(const side of[-1,1]){const right=[Math.cos(a.heading)*side,-Math.sin(a.heading)*side],right2=[Math.cos(c.heading)*side,-Math.sin(c.heading)*side];const p=(s,x,ww,r)=>{const px=x.x+r[0]*ww,pz=x.z+r[1]*ww;return[px,waveHeight(px,pz)+.09,pz];};const p0=p(0,a,w*.45,right),p1=p(0,a,w,right),p2=p(0,c,w2,right2),p3=p(0,c,w2*.45,right2);b.quad(p0,p1,p2,p3,[.69,.91,.87,alpha*(.80+.20*Math.sin(i*2.4))]);}}
+ gl.bindBuffer(gl.ARRAY_BUFFER,wakeMesh.buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(b.data),gl.DYNAMIC_DRAW);wakeMesh.count=b.data.length/13;gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);drawMesh(wakeMesh,I(),null,1);gl.depthMask(true);gl.disable(gl.BLEND);
+}
+function render(dt){environment(dt);const target=[state.x,state.height+7.3,state.z];let desiredEye;
+if(state.view==='deck'){const h=state.heading;desiredEye=[state.x-Math.sin(h)*7.3,state.height+8.2,state.z-Math.cos(h)*7.3];target[0]=state.x+Math.sin(h+state.yaw*.30)*80;target[1]=state.height+8.1+Math.sin(state.pitch)*12;target[2]=state.z+Math.cos(h+state.yaw*.30)*80;}else{const yaw=state.heading+state.yaw,d=state.zoom,cos=Math.cos(state.pitch);desiredEye=[state.x+Math.sin(yaw)*d*cos,state.height+7.3+Math.sin(state.pitch)*d,state.z+Math.cos(yaw)*d*cos];}
+ if(Math.hypot(eye[0]-desiredEye[0],eye[2]-desiredEye[2])>300){eye=desiredEye.slice();wake.length=0;}const cameraEase=1-Math.exp(-dt*5);eye=eye.map((v,i)=>lerp(v,desiredEye[i],cameraEase));eye[1]=Math.max(eye[1],waveHeight(eye[0],eye[2])+2.0);const cam=lookAt(eye,target),fov=52*Math.PI/180;vp=mm(perspective(fov,aspect,.22,10000),cam.matrix);
+ gl.clearColor(...fog,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.depthMask(false);for(let i=0;i<5;i++)gl.disableVertexAttribArray(i);gl.useProgram(skyProgram.p);attr(skyProgram,'aPosition',2,skyBuffer);for(const[n,v]of Object.entries({uForward:cam.forward,uRight:cam.right,uUp:cam.up,uSun:sun,uFog:fog,uAspect:aspect,uTan:Math.tan(fov/2),uDay:state.day,uStorm:state.storm,uTime:state.time}))uniform(skyProgram,n,v);gl.drawArrays(gl.TRIANGLES,0,6);
+ gl.depthMask(true);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);for(let i=0;i<5;i++)gl.disableVertexAttribArray(i);gl.useProgram(oceanProgram.p);attr(oceanProgram,'aPosition',2,oceanBuffer);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,oceanIndex);for(const[n,v]of Object.entries({uVP:vp,uEye:eye,uSun:sun,uFog:fog,uCenter:[state.x,state.z],uShip:[state.x,state.z],uDirection:[Math.sin(state.heading),Math.cos(state.heading)],uTime:state.time,uDay:state.day,uStorm:state.storm,uAmplitude:state.amplitude,uSpeed:state.speed}))uniform(oceanProgram,n,v);gl.drawElements(gl.TRIANGLES,oceanIndices.length,gl.UNSIGNED_SHORT,0);
+ gl.useProgram(meshProgram.p);for(const[n,v]of Object.entries({uVP:vp,uEye:eye,uSun:sun,uFog:fog,uTime:state.time,uDay:state.day,uStorm:state.storm,uWind:state.wind,uSails:state.sailVisual}))uniform(meshProgram,n,v);
+ for(const island of islands)if(Math.hypot(island.x-state.x,island.z-state.z)<5200)drawMesh(island.mesh,island.matrix);
+ const model=mm(translation(state.x,state.height,state.z),mm(ry(state.heading),mm(rx(state.pitchShip),rz(state.roll))));const ship=coastalShips[Adventure.snapshot().ship.tier-1];drawMesh(ship.body,model);
+ // Furling is achieved by compressing each sail toward its yard, independently.
+ drawMesh(ship.sail,model,plainSailTexture);
+ drawMesh(ship.flag,model);
+ for(let i=0;i<7;i++){const a=state.time*.043+i*.84,r=69+i*11,x=state.x+Math.cos(a)*r,z=state.z+Math.sin(a)*r,y=34+i*3+Math.sin(state.time*.35+i)*3;const birdModel=mm(translation(x,y,z),mm(ry(-a+.7),mm(rz(Math.sin(state.time*3.2+i)*.18),scale(.7,.7,.7))));drawMesh(birdMesh,birdModel);}
+ drawWake();
+}
+function chartPoint(x,z,w,h){return[(x+35)/310*w,(75-z)/150*h];}
+function drawChart(){const c=$('chart'),ctx=c.getContext('2d'),w=c.width,h=c.height,s=Adventure.snapshot();ctx.clearRect(0,0,w,h);ctx.strokeStyle='#bad0b214';ctx.lineWidth=1;for(let i=0;i<=4;i++){ctx.beginPath();ctx.moveTo(i*w/4,0);ctx.lineTo(i*w/4,h);ctx.moveTo(0,i*h/4);ctx.lineTo(w,i*h/4);ctx.stroke();}
+ctx.font=`${w*.045}px system-ui`;ctx.textAlign='center';for(const p of AdventureCore.PORTS){const[x,y]=chartPoint(p.x,p.z,w,h);ctx.fillStyle='#789c7955';ctx.beginPath();ctx.ellipse(x,y-h*.065,w*.039,h*.049,0,0,TAU);ctx.fill();ctx.fillStyle='#e7c78d';ctx.beginPath();ctx.arc(x,y,w*.012,0,TAU);ctx.fill();ctx.fillStyle='#d6e6d5';ctx.fillText(p.name,x,y+h*.15);}
+const[x,y]=chartPoint(s.position.xNm,s.position.zNm,w,h);if(s.navigation.waypoint){const[wx,wy]=chartPoint(...s.navigation.waypoint,w,h);ctx.save();ctx.setLineDash([5,7]);ctx.strokeStyle='#e7c78d90';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(wx,wy);ctx.stroke();ctx.restore();}
+ctx.save();ctx.translate(clamp(x,8,w-8),clamp(y,8,h-8));ctx.rotate(s.navigation.heading);ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(5,7);ctx.lineTo(-5,7);ctx.closePath();ctx.fillStyle='#edcf94';ctx.fill();ctx.restore();}
+function hud(){const s=Adventure.snapshot(),heading=(s.navigation.heading*180/Math.PI+360)%360,names=['N / 北','NE / 北東','E / 東','SE / 南東','S / 南','SW / 南西','W / 西','NW / 北西'];$('ship-speed').textContent=s.navigation.speed.toFixed(1);$('heading').textContent=(Math.round(heading)%360).toString().padStart(3,'0')+'°';$('heading-name').textContent=names[Math.round(heading/45)%8];$('distance').textContent=s.navigation.distance.toFixed(1);$('wind-speed').textContent='14.0';$('wind-description').textContent='穏やかな貿易風';$('wind-arrow').style.transform=`rotate(${(state.windAngle+Math.PI)*180/Math.PI}deg)`;drawChart();Adventure.update();}
+function frame(now){if(!running)return;const dt=lastFrame?clamp((now-lastFrame)/1000,0,.5):1/60;lastFrame=now;update(dt);render(dt);hudTimer+=dt;if(hudTimer>.12){hudTimer=0;hud();}requestAnimationFrame(frame);}
+$('auto').addEventListener('click',()=>autopilot(true));$('manual').addEventListener('click',()=>autopilot(false));$('sails').addEventListener('input',e=>setSails(+e.target.value/100));$('pause').addEventListener('click',togglePause);$('restore').addEventListener('click',toggleUI);
+
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;document.querySelectorAll('[data-view]').forEach(el=>el.classList.toggle('active',el===b));if(state.view==='deck'){state.yaw=0;state.pitch=0;}else{state.yaw=.78;state.pitch=.31;state.zoom=initialZoom;}}));
+$('help-button').addEventListener('click',()=>{$('help').showModal();});$('close-help').addEventListener('click',()=>$('help').close());$('help').addEventListener('click',e=>{if(e.target===$('help')){const r=$('help').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('help').close();}});
+$('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else message('このブラウザは全画面切替に対応していません。');}catch(e){message('ブラウザの全画面表示をご利用ください。');}});
+async function toggleSound(){try{if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)throw new Error('Audio unavailable');audioCtx=new AC();const buffer=audioCtx.createBuffer(1,audioCtx.sampleRate*3,audioCtx.sampleRate),data=buffer.getChannelData(0);let previous=0;for(let i=0;i<data.length;i++){const white=Math.random()*2-1;previous=(previous+.02*white)/1.02;data[i]=previous*4.5;}const source=audioCtx.createBufferSource();source.buffer=buffer;source.loop=true;audioFilter=audioCtx.createBiquadFilter();audioFilter.type='lowpass';audioFilter.frequency.value=950;audioGain=audioCtx.createGain();audioGain.gain.value=0;const breathing=audioCtx.createGain();breathing.gain.value=.78;const swell=audioCtx.createOscillator(),swellGain=audioCtx.createGain();swell.frequency.value=.12;swellGain.gain.value=.18;swell.connect(swellGain);swellGain.connect(breathing.gain);swell.start();source.connect(audioFilter);audioFilter.connect(breathing);breathing.connect(audioGain);audioGain.connect(audioCtx.destination);source.start();}await audioCtx.resume();state.audio=!state.audio;audioGain.gain.setTargetAtTime(state.audio&&!state.paused?.18:0,audioCtx.currentTime,.6);$('sound').setAttribute('aria-pressed',String(state.audio));$('sound').setAttribute('aria-label',state.audio?'波と風の音をオフ':'波と風の音をオン');$('sound-waves').setAttribute('d',state.audio?'M13 7a5 5 0 0 1 0 6m2-9a8 8 0 0 1 0 12':'M13 7l5 6M18 7l-5 6');}catch(e){message('この環境では音を再生できません。');}}
+$('sound').addEventListener('click',toggleSound);
+window.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]')||!$('title-screen').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;const k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','a','d','w','s','p','h','r'].includes(k))e.preventDefault();keys.add(k);if(['ArrowLeft','ArrowRight','a','d'].includes(k)&&state.auto&&Adventure.snapshot().phase==='SAILING')autopilot(false);if(e.repeat)return;if(k==='p')togglePause();if(k==='h')toggleUI();if(k==='r')Adventure.rescue();});
+window.addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',()=>{keys.clear();state.helm=0;pointers.clear();});
+let pinchDistance=0;
+canvas.addEventListener('pointerdown',e=>{canvas.focus({preventScroll:true});pointers.set(e.pointerId,[e.clientX,e.clientY]);canvas.setPointerCapture(e.pointerId);if(pointers.size===2){const p=[...pointers.values()];pinchDistance=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);}});
+canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;const old=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1){state.yaw-=(e.clientX-old[0])*.006;state.pitch=clamp(state.pitch+(e.clientY-old[1])*.004,state.view==='deck'?-.35:.08,state.view==='deck'?.55:1.15);}else if(pointers.size===2){const p=[...pointers.values()],d=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);if(pinchDistance>0)state.zoom=clamp(state.zoom*pinchDistance/Math.max(d,1),28,180);pinchDistance=d;}});
+for(const event of['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,e=>{pointers.delete(e.pointerId);pinchDistance=0;});canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom*Math.exp(e.deltaY*.001),28,180);},{passive:false});
+for(const[id,dir]of[['port',-1],['starboard',1]]){$(id).addEventListener('pointerdown',e=>{e.preventDefault();autopilot(false);state.helm=dir;$(id).setPointerCapture(e.pointerId);});for(const event of['pointerup','pointercancel','lostpointercapture'])$(id).addEventListener(event,()=>state.helm=0);}
+$('chart').addEventListener('click',e=>{const r=$('chart').getBoundingClientRect(),x=(e.clientX-r.left)/r.width*310-35,z=75-(e.clientY-r.top)/r.height*150;const p=AdventureCore.PORTS.find(p=>Math.hypot(x-p.x,z-p.z)<18);Adventure.run('waypoint',p?p.x:x,p?p.z:z,p?p.id:null);});
+document.addEventListener('visibilitychange',()=>{lastFrame=0;accumulator=0;keys.clear();state.helm=0;if(audioCtx){if(document.hidden)audioCtx.suspend();else if(state.audio)audioCtx.resume().catch(()=>{});}});
+canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();running=false;Adventure.renderingFailed();$('error-detail').textContent='描画コンテキストが中断されました。ページを再読み込みしてください。';$('error').style.display='block';});
+gl.disable(gl.CULL_FACE);hud();requestAnimationFrame(frame);requestAnimationFrame(()=>$('loader').classList.add('done'));
+
+} catch(error){console.error(error);Adventure.renderingFailed();$('loader').style.display='none';$('error-detail').textContent=error.message||String(error);$('error').style.display='block';}
+})();
+</script>
+</body>
+</html>

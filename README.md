@@ -1,16 +1,32 @@
 # 黒潮の航海 — The Wandering Sea
 
-3本マストの海賊船で広大な海と碧の群島を航海する、ブラウザ向け3Dシミュレーションです。
+海を眺める自由航海版と、交易で船を育てるゲーム版を、同じリポジトリで公開しています。
 
-HTML・CSS・JavaScriptを `index.html` 1ファイルに収めています。外部ライブラリ、外部画像、インストール、ビルドは不要です。
+各版のHTML・CSS・JavaScriptを、それぞれ独立したHTML一ファイルに収めています。外部ライブラリ、外部画像、インストール、ビルドは不要です。
 
 ## プレイする
 
-- [ChatGPT Sites版](https://pirate-voyage.budoto.chatgpt.site/)
-- GitHub Pagesの公開先：<https://ryotamatsuki.github.io/pirate-voyage/>（下記の公開設定後に利用できます）
-- ローカル：`index.html` をダウンロードし、WebGLに対応したブラウザで開いてください。オフラインでも動きます。
+- [自由航海版 — GitHub Pages](https://ryotamatsuki.github.io/pirate-voyage/)
+- [ゲーム版 — 二港交易の試作 v0.1](https://ryotamatsuki.github.io/pirate-voyage/adventure/)
+- [自由航海版 — ChatGPT Sites](https://pirate-voyage.budoto.chatgpt.site/)
+- ローカル：遊びたい版の `index.html` をダウンロードし、WebGLに対応したブラウザで開いてください。オフラインでも動きます。
 
-## 主な機能
+## ゲーム版：黒潮の航海 失われた潮路
+
+小船「凪灯号」で灯待ち港と松帆港を往復する試作です。最初は100G、食料30、船倉20から始まります。
+
+1. 市場で木材を仕入れる。最初の配送も引き受けられます。
+2. 出港画面で食料と行き先を確認し、自動航海で松帆港へ向かう。
+3. 港の沖で「入港する」を押し、木材を売る。配送の報酬は40Gです。
+4. 補給し、120Gで補強沿岸船へ改造する。船倉と食料上限が広がります。
+
+在庫に応じて価格が動き、表示した合計額で決済します。食料と船体HP、救助による復帰、1・2・4倍速、航海日誌、ブラウザ内保存、JSONの書き出し・読み込みが使えます。港とメニュー、背景のタブでは航海時間が止まります。ゲーム版の `R` は、費用を確認した上で救助を要請する操作です。
+
+探索・五港・遭遇・第一章は次の工程です。船員・海賊行為・勢力争いはさらに後の工程です。完成版の仕様と現在の実装範囲は、[開発タスクと進捗](docs/development-status.md)で区別しています。
+
+保存先はブラウザと公開先ごとに異なります。移動する場合は日誌からJSONを書き出してください。二港試作の世界データは `two-ports-1` です。将来版への移行は今後実装し、互換性のない保存は上書きせず拒否します。
+
+## 自由航海版の主な機能
 
 - 波と風による船の揺れ、帆の動き、航跡
 - 島を避ける自動航海と手動操舵
@@ -21,7 +37,7 @@ HTML・CSS・JavaScriptを `index.html` 1ファイルに収めています。外
 
 実際の船舶運航を再現する専門シミュレーターではなく、風・帆・波の影響を体験するための簡易モデルです。
 
-## 操作
+## 自由航海版の操作
 
 | 操作 | 動作 |
 | --- | --- |
@@ -44,11 +60,15 @@ HTML・CSS・JavaScriptを `index.html` 1ファイルに収めています。外
 - Branch：**main**
 - Folder：**/ (root)**
 
-保存すると、`index.html` がGitHub Pagesのトップページになります。以後は `main` の更新が公開版に反映されます。
+保存すると、直下の `index.html` が自由航海版、`adventure/index.html` がゲーム版として同時に配信されます。以後は `main` の更新が公開版に反映されます。既存のChatGPT Sites版は自由航海のままです。
 
 ## ファイル
 
-- `index.html`：シミュレーション本体（HTML／CSS／JavaScript）
+- `index.html`：従来の自由航海版（内容を保持）
+- `adventure/index.html`：交易ゲーム版（HTML／CSS／JavaScript）
+- `tests/adventure-core.test.cjs`：取引・航海・保存のゲーム処理テスト
+- `docs/development-status.md`：タスク、実装済み範囲、検証結果
+- `docs/asset-register.md`：素材の出所と制作記録
 - `.nojekyll`：GitHub Pagesで静的ファイルをそのまま配信するための設定
 - `README.md`：作品概要・操作方法・公開手順
 
@@ -59,4 +79,14 @@ HTML・CSS・JavaScriptを `index.html` 1ファイルに収めています。外
 - [企画書兼仕様書 Markdown版](docs/pirate-voyage_game-spec_v1.md)
 - [企画書兼仕様書 Word版](docs/pirate-voyage_game-spec_v1.docx)
 
-ゲーム拡張の実装は、この文書の制作順序に沿って進めます。
+仕様書は版1.1です。二版を並べる構成を追記し、その制作順序に沿ってM0〜M3の試作を実装しました。
+
+## 開発時の検証
+
+Node.js 18以上で、追加パッケージなしに実行できます。
+
+```sh
+node tests/adventure-core.test.cjs
+```
+
+ゲーム処理は `adventure/index.html` の `adventure-core`、画面と保存は `adventure-ui`、WebGL描画は `adventure-renderer` の各scriptに分けています。テストは配布するHTMLから処理を読み込むため、別の実装との食い違いを防げます。ゲーム版の修正は `adventure/` で行い、直下の自由航海版を変更しません。
