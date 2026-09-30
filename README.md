@@ -75,6 +75,8 @@
 - `tests/adventure-core.test.cjs`：取引・航海・保存のゲーム処理テスト
 - `tests/adventure-tutorial.test.cjs`：案内の進行、保存、旧セーブ互換性のテスト
 - `tests/adventure-exploration.test.cjs`：発見、海図、寄り道、食料見積り、保存のテスト
+- `tests/adventure-browser.cjs`：実画面の操作・保存・旧記録・縦横配置のブラウザ検証
+- `.github/workflows/adventure-checks.yml`：処理とブラウザの継続検証、画面・結果の保存
 - `tests/responsive-review.html`：幅を変えて航海中の画面と操作を確認する開発用ページ
 - `docs/tutorial-guide.md`：初回ガイドの動作と確認条件
 - `docs/development-status.md`：タスク、実装済み範囲、検証結果
@@ -111,5 +113,16 @@ node --test tests/*.test.cjs
 
 画面は [開発用の確認ページ](https://ryotamatsuki.github.io/pirate-voyage/tests/responsive-review.html) でPC幅、縦・小型・横画面を切り替えて確認できます。iframe内のゲームは同じ公開版で、幅変更だけでは再読込みしません。実機のタッチ入力・Safari・性能測定とは区別します。
 
+ブラウザ検証はGitHub Actionsの **Adventure checks** で実行します。配布するHTMLをChromiumで開き、初回ガイド、発見・寄り道、帰港、売買、補強、保存・JSON、旧記録の移行を確認します。PCとタッチ操作を模した六つの画面サイズ、回転、画面の重なりを検証し、スクリーンショットと結果JSONを14日間保存します。実機Safariと性能測定は後続の確認です。
+
+手元で画面検証を行う場合だけ、開発用にPlaywrightを追加します。ゲームの起動には不要です。
+
+```sh
+npm install --no-save --package-lock=false playwright@1.51.1
+npx playwright install chromium
+node tests/adventure-browser.cjs
+```
+
 ゲーム処理は `adventure/index.html` の `adventure-core`、画面と保存は `adventure-ui`、WebGL描画は `adventure-renderer` の各scriptに分けています。テストは配布するHTMLから処理を読み込むため、別の実装との食い違いを防げます。ゲーム版の修正は `adventure/` で行い、直下の自由航海版を変更しません。
+
 
