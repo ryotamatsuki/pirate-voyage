@@ -17,6 +17,7 @@ async function layout(label){
       return {selector,x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height,visible:!e.hidden&&css.display!=='none'&&css.visibility!=='hidden'&&r.width>0&&r.height>0};}).filter(e=>e.visible);
     return {width:innerWidth,height:innerHeight,items:visible,dialogs:[...document.querySelectorAll('dialog[open]')].map(e=>({id:e.id,width:e.getBoundingClientRect().width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}))};
   });
+  const result={label,bounds,passed:false};results.push(result);
   for(const d of bounds.dialogs){assert.ok(d.width<=bounds.width,label+' dialog width');assert.ok(d.scrollWidth<=d.clientWidth+1,label+' horizontal overflow');}
   if(!bounds.dialogs.length){
     for(const a of bounds.items){assert.ok(a.x>=-1&&a.y>=-1&&a.right<=bounds.width+1&&a.bottom<=bounds.height+1,label+' outside viewport: '+a.selector);}
@@ -25,7 +26,7 @@ async function layout(label){
       assert.ok(overX<=2||overY<=2,label+' overlap: '+a.selector+' / '+b.selector);
     }
   }
-  results.push({label,bounds});
+  result.passed=true;
 }
 function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
 (async()=>{
