@@ -4,7 +4,7 @@
 const fs=require('node:fs/promises'),path=require('node:path'),http=require('node:http'),vm=require('node:vm'),assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results');
-const results=[],errors=[];let browser,server,page,touchMode=false;
+const results=[],errors=[],layoutErrors=[];let browser,server,page,touchMode=false;
 const click=selector=>touchMode?page.locator(selector).tap():page.locator(selector).click();
 const state=()=>page.evaluate(()=>window.adventure.getState());
 const shot=name=>page.screenshot({path:path.join(out,name+'.png'),fullPage:true});
@@ -17,16 +17,17 @@ async function layout(label){
       return {selector,x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height,visible:!e.hidden&&css.display!=='none'&&css.visibility!=='hidden'&&r.width>0&&r.height>0};}).filter(e=>e.visible);
     return {width:innerWidth,height:innerHeight,items:visible,dialogs:[...document.querySelectorAll('dialog[open]')].map(e=>({id:e.id,width:e.getBoundingClientRect().width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}))};
   });
-  const result={label,bounds,passed:false};results.push(result);
-  for(const d of bounds.dialogs){assert.ok(d.width<=bounds.width,label+' dialog width');assert.ok(d.scrollWidth<=d.clientWidth+1,label+' horizontal overflow');}
+  const result={label,bounds,passed:false,violations:[]};results.push(result);
+  const check=(ok,message)=>{if(!ok){result.violations.push(message);layoutErrors.push(message);}};
+  for(const d of bounds.dialogs){check(d.width<=bounds.width,label+' dialog width');check(d.scrollWidth<=d.clientWidth+1,label+' horizontal overflow');}
   if(!bounds.dialogs.length){
-    for(const a of bounds.items){assert.ok(a.x>=-1&&a.y>=-1&&a.right<=bounds.width+1&&a.bottom<=bounds.height+1,label+' outside viewport: '+a.selector);}
+    for(const a of bounds.items){check(a.x>=-1&&a.y>=-1&&a.right<=bounds.width+1&&a.bottom<=bounds.height+1,label+' outside viewport: '+a.selector);}
     for(let i=0;i<bounds.items.length;i++)for(let j=i+1;j<bounds.items.length;j++){
       const a=bounds.items[i],b=bounds.items[j],overX=Math.min(a.right,b.right)-Math.max(a.x,b.x),overY=Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y);
-      assert.ok(overX<=2||overY<=2,label+' overlap: '+a.selector+' / '+b.selector);
+      check(overX<=2||overY<=2,label+' overlap: '+a.selector+' / '+b.selector);
     }
   }
-  result.passed=true;
+  result.passed=result.violations.length===0;
 }
 function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
 (async()=>{
@@ -104,7 +105,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  const ctx=await browser.newContext({viewport:{width:1360,height:900}});await ctx.addInitScript(({key,save})=>localStorage.setItem(key,JSON.stringify(save)),{key:C.SAVE_KEY,save:old});
  page=await ctx.newPage();listen(page);await page.goto(url);await page.locator('#loader.done').waitFor();await click('#continue-game');
  const migrated=await state();assert.equal(migrated.player.gold,old.player.gold);assert.equal(migrated.ship.tier,2);assert.equal(migrated.tutorial.step,'welcome');assert.equal(migrated.exploration.buoys.buoy_shoal_01.seen,false);
- assert.deepEqual(errors,[],'No page exceptions');results.push({label:'legacy-import',passed:true});
+ assert.deepEqual(errors,[],'No page exceptions');assert.deepEqual(layoutErrors,[],'All viewport layouts must fit without overlapping controls');results.push({label:'legacy-import',passed:true});
  await fs.writeFile(path.join(out,'results.json'),JSON.stringify({passed:true,version:C.VERSION,results,errors},null,2));
  console.log('Browser flow, persistence, JSON, legacy import and six viewport profiles passed.');
 })().catch(async error=>{
