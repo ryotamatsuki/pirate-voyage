@@ -799,6 +799,7 @@ const Adventure = (() => {
     leaveObservation();document.querySelectorAll('dialog[open]').forEach(d=>d.close());
     $('captain-log').showModal();update();
   }
+  function openObservationBook(){openLog();$('observation-book').scrollIntoView({block:'start'});}
   function openObservation(){
     if(!active)return;
     const result=model.beginObservation();if(!result.ok){message(result.message,true);return;}
@@ -814,17 +815,25 @@ const Adventure = (() => {
     if(model.snapshot().phase!=='PORT'||model.snapshot().portId!==C.OBSERVATION.reportPortId)return;
     document.querySelectorAll('dialog[open]').forEach(d=>d.close());selectTab('observations');openHarbor();
   }
+  function reportedNextAction(s){
+    if(s.phase==='SAILING')return '受理済みの記録は航海帳に残っている。海図で既知の港を選び、通常航海を続けられる。';
+    if(s.portId==='p_light')return '市場と補給で準備し、「出港」から通常航海で松帆港へ向かえる。';
+    const tasks=[];if(C.woodOwned(s)>0)tasks.push('木材の売却');
+    if(s.quests.firstDelivery.status==='ACTIVE')tasks.push('配送');
+    if(s.ship.food<tier(s).food)tasks.push('補給');
+    return (tasks.length?tasks.join('・')+'を済ませ、':'')+'「出港」から通常航海で灯待ち港へ戻れる。';
+  }
   function observationUI(s){
     const q=model.observationQuote(),o=C.OBSERVATION,r=q.record;
     const status=q.observed?`観測 ${fmt(r.observedDay)}日 · ${q.reported?'松帆港で受理済み':'港への報告はまだ'}`:'まだ観測していません。';
-    const next=q.reported?o.afterReport:o.next;
+    const next=q.reported?reportedNextAction(s):o.next;
     for(const prefix of ['observe','book']){
       text(prefix+'-status',status);text(prefix+'-known',o.known);text(prefix+'-unknown',o.unknown);text(prefix+'-next',next);text(prefix+'-clue',o.clue);
     }
     text('observe-title',q.observed?'潮見の浮標の観測記録':'潮見の浮標を観測する');
     text('observe-speech',q.observed?(q.reported?'この記録は松帆港で受理されたよ。交易と補給を済ませ、次の航海を選ぼう。':'旗の向きと泡の筋、それに銘板の言葉を記録したよ。海図だけでは分からない潮の情報だね。松帆港へ持ち帰ろう。'):'近くで見ると、旗の向きと海面を横切る泡の筋が読める。銘板の言葉も確かめて、航海帳へ記録しよう。接近しただけでは観測済みにはならないよ。');
     $('observe-entry').hidden=!q.observed;$('observe-confirm').hidden=q.observed;$('observe-confirm').disabled=!q.canObserve;
-    $('observe-log').hidden=!q.observed;$('observe-onward').hidden=s.phase!=='SAILING';
+    $('observe-log').hidden=!q.observed;$('observe-onward').hidden=s.phase!=='SAILING';$('observe-onward').classList.toggle('primary',q.observed);
     const course=model.explorationQuote();text('observe-onward',course.ok?`${course.targetName}への航海を再開`:'航海へ戻る');
     $('book-entry').hidden=!q.observed;$('book-empty').hidden=q.observed;
     text('book-empty',q.seen?'潮見の浮標を見つけた。浮標へ接近し、観測するとここに記録が残ります。':'まだ観測記録はありません。海鳥の集まる浮標を探してみよう。');
@@ -839,7 +848,7 @@ const Adventure = (() => {
     $('submit-observation').disabled=!q.canReport;text('submit-observation',q.reported?'この観測は受理済み':'浮標の観測を報告する');
     $('report-result').hidden=!q.reported;text('report-result',q.reported?`受理 ${fmt(r.reportedDay)}日 · 潮の境目の記録を、航路登録に使う資料として受け取りました。`:'');
     text('registration-status',q.registrationReady?'航路登録の準備がそろいました':'航路登録の準備');
-    text('registration-note',q.reported?o.afterReport:'浮標の観測と、松帆港での受理が必要です。');
+    text('registration-note',q.reported?reportedNextAction(s):'浮標の観測と、松帆港での受理が必要です。');
   }
   function openSeaMap(){
     if(!active)return;
@@ -1155,9 +1164,9 @@ const Adventure = (() => {
   $('close-observation').addEventListener('click',dismissObservation);
   $('observation').addEventListener('cancel',e=>{e.preventDefault();dismissObservation();});
   $('observe-confirm').addEventListener('click',()=>run('completeObservation'));
-  $('observe-log').addEventListener('click',openLog);$('observe-onward').addEventListener('click',()=>chooseSight('direct'));
+  $('observe-log').addEventListener('click',openObservationBook);$('observe-onward').addEventListener('click',()=>chooseSight('direct'));
   $('book-reopen').addEventListener('click',openObservation);$('book-report').addEventListener('click',openReportDesk);
-  $('submit-observation').addEventListener('click',()=>run('reportObservation'));$('report-book').addEventListener('click',openLog);
+  $('submit-observation').addEventListener('click',()=>run('reportObservation'));$('report-book').addEventListener('click',openObservationBook);
   for(const action of ['direct','approach','mark'])$('sight-'+action).addEventListener('click',()=>chooseSight(action));
   document.querySelectorAll('[data-map-port]').forEach(button=>button.addEventListener('click',()=>{
     const p=port(button.dataset.mapPort);if(run('waypoint',p.x,p.z,p.id).ok){model.setPaused(false);save(true);$('sea-map').close();update();}

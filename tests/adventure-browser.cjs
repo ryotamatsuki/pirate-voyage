@@ -32,6 +32,7 @@ async function layout(label){
   }
   result.passed=result.violations.length===0;
 }
+async function bookInView(){const box=await page.locator('#book-heading').boundingBox();assert.ok(box&&box.y>=0&&box.y+box.height<=page.viewportSize().height,'Book action must show its record heading');}
 function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
 (async()=>{
  await fs.mkdir(out,{recursive:true});
@@ -67,7 +68,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  assert.equal(surveyed.observations.activeId,null);assert.equal(surveyed.observations.records.buoy_shoal_01.reportedPortId,null);
  assert.match(await page.locator('#observe-next').innerText(),/松帆港.*海図係/);assert.match(await page.locator('#observe-clue').innerText(),/訪問できない/);
  await layout('pc-observation-record');await shot('pc-observation-record');await click('#observe-log');
- await page.locator('#observation-book').scrollIntoViewIfNeeded();await fixed();await shot('pc-observation-book');await layout('pc-observation-book');
+ await bookInView();await fixed();await shot('pc-observation-book');await layout('pc-observation-book');
  await click('#book-reopen');assert.deepEqual((await state()).observations,surveyed.observations);await click('#observe-onward');
  await page.waitForFunction(()=>!document.querySelector('#dock-game').disabled,null,{timeout:60000});await click('#dock-game');
  await click('[data-tab="observations"]');await fixed();assert.equal(await page.locator('#submit-observation').isEnabled(),true);
@@ -119,7 +120,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
   await page.locator('#observation[open]').waitFor({timeout:45000});await fixed();await layout(label+'-observation-intro');await shot(label+'-observation-intro');
   await click('#close-observation');await layout(label+'-arrival');await shot(label+'-buoy-at-sea');
   await click('#sea-clue');await click('#observe-confirm');await fixed();await layout(label+'-observation-record');await shot(label+'-observation-record');
-  await click('#observe-log');await page.locator('#observation-book').scrollIntoViewIfNeeded();await layout(label+'-observation-book');await shot(label+'-observation-book');
+  await click('#observe-log');await bookInView();await layout(label+'-observation-book');await shot(label+'-observation-book');
   assert.match(await page.locator('#book-next').innerText(),/松帆港/);assert.equal(await page.locator('#book-report').isDisabled(),true);
   await click('#book-reopen');assert.equal(await page.locator('#observe-confirm').isVisible(),false);await click('#close-observation');
   if(touch){await page.setViewportSize({width:height,height:width});await page.waitForTimeout(250);assert.equal((await state()).exploration.buoys.buoy_shoal_01.approached,true);await layout(label+'-rotation');}
@@ -129,7 +130,7 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
   await click('[data-tab="observations"]');await fixed();await layout(label+'-report-before');
   await click('#submit-observation');assert.equal((await state()).observations.records.buoy_shoal_01.reportedPortId,'p_pine');
   await layout(label+'-report');await shot(label+'-report');await click('#report-book');
-  await page.locator('#observation-book').scrollIntoViewIfNeeded();await fixed();await layout(label+'-accepted-book');await shot(label+'-accepted-book');
+  await bookInView();await fixed();await layout(label+'-accepted-book');await shot(label+'-accepted-book');
   assert.match(await page.locator('#book-next').innerText(),/通常航海/);await click('#book-report');
   assert.equal(await page.locator('#submit-observation').isDisabled(),true);await ctx.close();
  }
