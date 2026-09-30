@@ -15,11 +15,14 @@ async function layout(label){
     const selectors=['#voyage-guide','.helm','.journey','.game-actions','.touch-helm','.resources','.chart','#sea-clue','.top-actions','.brand','#next-goal','.readout','.view-tools'];
     const visible=selectors.map(selector=>{const e=document.querySelector(selector),r=e.getBoundingClientRect(),css=getComputedStyle(e);
       return {selector,x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height,visible:!e.hidden&&css.display!=='none'&&css.visibility!=='hidden'&&r.width>0&&r.height>0};}).filter(e=>e.visible);
-    return {width:innerWidth,height:innerHeight,items:visible,dialogs:[...document.querySelectorAll('dialog[open]')].map(e=>({id:e.id,width:e.getBoundingClientRect().width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}))};
+    const guide=document.querySelector('#voyage-guide'),gr=guide.getBoundingClientRect();
+    const guideControls=gr.width&&gr.height?[...guide.querySelectorAll('button')].map(e=>{const r=e.getBoundingClientRect();return {id:e.id,x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height,visible:r.width>0&&r.height>0};}).filter(e=>e.visible):[];
+    return {width:innerWidth,height:innerHeight,items:visible,guide:{x:gr.x,y:gr.y,right:gr.right,bottom:gr.bottom},guideControls,dialogs:[...document.querySelectorAll('dialog[open]')].map(e=>({id:e.id,width:e.getBoundingClientRect().width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}))};
   });
   const result={label,bounds,passed:false,violations:[]};results.push(result);
   const check=(ok,message)=>{if(!ok){result.violations.push(message);layoutErrors.push(message);}};
   for(const d of bounds.dialogs){check(d.width<=bounds.width,label+' dialog width');check(d.scrollWidth<=d.clientWidth+1,label+' horizontal overflow');}
+  for(const b of bounds.guideControls){check(b.w>=44&&b.h>=44,label+' guide touch size: '+b.id);check(b.x>=bounds.guide.x-1&&b.y>=bounds.guide.y-1&&b.right<=bounds.guide.right+1&&b.bottom<=bounds.guide.bottom+1,label+' clipped guide control: '+b.id);}
   if(!bounds.dialogs.length){
     for(const a of bounds.items){check(a.x>=-1&&a.y>=-1&&a.right<=bounds.width+1&&a.bottom<=bounds.height+1,label+' outside viewport: '+a.selector);}
     for(let i=0;i<bounds.items.length;i++)for(let j=i+1;j<bounds.items.length;j++){

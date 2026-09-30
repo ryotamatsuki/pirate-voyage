@@ -35,8 +35,8 @@ dialog{border:1px solid #bcaa7e55;border-radius:8px;background:#092831f5;color:v
 
 /* Original illustrated guide. No external images, fonts or libraries. */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-#guide-sea-slot{position:absolute;left:28px;top:352px;bottom:174px;width:440px;z-index:4;pointer-events:auto}
-.guide-card{background:#12343cf5;border:1px solid #a7bdab80;border-radius:12px;padding:15px;box-shadow:0 12px 40px #00151b66;max-height:100%;display:flex;flex-direction:column;gap:9px;overflow:hidden;color:var(--ink)}
+#guide-sea-slot{position:absolute;left:28px;top:352px;bottom:174px;width:440px;z-index:4;pointer-events:none}
+.guide-card{pointer-events:auto;background:#12343cf5;border:1px solid #a7bdab80;border-radius:12px;padding:15px;box-shadow:0 12px 40px #00151b66;max-height:100%;display:flex;flex-direction:column;gap:9px;overflow:hidden;color:var(--ink)}
 .guide-person{display:flex;align-items:center;gap:11px;flex-shrink:0}.guide-portrait{width:45px;height:45px;flex-shrink:0;border-radius:50%}.guide-person strong{font-size:13px;font-weight:600;display:block;color:#f0dfb4}.guide-person span{display:block;font-size:10px;color:#b8cebf;margin-top:5px}.guide-person b{font-weight:400;margin-left:7px}.guide-person .text-button{margin-left:auto;font-size:11px;min-width:44px;padding:8px 4px;color:#bfd2ca}
 .guide-card progress{appearance:none;flex-shrink:0;width:100%;height:3px;border:0;background:#294b50}.guide-card progress::-webkit-progress-bar{background:#294b50}.guide-card progress::-webkit-progress-value{background:#e7c78d}.guide-card progress::-moz-progress-bar{background:#e7c78d}
 .guide-body{overflow:auto;overscroll-behavior:contain;min-height:40px}.guide-card h3{font-size:18px;margin:0 0 9px;line-height:1.5;font-weight:600;letter-spacing:.02em}.guide-card #guide-speech{font-size:13px;color:#e0e9df;line-height:1.85;margin:0 0 12px}.guide-card .guide-task{font-size:12px;color:#f2dba7;line-height:1.75;border-left:3px solid var(--gold);padding:6px 10px;background:#e7c78d0b;margin:9px 0 2px}
@@ -71,6 +71,7 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
 
 /* A short landscape screen uses the same two-column layout below 701px too. */
 @media(max-height:500px) and (orientation:landscape){
+ .brand-mark{width:18px;height:18px}.brand h1{margin:4px 0}
  .resources,.tutorial-at-sea .resources{left:244px;top:12px;width:min(310px,calc(100vw - 420px))}
  .journey,.tutorial-at-sea .journey{left:auto;right:12px;top:75px;width:195px;min-height:0;padding:12px}
  .tutorial-at-sea .journey h2,.tutorial-at-sea .journey #journey-distance{max-width:none}
@@ -86,6 +87,7 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
  .tutorial-at-sea #sea-clue{display:none}
 }
 
+@media(max-height:500px) and (orientation:landscape) and (max-width:700px){.guide-portrait{display:none}.guide-buttons .game-button{min-width:0;font-size:10px;padding:7px 5px}}
 </style>
 </head>
 <body>
