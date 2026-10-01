@@ -52,6 +52,12 @@ function listen(p){p.on('pageerror',e=>errors.push(String(e)));}
  await click('#new-game');await click('#guide-next');await click('#guide-next');await click('#delivery-job');await click('#buy-wood');
  await click('[data-tab="supply"]');await click('#guide-next');await click('[data-tab="departure"]');await click('#depart-game');
  await click('#pause');await click('#pause');await click('#guide-next');await click('[data-speed="4"]');
+ const motionSamples=await page.evaluate(async()=>{
+  const samples=[];for(let i=0;i<18;i++){await new Promise(requestAnimationFrame);const s=window.__adventureRendererDebug.snapshot();samples.push({...s,lag:Math.hypot(s.targetX-s.x,s.targetZ-s.z)});}return samples;
+ });
+ assert.ok(motionSamples.some(s=>s.lag>1e-4),'Renderer should interpolate between 20 Hz navigation ticks instead of snapping to each tick');
+ const movingFrames=motionSamples.slice(1).filter((s,i)=>Math.hypot(s.x-motionSamples[i].x,s.z-motionSamples[i].z)>1e-5).length;
+ assert.ok(movingFrames>=Math.min(6,motionSamples.length-1),'Visual ship position should advance smoothly across render frames');
  await page.locator('#sighting[open]').waitFor({timeout:45000});await fixed();await shot('pc-sighting');await layout('pc-sighting');
  assert.equal((await state()).exploration.pending.kind,'SIGHTED');
  await page.locator('#sight-mark').press('Enter');await click('#open-map');await fixed();await shot('pc-map');
