@@ -1,0 +1,41 @@
+name: Render lab checks
+on:
+  push:
+    paths:
+      - 'render-lab/**'
+      - 'tests/render-lab-browser.cjs'
+      - '.github/workflows/render-lab-checks.yml'
+  pull_request:
+    paths:
+      - 'render-lab/**'
+      - 'tests/render-lab-browser.cjs'
+      - '.github/workflows/render-lab-checks.yml'
+permissions:
+  contents: read
+concurrency:
+  group: render-lab-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test browser
+        run: |
+          npm install --no-save --package-lock=false playwright@1.51.1
+          npx playwright install --with-deps chromium
+      - name: Render desktop and phone comparison
+        run: node tests/render-lab-browser.cjs
+      - name: Save comparison screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: render-lab-review
+          path: test-results/render-lab-*.png
+          retention-days: 14
