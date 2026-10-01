@@ -1386,13 +1386,15 @@ for(let z=0;z<GRID;z++)for(let x=0;x<GRID;x++){const a=z*(GRID+1)+x,b=a+1,c=a+GR
 const oceanBuffer=gl.createBuffer(),oceanIndex=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,oceanBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(oceanVertices),gl.STATIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,oceanIndex);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(oceanIndices),gl.STATIC_DRAW);
 const wakeMesh=new Builder().mesh(true);
 const initialZoom=innerWidth<700&&innerHeight>innerWidth?76:54;
-const state={x:0,z:0,heading:.04,speed:3.8,distance:0,sails:1,sailVisual:1,time:0,paused:false,auto:true,weather:'breeze',storm:0,amplitude:.95,wind:14,windAngle:.68,day:1,hour:17.1,timeIndex:2,view:'follow',yaw:.78,pitch:.31,zoom:initialZoom,waypoint:null,routeIndex:0,helm:0,roll:0,pitchShip:0,height:0,hidden:false,audio:false};
+const state={x:0,z:0,heading:.04,targetX:0,targetZ:0,targetHeading:.04,speed:3.8,distance:0,sails:1,sailVisual:1,time:0,paused:false,auto:true,weather:'breeze',storm:0,amplitude:.95,wind:14,windAngle:.68,day:1,hour:17.1,timeIndex:2,view:'follow',yaw:.78,pitch:.31,zoom:initialZoom,waypoint:null,routeIndex:0,helm:0,roll:0,pitchShip:0,height:0,hidden:false,audio:false};
 const weatherPresets={calm:{wind:7,amp:.42,storm:0,description:'弱い南西の風 · 静かな海',caption:'静かな海、ゆっくりと進む船。'},breeze:{wind:14,amp:.95,storm:0,description:'南西の風 · 穏やかなうねり',caption:'晴れた空、帆を満たす風。'},storm:{wind:28,amp:2.95,storm:1,description:'強い南西の風 · 高い波',caption:'荒れる海。帆を絞って進もう。'}};
 const timePresets=[{hour:7.0,name:'朝景',icon:'☀'},{hour:12.4,name:'昼景',icon:'☼'},{hour:17.1,name:'夕景',icon:'◑'},{hour:22,name:'夜景',icon:'☾'}];
 const keys=new Set(),wake=[],pointers=new Map();let chartTimer=0,hudTimer=0,wakeTimer=0,lastFrame=0,toastTimer=0,running=true,width=1,height=1,aspect=1,chartScale=1800,audioCtx=null,audioGain=null,audioFilter=null;
 let eye=[Math.sin(.82)*initialZoom*Math.cos(.31),7.3+Math.sin(.31)*initialZoom,Math.cos(.82)*initialZoom*Math.cos(.31)],vp=I(),sun=[-.45,.28,-.84],fog=[.66,.70,.65];
 function waveHeight(x,z,t=state.time){return state.amplitude*(Math.sin(x*.09+z*.048+t*1.10)*.60+Math.sin(x*-.059+z*.12+t*.85)*.32+Math.sin(x*.19-z*.14+t*1.67)*.14)-.25;}
 function waveSlope(x,z){const t=state.time,a=state.amplitude;return[a*(Math.cos(x*.09+z*.048+t*1.1)*.60*.09+Math.cos(x*-.059+z*.12+t*.85)*.32*-.059+Math.cos(x*.19-z*.14+t*1.67)*.14*.19),a*(Math.cos(x*.09+z*.048+t*1.1)*.60*.048+Math.cos(x*-.059+z*.12+t*.85)*.32*.12+Math.cos(x*.19-z*.14+t*1.67)*.14*-.14)];}
+function lerpAngle(a,b,t){const d=Math.atan2(Math.sin(b-a),Math.cos(b-a));return a+d*t;}
+function smoothShipMotion(dt,targetX,targetZ,targetHeading){const jump=Math.hypot(targetX-state.x,targetZ-state.z);if(!Number.isFinite(jump)||jump>320){state.x=targetX;state.z=targetZ;state.heading=targetHeading;return;}const ease=1-Math.exp(-dt*18);state.x=lerp(state.x,targetX,ease);state.z=lerp(state.z,targetZ,ease);state.heading=lerpAngle(state.heading,targetHeading,ease);}
 function message(str){$('toast').textContent=str;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600);}
 function autopilot(on){const r=Adventure.run('setAuto',on);if(r.ok)state.auto=on;}
 function togglePause(){Adventure.togglePause();state.paused=Adventure.snapshot().paused;}
@@ -1410,7 +1412,7 @@ function update(dt){
   if(game.phase==='SAILING'){if(keys.has('ArrowUp')||keys.has('w'))Adventure.setSails(Math.min(1,game.navigation.sails+dt*.25));if(keys.has('ArrowDown')||keys.has('s'))Adventure.setSails(Math.max(0,game.navigation.sails-dt*.25));}
   let ticks=0;while(accumulator>=.05&&ticks<40&&Adventure.shouldAdvance()){Adventure.step(.05,steer);accumulator-=.05;ticks++;}
  }else accumulator=0;
- const game=Adventure.snapshot(),n=game.navigation;state.x=game.position.xNm*40;state.z=game.position.zNm*40;state.heading=n.heading;state.speed=n.speed*.514444;state.sails=n.sails;state.auto=n.auto;state.paused=game.paused;
+ const game=Adventure.snapshot(),n=game.navigation;state.targetX=game.position.xNm*40;state.targetZ=game.position.zNm*40;state.targetHeading=n.heading;smoothShipMotion(dt,state.targetX,state.targetZ,state.targetHeading);state.speed=n.speed*.514444;state.sails=n.sails;state.auto=n.auto;state.paused=game.paused;
  state.time+=dt;state.windAngle=.68+Math.sin(state.time*.016)*.10;
  const slope=waveSlope(state.x,state.z),direction=[Math.sin(state.heading),Math.cos(state.heading)],frontSlope=slope[0]*direction[0]+slope[1]*direction[1],sideSlope=slope[0]*direction[1]-slope[1]*direction[0];state.height=lerp(state.height,waveHeight(state.x,state.z)+.26,1-Math.exp(-dt*2.5));state.pitchShip=lerp(state.pitchShip,-Math.atan(frontSlope)*.72,1-Math.exp(-dt*1.8));state.roll=lerp(state.roll,Math.atan(sideSlope)*.64+steer*.026+Math.sin(state.time*.66)*.012,1-Math.exp(-dt*1.6));state.sailVisual=lerp(state.sailVisual,state.sails,1-Math.exp(-dt*2));
  wakeTimer+=dt;if(wakeTimer>.19&&state.speed>.1){wakeTimer=0;wake.unshift({x:state.x-direction[0]*9,z:state.z-direction[1]*9,t:state.time,speed:state.speed,heading:state.heading});if(wake.length>100)wake.pop();}while(wake.length&&state.time-wake[wake.length-1].t>20)wake.pop();
@@ -1502,6 +1504,7 @@ for(const id of ['chart','large-chart'])$(id).addEventListener('click',e=>{
 });
 document.addEventListener('visibilitychange',()=>{lastFrame=0;accumulator=0;keys.clear();state.helm=0;if(audioCtx){if(document.hidden)audioCtx.suspend();else if(state.audio)audioCtx.resume().catch(()=>{});}});
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();running=false;Adventure.renderingFailed();$('error-detail').textContent='描画コンテキストが中断されました。ページを再読み込みしてください。';$('error').style.display='block';});
+window.__adventureRendererDebug={snapshot:()=>({x:state.x,z:state.z,heading:state.heading,targetX:state.targetX,targetZ:state.targetZ,targetHeading:state.targetHeading})};
 gl.disable(gl.CULL_FACE);hud();requestAnimationFrame(frame);requestAnimationFrame(()=>$('loader').classList.add('done'));
 
 } catch(error){console.error(error);Adventure.renderingFailed();$('loader').style.display='none';$('error-detail').textContent=error.message||String(error);$('error').style.display='block';}
