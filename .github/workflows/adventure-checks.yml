@@ -3,11 +3,13 @@ on:
   push:
     paths:
       - 'adventure/**'
+      - 'render-lab/**'
       - 'tests/**'
       - '.github/workflows/adventure-checks.yml'
   pull_request:
     paths:
       - 'adventure/**'
+      - 'render-lab/**'
       - 'tests/**'
       - '.github/workflows/adventure-checks.yml'
 permissions:
@@ -34,7 +36,9 @@ jobs:
           npx playwright install --with-deps chromium
           sudo apt-get install -y fonts-noto-cjk
       - name: Browser interaction and viewport checks
-        run: node tests/adventure-browser.cjs
+        run: |
+          node tests/adventure-browser.cjs
+          node tests/render-lab-browser.cjs
       - name: Save screenshots and results
         if: always()
         uses: actions/upload-artifact@v4
