@@ -1,0 +1,151 @@
+{
+  "checked_at": "2026-10-01",
+  "target_game_version": "0.1.3",
+  "baseline_commit": "e835e1359941719573f24d285ce0738c8ffc59ca",
+  "games": 9,
+  "source_records": 26,
+  "viewed_reference_images": 29,
+  "relative_links_checked": 156,
+  "relative_links_broken": [],
+  "existing_element_ids_checked": 72,
+  "proposed_opaque_contrast_checks": [
+    {
+      "foreground": "paper",
+      "background": "panel",
+      "ratio": 12.300573653065802,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "muted_panel",
+      "background": "panel",
+      "ratio": 8.492881401010452,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "ink",
+      "background": "paper",
+      "ratio": 10.985701615520428,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "muted_paper",
+      "background": "paper",
+      "ratio": 5.035991808793274,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "primary_ink",
+      "background": "primary",
+      "ratio": 9.113424553061673,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "paper",
+      "background": "secondary",
+      "ratio": 7.202260431794602,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "success",
+      "background": "paper",
+      "ratio": 5.4967759100868605,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "warning",
+      "background": "paper",
+      "ratio": 5.133742655049417,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "danger",
+      "background": "paper",
+      "ratio": 5.526486938351262,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    },
+    {
+      "foreground": "boundary",
+      "background": "panel",
+      "ratio": 4.618802508571867,
+      "normal_text_4_5": true,
+      "ui_boundary_3": true
+    }
+  ],
+  "baseline_images": [
+    {
+      "path": "docs/design/baseline/pc-buoy-at-sea.png",
+      "width_px": 1360,
+      "height_px": 900,
+      "sha256": "093e186e1ea5cc9c28937e7d95bda2c9939f9fa664a55e5fc4dc4774762f66ed",
+      "unedited_copy": true,
+      "game_version": "0.1.3"
+    },
+    {
+      "path": "docs/design/baseline/small-guide.png",
+      "width_px": 375,
+      "height_px": 667,
+      "sha256": "7c906df903f1cee51a53c84337cd4190e8a7cf02005fc8a1a5350944e27a6111",
+      "unedited_copy": true,
+      "game_version": "0.1.3"
+    }
+  ],
+  "original_figures": [
+    {
+      "name": "sea-layout",
+      "xml_valid": true,
+      "external_images": false,
+      "preview_px": [
+        1400,
+        1030
+      ],
+      "visual_review": "日本語、重なり、読み順を目視確認済み"
+    },
+    {
+      "name": "observation-book",
+      "xml_valid": true,
+      "external_images": false,
+      "preview_px": [
+        1400,
+        1000
+      ],
+      "visual_review": "日本語、重なり、読み順を目視確認済み"
+    }
+  ],
+  "protected_baseline_git_blobs": {
+    ".github/ISSUE_TEMPLATE/development-task.md": "20baecf63b9b5664db51510848cadac4ba99e2a7",
+    ".github/workflows/adventure-checks.yml": "8467db0be2a2848fbf16bb31dce7956818da0cef",
+    "adventure/index.html": "5458b89150e902d42a138571b2183bda68f462eb",
+    "docs/pirate-voyage_game-spec_v1.docx": "5645c2cbe7cf5a7ef09d72351ed0defc3f61e540",
+    "docs/pirate-voyage_game-spec_v1.md": "4131701fa96ba6eee3214784e3a9228d9c3c219c",
+    "index.html": "6f891695f765f358ac79e062561c08006c4703da",
+    "tests/adventure-browser.cjs": "e3a08679883e3c7809400d0f655ebf80e86d4170",
+    "tests/adventure-core.test.cjs": "66b87bf0f0905232b4552e4716012fe0191f0ef7",
+    "tests/adventure-exploration.test.cjs": "8af646ee9b9508cc95ce42999a756a8449c37dad",
+    "tests/adventure-observation.test.cjs": "b25e5e14c88ef6abb68d7f28988d4ab66d5dc2c7",
+    "tests/adventure-tutorial.test.cjs": "38d97aa07af9badfd610a64e609e0d1a69780d79",
+    "tests/responsive-review.html": "2d3d7ee05b9d2b0dae7e297fc400e1d48192a79d"
+  },
+  "local_protected_files_match_baseline": true,
+  "local_protected_files_compared": [
+    "adventure/index.html",
+    "tests/adventure-browser.cjs"
+  ],
+  "gameplay_tests_rerun": false,
+  "limitations": [
+    "画面改修は未実装",
+    "初見の試遊は未実施",
+    "実機Safariは未実施",
+    "FPSは未測定",
+    "透明面の実際のコントラストは未測定",
+    "公開画像と本文に基づく比較で、参照作品を操作する比較試験は未実施"
+  ]
+}

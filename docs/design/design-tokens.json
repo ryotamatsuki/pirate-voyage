@@ -1,0 +1,100 @@
+{
+  "status": "proposal_not_implemented",
+  "version": 1,
+  "created_at": "2026-10-01",
+  "target_game_version": "0.1.3",
+  "direction": "潮路を調べる船長の航海手帳",
+  "colors": {
+    "panel": "#112C38",
+    "paper": "#F3EBDC",
+    "ink": "#20343A",
+    "muted_paper": "#53676B",
+    "muted_panel": "#B7C9CC",
+    "primary": "#E8C98D",
+    "primary_ink": "#182C32",
+    "secondary": "#1E5360",
+    "success": "#336759",
+    "warning": "#8B5623",
+    "danger": "#9D3F3B",
+    "boundary": "#7A969A"
+  },
+  "typography": {
+    "body": {
+      "font_family": [
+        "\"Yu Gothic\"",
+        "\"Meiryo\"",
+        "system-ui",
+        "sans-serif"
+      ],
+      "font_size_px": 16,
+      "line_height": 1.65
+    },
+    "supporting": {
+      "font_size_px": 14,
+      "line_height": 1.6
+    },
+    "decorative_only": {
+      "font_size_px": 12,
+      "rule": "必須の操作名と説明には使わない"
+    },
+    "heading": {
+      "font_family": [
+        "\"Yu Mincho\"",
+        "\"Hiragino Mincho ProN\"",
+        "serif"
+      ],
+      "font_size_px": [
+        24,
+        30
+      ],
+      "line_height": 1.35
+    },
+    "numbers": {
+      "font_variant_numeric": "tabular-nums",
+      "rule": "実際の資源とゲーム海里の単位を維持"
+    }
+  },
+  "spacing_px": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "controls": {
+    "project_target_min_height_css_px": 44,
+    "project_target_min_width_css_px": 44,
+    "standard_min_gap_px": 8,
+    "corner_radius_px": [
+      6,
+      10
+    ],
+    "focus_outline_px": 3,
+    "focus_outline_offset_px": 3,
+    "focus_rule": "暗い面と明るい面で識別できる色を別に確認する"
+  },
+  "layout": {
+    "desktop": "上部に資源と航海情報、中央に海、下部左右に操船と海図",
+    "portrait": "資源、行き先、海、操船を縦に並べる。本文は一列",
+    "compact_landscape": "高さで配置を再評価する。終了操作とタッチ操舵を保持",
+    "modal": "見出しと終了操作をスクロール領域から分ける",
+    "unknown_clues": "未発見情報と未訪問の北の灯を見た目だけで開示しない"
+  },
+  "motion": {
+    "transition_duration_ms": 160,
+    "record_feedback_duration_ms": 280,
+    "reduced_motion": "prefers-reduced-motionに従う",
+    "rule": "強制待機、常時点滅、新しい音を加えない"
+  },
+  "accessibility": {
+    "normal_text_min_contrast_ratio": 4.5,
+    "large_text_min_contrast_ratio": 3,
+    "source_contrast": "S24",
+    "source_target_minimum": "S25",
+    "wcag_target_minimum_css_px": 24,
+    "rule": "44pxは本作の目標。透明面の実表示と全体の適合は別に検証"
+  },
+  "functionality": "既存の状態と操作を維持する。新しいゲーム機能は含めない"
+}
+
