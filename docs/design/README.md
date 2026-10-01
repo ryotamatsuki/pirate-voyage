@@ -20,6 +20,7 @@
 | [デザイントークン](design-tokens.json) | 色、書体、寸法、余白、動きの実装基準 |
 | [D1タイポグラフィ決定](typography-d1.md) | LINE Seed JPとKlee Oneの役割、フォールバック、参照元 |
 | [実装記録](implementation.md) | D1〜D4の段階、変更範囲、検証状況 |
+| [水面レンダリング比較](water-renderer-comparison_2026-10-01.md) | Clearwater、CAUSTIC//VOLUME、ClearWater6.1と現行実装の比較、採用方針 |
 | [資料の確認記録](verification.md) | リンクと図の確認、配色計算、ゲームと仕様書の保持 |
 
 過去の [遊びの設計に関する8作品の調査](../exploration-research_2026-09-30.md) とは目的を分ける。
