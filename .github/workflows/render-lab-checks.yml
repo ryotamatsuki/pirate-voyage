@@ -1,26 +1,24 @@
-name: Adventure checks
+name: Render lab checks
 on:
   push:
     paths:
-      - 'adventure/**'
       - 'render-lab/**'
-      - 'tests/**'
-      - '.github/workflows/adventure-checks.yml'
+      - 'tests/render-lab-browser.cjs'
+      - '.github/workflows/render-lab-checks.yml'
   pull_request:
     paths:
-      - 'adventure/**'
       - 'render-lab/**'
-      - 'tests/**'
-      - '.github/workflows/adventure-checks.yml'
+      - 'tests/render-lab-browser.cjs'
+      - '.github/workflows/render-lab-checks.yml'
 permissions:
   contents: read
 concurrency:
-  group: adventure-checks-${{ github.ref }}
+  group: render-lab-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,21 +26,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Game rule tests
-        run: node --test tests/*.test.cjs
       - name: Install test browser
         run: |
           npm install --no-save --package-lock=false playwright@1.51.1
           npx playwright install --with-deps chromium
-          sudo apt-get install -y fonts-noto-cjk
-      - name: Browser interaction and viewport checks
-        run: |
-          node tests/adventure-browser.cjs
-          node tests/render-lab-browser.cjs
-      - name: Save screenshots and results
+      - name: Render desktop and phone comparison
+        run: node tests/render-lab-browser.cjs
+      - name: Save comparison screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: adventure-browser-review
-          path: test-results/
+          name: render-lab-review
+          path: test-results/render-lab-*.png
           retention-days: 14

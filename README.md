@@ -8,6 +8,7 @@
 
 - [自由航海版 — GitHub Pages](https://ryotamatsuki.github.io/pirate-voyage/)
 - [ゲーム版 — 交易と観測の試作 v0.1.3](https://ryotamatsuki.github.io/pirate-voyage/adventure/)
+- [Water Render Lab — 現行海面 vs 二スケールFFT](https://ryotamatsuki.github.io/pirate-voyage/render-lab/)
 - [自由航海版 — ChatGPT Sites](https://pirate-voyage.budoto.chatgpt.site/)
 - ローカル：遊びたい版の `index.html` をダウンロードし、WebGLに対応したブラウザで開いてください。オフラインでも動きます。
 
