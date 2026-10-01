@@ -8,6 +8,10 @@
 <meta name="description" content="木材を積み、対岸の港へ。交易・補給・船の強化を遊べる海洋冒険ゲーム、二港交易の試作です。">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%3E%3Crect%20width%3D%2240%22%20height%3D%2240%22%20rx%3D%227%22%20fill%3D%22%23082b36%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%2215%22%20fill%3D%22none%22%20stroke%3D%22%23e7c78d%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M20%204L23%2017%2036%2020%2023%2023%2020%2036%2017%2023%204%2020%2017%2017Z%22%20fill%3D%22none%22%20stroke%3D%22%23e7c78d%22%2F%3E%3Cpath%20d%3D%22M20%208L23%2020%2020%2032%2017%2020Z%22%20fill%3D%22%23e7c78d%22%2F%3E%3C%2Fsvg%3E">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=LINE+Seed+JP:wght@400;700;800&display=swap" rel="stylesheet">
+
 <style>
 :root{color-scheme:dark;--ink:#eef2e6;--muted:#9dbabc;--gold:#e7c78d;--line:rgba(223,207,167,.2);--panel:rgba(5,27,35,.78)}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#082b36;color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:4px}button{color:inherit;-webkit-tap-highlight-color:transparent}canvas#sea{display:block;width:100%;height:100%;touch-action:none;outline:0}.shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,22,31,.42),transparent 27%,transparent 57%,rgba(2,21,28,.7)),radial-gradient(ellipse at 50% 40%,transparent 44%,rgba(0,15,23,.22));z-index:1}
@@ -99,6 +103,57 @@ dialog.sea-map-dialog{width:720px}.large-chart{position:relative;aspect-ratio:31
 .port-tabs button{flex:1;min-width:0;padding:10px 7px}
 @media(max-width:700px){.observation-card{padding:12px}.observation-actions button{flex-basis:100%}.observation-facts{grid-template-columns:65px minmax(0,1fr);gap:10px}.port-tabs button{font-size:12px;padding:10px 4px}}
 @media(max-height:500px) and (orientation:landscape){#observation .sight-illustration{display:block;height:50px}}
+
+/* D1 — visual foundation: modern UI typography, shared color tokens and paper records. */
+:root{
+  --font-ui:"LINE Seed JP","Noto Sans JP","Yu Gothic UI","Yu Gothic","Meiryo",system-ui,sans-serif;
+  --font-log:"Klee One","Yu Mincho","Hiragino Mincho ProN",serif;
+  --ink:#F3EBDC;
+  --muted:#B7C9CC;
+  --gold:#E8C98D;
+  --line:rgba(122,150,154,.42);
+  --panel:rgba(17,44,56,.88);
+  --paper:#F3EBDC;
+  --paper-ink:#20343A;
+  --paper-muted:#53676B;
+  --secondary:#1E5360;
+  --success:#336759;
+  --warning:#8B5623;
+  --danger:#9D3F3B;
+}
+html,body,button,input,dialog{font-family:var(--font-ui)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.brand h1,.title-content h2,.title-content h2 span,dialog h2,.loader h2,.error h2,
+.wind-value,.wind-value small,.speed,.speed small,.readout-detail b,.guide-loop b{
+  font-family:var(--font-ui)
+}
+.brand h1{font-weight:800;letter-spacing:.055em}
+.title-content h2{font-weight:800;letter-spacing:.05em}
+.title-content h2 span{font-weight:700}
+dialog h2,.loader h2,.error h2{font-weight:700;letter-spacing:.035em}
+.game-button{border-radius:8px;font-weight:600;transition:background .16s,color .16s,border-color .16s,transform .16s}
+.game-button:active:enabled{transform:translateY(1px)}
+.resources b,.wallet,.journey #journey-distance,.journey #journey-eta,.section-title strong,
+.wind-value,.speed,.readout-detail b{font-variant-numeric:tabular-nums}
+#captain-log-title,#book-heading,#book-entry>h3{font-family:var(--font-log);font-weight:600;letter-spacing:.025em}
+.observation-card{
+  background:var(--paper);
+  color:var(--paper-ink);
+  border-color:#C7BDA9;
+  box-shadow:0 12px 32px rgba(0,20,27,.12)
+}
+.observation-card h3,.observation-card dd{color:var(--paper-ink)}
+.observation-card .muted{color:var(--paper-muted)!important}
+.observation-card .observation-facts dt{color:var(--success);font-weight:700}
+.observation-card .observation-status{color:var(--warning)!important}
+.observation-card .game-button:not(.primary){background:var(--secondary);color:var(--paper);border-color:var(--secondary)}
+.observation-card .game-button.primary{background:var(--gold);color:#182C32;border-color:var(--gold)}
+.observation-card .game-button:disabled{opacity:.5}
+@media(max-width:700px){
+  .brand h1{letter-spacing:.035em}
+  .title-content h2{letter-spacing:.035em}
+}
+
 </style>
 </head>
 <body>
